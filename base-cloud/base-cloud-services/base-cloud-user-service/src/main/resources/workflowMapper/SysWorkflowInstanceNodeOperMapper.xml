@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.adtec.rdc.base.workflow.mapper.SysWorkflowInstanceNodeOperMapper">
+
+	<!-- 基本resultMap -->
+	<resultMap
+		type="com.adtec.rdc.base.workflow.model.po.SysWorkflowInstanceNodeOper"
+		id="SysWorkflowInstanceNodeOperMap">
+		<id property="operId" column="OPER_ID" />
+		<result property="loginName" column="LOGIN_NAME" />
+		<result property="agreeFlag" column="AGREE_FLAG" />
+		<result property="operRmk" column="OPER_RMK" />
+		<result property="inodeId" column="INODE_ID" />
+		<result property="instanceId" column="INSTANCE_ID" />
+		<result property="operTime" column="OPER_TIME" />
+		<!-- sys_user_info -->
+		<result property="userName" column="USER_NAME" />
+	</resultMap>
+
+	<select id="pageByQuery"
+		resultMap="SysWorkflowInstanceNodeOperMap">
+		select * from SYS_WORKFLOW_INST_NODE_OPER
+		<where>
+			<if test=" operId != '' and  operId != null">
+				and OPER_ID = #{ operId}
+			</if>
+			<if test=" loginName != '' and  loginName != null">
+				and LOGIN_NAME = #{ loginName}
+			</if>
+			<if test=" agreeFlag != '' and  agreeFlag != null">
+				and AGREE_FLAG = #{ agreeFlag}
+			</if>
+			<if test=" operRmk != '' and  operRmk != null">
+				and OPER_RMK = #{ operRmk}
+			</if>
+			<if test=" inodeId != '' and  inodeId != null">
+				and INODE_ID = #{ inodeId}
+			</if>
+			<if test=" instanceId != '' and  instanceId != null">
+				and INSTANCE_ID = #{ instanceId}
+			</if>
+			<if test="operTime != null">
+				and OPER_TIME = #{ operTime}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryNodeOpersByInstanceId" resultMap="SysWorkflowInstanceNodeOperMap">
+		select a.*,b.user_name from SYS_WORKFLOW_INST_NODE_OPER a, sys_user_info b where a.instance_id=#{instanceId} and a.login_name=b.login_name order by a.OPER_TIME
+	</select>
+	
+	<select id="queryNodeOpersByInodeIds" resultMap="SysWorkflowInstanceNodeOperMap">
+		select a.*,b.user_name from SYS_WORKFLOW_INST_NODE_OPER a, sys_user_info b where a.login_name=b.login_name and a.inode_id in 
+		<foreach collection="inodeIds" item="item" open="(" separator="," close=")">
+			#{item}
+	    </foreach>  
+		order by a.OPER_TIME desc
+	</select>
+	
+	<delete id="deleteByInstanceId" parameterType="String">
+		delete from SYS_WORKFLOW_INST_NODE_OPER where INSTANCE_ID=#{instanceId}
+	</delete>
+</mapper>

@@ -1,0 +1,19 @@
+/*
+ * @Author: ${tableInfo.authorName}
+ * @Date: ${datetime}
+ * @Descripttion:${tableInfo.funcDesc} 中文定义
+ * @version: 1.0
+ * @Copyright: adtec
+ * @LastEditors: ${tableInfo.authorName}
+ * @LastEditTime: ${datetime}
+ */
+
+export default {
+    '${tableInfo.moduleName}.${tableInfo.funcName}.create': '${tableInfo.funcDesc}创建',
+    '${tableInfo.moduleName}.${tableInfo.funcName}.edit': '${tableInfo.funcDesc}编辑',
+    #foreach ($column in ${tableInfo.columnInfo})
+        #if($!tableInfo.pk.attrName !=  $column.attrName)
+            '${tableInfo.moduleName}.${tableInfo.funcName}.$column.attrName': '$!{column.columnComment}',
+        #end
+    #end
+}

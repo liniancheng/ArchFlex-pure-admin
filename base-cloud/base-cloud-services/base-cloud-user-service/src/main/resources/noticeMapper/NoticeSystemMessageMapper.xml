@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.resource.mapper.NoticeSystemMessageMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.resource.model.po.NoticeSystemMessage" id="NoticeSystemMessageMap">
+            <id property="msgId" column="MSG_ID"/>
+            <result property="receiveUser" column="RECEIVE_USER"/>
+            <result property="sendUser" column="SEND_USER"/>
+            <result property="sendTime" column="SEND_TIME"/>
+            <result property="readFlag" column="READ_FLAG"/>
+            <result property="msgContent" column="MSG_CONTENT"/>
+            <result property="msgTheme" column="MSG_THEME"/>
+    </resultMap>
+
+    <select id="pageByQuery" resultMap="NoticeSystemMessageMap">
+        select * from notice_system_message
+        <where >
+            <if test=" msgId != '' and  msgId != null">
+                and   MSG_ID = #{ msgId}
+            </if>
+            <if test=" receiveUser != '' and  receiveUser != null">
+                and   RECEIVE_USER = #{ receiveUser}
+            </if>
+            <if test=" sendUser != '' and  sendUser != null">
+                and   SEND_USER = #{ sendUser}
+            </if>
+            <if test=" sendTime != '' and  sendTime != null">
+                and   SEND_TIME = #{ sendTime}
+            </if>
+            <if test=" readFlag != '' and  readFlag != null">
+                and   READ_FLAG = #{ readFlag}
+            </if>
+            <if test=" msgContent != '' and  msgContent != null">
+            	<bind name="msgContent2" value="'%'+ msgContent + '%'"/>
+                and   MSG_CONTENT  like #{"msgContent2"}
+            </if>
+            <if test=" msgTheme != '' and  msgTheme != null">
+            	<bind name="msgTheme2" value="'%'+ msgTheme + '%'"/>
+                and   MSG_THEME   like #{msgTheme2}
+            </if>
+        </where>
+    </select>
+</mapper>

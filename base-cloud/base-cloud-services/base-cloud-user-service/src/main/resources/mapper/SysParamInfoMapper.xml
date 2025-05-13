@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.param.mapper.SysParamInfoMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.param.model.po.SysParamInfo" id="SysParamInfoMap">
+            <id property="paramId" column="param_id"/>
+            <result property="paramName" column="param_name"/>
+            <result property="paramValue" column="param_value"/>
+            <result property="paramRmk" column="param_rmk"/>
+            <result property="appId" column="app_id"/>
+            <result property="createTime" column="create_time"/>
+            <result property="modifyTime" column="modify_time"/>
+    </resultMap>
+
+    <select id="pageByQuery" resultMap="SysParamInfoMap">
+    	select * from sys_param_info 
+    	<where>
+    		<if test=" paramName != '' and paramName != null">
+    			<bind name="paramName2" value="'%'+ paramName + '%'"/>
+    			and param_name like #{paramName}
+    		</if>
+    		<if test=" appId != '' and appId != null">
+    			and app_id = #{appId}
+    		</if>
+    	</where>
+    </select>
+    
+    <select id="isExistParamName" resultType="java.lang.Boolean">
+    	select count(1) from sys_param_info
+    	<where>
+    		<if test="paramId != '' and paramId != null">
+    			and param_id != #{paramId}
+    		</if>
+    		<if test="paramName != '' and paramName != null">
+    			and param_name = #{paramName}
+    		</if>
+    	</where>
+    </select>
+</mapper>

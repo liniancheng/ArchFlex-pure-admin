@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.adtec.rdc.base.workflow.mapper.SysWorkflowNodeInfoMapper">
+
+	<!-- 基本resultMap -->
+	<resultMap
+		type="com.adtec.rdc.base.workflow.model.po.SysWorkflowNodeInfo"
+		id="SysWorkflowNodeInfoMap">
+		<id property="wfnodeId" column="NODE_ID" />
+		<result property="wfnodeName" column="NODE_NAME" />
+		<result property="parentIds" column="PARENT_IDS" />
+		<result property="workflowId" column="WORKFLOW_ID" />
+		<result property="wfnodeRmk" column="NODE_RMK" />
+		<result property="agreeNum" column="AGREE_NUM" />
+		<result property="disagreeNum" column="DISAGREE_NUM" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="modifyTime" column="MODIFY_TIME" />
+		<result property="wfnodeLevel" column="NODE_LEVEL" />
+	</resultMap>
+
+	<select id="pageByQuery" resultMap="SysWorkflowNodeInfoMap">
+		select * from sys_workflow_node_info
+		<where>
+			<if test=" wfnodeId != '' and  wfnodeId != null">
+				and NODE_ID = #{ wfnodeId}
+			</if>
+			<if test=" wfnodeName != '' and  wfnodeName != null">
+				and NODE_NAME = #{ wfnodeName}
+			</if>
+			<if test=" parentIds != '' and  parentIds != null">
+				and PARENT_IDS = #{ parentIds}
+			</if>
+			<if test=" workflowId != '' and  workflowId != null">
+				and WORKFLOW_ID = #{ workflowId}
+			</if>
+			<if test=" nodeRmk != '' and  nodeRmk != null">
+				and NODE_RMK = #{ nodeRmk}
+			</if>
+			<if test="agreeNum != null">
+				and AGREE_NUM = #{ agreeNum}
+			</if>
+			<if test="disagreeNum != null">
+				and DISAGREE_NUM = #{ disagreeNum}
+			</if>
+			<if test="createTime != null">
+				and CREATE_TIME = #{ createTime}
+			</if>
+			<if test="modifyTime != null">
+				and MODIFY_TIME = #{ modifyTime}
+			</if>
+		</where>
+	</select>
+
+	<select id="isExistName" resultType="java.lang.Boolean">
+		select count(*) from sys_workflow_node_info
+		<where>
+			<if test="wfnodeId != '' and wfnodeId != null">
+				and NODE_ID <![CDATA[ <> ]]>
+				#{ wfnodeId}
+			</if>
+			<if test="wfnodeName != '' and wfnodeName != null">
+				and NODE_NAME = #{ wfnodeName}
+			</if>
+			<if test="workflowId != '' and workflowId != null">
+				and WORKFLOW_ID = #{ workflowId}
+			</if>
+		</where>
+	</select>
+
+	<select id="isExistChild" resultType="java.lang.Boolean">
+		<bind name="nodeId2" value="'%'+ nodeId + '%'"/>
+		select count(*) from sys_workflow_node_info where PARENT_IDS like #{nodeId2}
+	</select>
+
+	<delete id="deleteByWorkflowId" parameterType="String">
+		delete from sys_workflow_node_info where workflow_id=#{workflowId}
+	</delete>
+	
+	<insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="false">
+		insert into sys_workflow_node_info(NODE_ID, NODE_NAME, PARENT_IDS, WORKFLOW_ID, NODE_RMK, AGREE_NUM, DISAGREE_NUM, CREATE_TIME, MODIFY_TIME, NODE_LEVEL) 
+    	values
+		<foreach collection="nodes" item="item" index="index" separator=",">
+    		(
+    			#{item.wfnodeId},
+    			#{item.wfnodeName},
+    			#{item.parentIds},
+    			#{item.workflowId},
+    			#{item.wfnodeRmk},
+    			#{item.agreeNum},
+    			#{item.disagreeNum},
+    			#{item.createTime},
+    			#{item.modifyTime},
+    			#{item.wfnodeLevel}
+    		)
+        </foreach>	
+	</insert>
+</mapper>

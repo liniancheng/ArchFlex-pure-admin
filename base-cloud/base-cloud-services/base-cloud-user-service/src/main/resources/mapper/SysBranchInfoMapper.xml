@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.user.mapper.SysBranchInfoMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.user.model.po.SysBranchInfo" id="SysBranchInfoMap">
+            <id property="branchNo" column="branch_no"/>
+            <result property="branchName" column="branch_name"/>
+            <result property="branchShortName" column="branch_short_name"/>
+            <result property="branchType" column="branch_type"/>
+            <result property="parentBranchNo" column="parent_branch_no"/>
+            <result property="etFlag" column="et_flag"/>
+            <result property="virFlag" column="vir_flag"/>
+    </resultMap>
+    
+    <resultMap type="com.adtec.rdc.base.user.model.bo.SysBranchTree" id="SysBranchTreeMap">
+            <id property="branchNo" column="branch_no"/>
+            <result property="branchName" column="branch_name"/>
+            <result property="branchShortName" column="branch_short_name"/>
+            <result property="branchType" column="branch_type"/>
+            <result property="parentBranchNo" column="parent_branch_no"/>
+            <result property="etFlag" column="et_flag"/>
+            <result property="virFlag" column="vir_flag"/>
+    </resultMap>
+	
+	<select id="hasChildren" resultType="java.lang.Boolean">
+		select count(*) from sys_branch_info where parent_branch_no =#{branchNo}
+	</select>
+	
+	<insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="false">
+		INSERT INTO sys_branch_info
+			(branch_no, branch_name, branch_short_name, branch_type, parent_branch_no, et_flag, vir_flag)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+    				(
+    					#{item.branchNo},
+    					#{item.branchName},
+    					#{item.branchShortName},
+    					#{item.branchType},
+    					#{item.parentBranchNo},
+    					#{item.etFlag},
+    					#{item.virFlag}
+    				)
+         </foreach>	
+		
+	</insert>
+	
+	<select id="isSameBranchName" resultType="java.lang.Integer">
+		select count(*) from sys_branch_info where branch_name=#{branchName}
+	</select>
+	
+	<select id="isSameBranchNo" resultType="java.lang.Integer">
+		select count(*) from sys_branch_info where branch_no=#{branchNo}
+	</select>
+	
+	<select id="isSameBranchNoAndName" resultType="java.lang.Integer">
+		select count(*) from sys_branch_info where branch_no!=#{branchNo} and branch_name=#{branchName}
+	</select>
+	
+	<select id="getPageForBranch" resultMap="SysBranchTreeMap">
+		select * from sys_branch_info where parent_branch_no= '-1' order by branch_name asc
+	</select>
+	
+	<select id="selectByBranchNoAndBranchType" resultMap="SysBranchTreeMap">
+		select * from sys_branch_info where branch_no =#{branchNo} and branch_type = #{branchType}
+	</select>
+	
+	<select id="loadAllBranchByAppIdAndBranchType" resultMap="SysBranchInfoMap">
+		select * from sys_branch_info where branch_type = #{branchType}
+	</select>
+</mapper>

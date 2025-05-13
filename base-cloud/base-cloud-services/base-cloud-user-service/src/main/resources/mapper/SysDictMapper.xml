@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.dict.mapper.SysDictMapper">
+
+	<!-- 基本resultMap -->
+	<resultMap type="com.adtec.rdc.base.dict.model.po.SysDict"
+		id="SysDictMap">
+		<id property="id" column="ID" />
+		<result property="dictName" column="DICT_NAME" />
+		<result property="dictCode" column="DICT_CODE" />
+		<result property="description" column="DESCRIPTION" />
+		<result property="delFlag" column="DEL_FLAG" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="type" column="TYPE" />
+	</resultMap>
+	
+	<!-- 通过字典id获取字典数据 -->
+	<select id="queryDictById" parameterType="String"
+		resultType="com.adtec.rdc.base.dict.model.po.SysDict">
+		SELECT S.* FROM SYS_DICT_ITEM S
+		WHERE S.ID =  #{id}
+	</select>
+	<select id="isSameDictCode" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM SYS_DICT WHERE DICT_CODE=#{dictCode}
+	</select>
+	<select id="pageByQuery" resultMap="SysDictMap">
+		SELECT * FROM SYS_DICT
+		<where>
+			<if test=" id != '' and  id != null">
+				and ID = #{ id}
+			</if>
+			<if test=" dictName != '' and  dictName != null">
+				<bind name="dictName2" value="'%'+ dictName + '%'"/>
+				and DICT_NAME like #{dictName2}
+			</if>
+			<if test=" dictCode != '' and  dictCode != null">
+				<bind name="dictName2" value="'%'+ dictName + '%'"/>
+				and DICT_CODE like #{dictCode2}
+			</if>
+			<if test=" description != '' and  description != null">
+				<bind name="description2" value="'%'+ description + '%'"/>
+				and DESCRIPTION like #{description2}
+			</if>
+			<if test="delFlag != null">
+				and DEL_FLAG = #{ delFlag}
+			</if>
+			<if test="createTime != null">
+				and CREATE_TIME = #{ createTime}
+			</if>
+			<if test=" type != '' and  type != null">
+				and TYPE = #{ type}
+			</if>
+		</where>
+	</select>
+</mapper>

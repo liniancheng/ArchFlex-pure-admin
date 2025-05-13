@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.statistics.mapper.SysStatisticalStrategyMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.statistics.model.po.SysStatisticalStrategy" id="SysStatisticalStrategyMap">
+            <id property="strategyId" column="strategy_id"/>
+            <result property="serviceUrl" column="service_url"/>
+            <result property="functionName" column="function_name"/>
+            <result property="repeatFlag" column="repeat_flag"/>
+            <result property="configStatus" column="config_status"/>
+            <result property="delFlag" column="del_flag"/>
+            <result property="createTime" column="create_time"/>
+            <result property="modifyTime" column="modify_time"/>
+    </resultMap>
+
+    <select id="pageByQuery" resultMap="SysStatisticalStrategyMap">
+        select * from sys_statistical_strategy
+        <where >
+            <if test=" serviceUrl != '' and  serviceUrl != null">
+                and   service_url = #{serviceUrl}
+            </if>
+            <if test=" functionName != '' and  functionName != null">
+                and   function_name = #{functionName}
+            </if>
+            <if test=" repeatFlag != '' and  repeatFlag != null">
+                and   repeat_flag = #{repeatFlag}
+            </if>
+            <if test=" configStatus != '' and  configStatus != null">
+                and   config_status = #{configStatus}
+            </if>
+            <if test="createTime != null">
+                and   create_time = #{createTime}
+            </if>
+            <if test="modifyTime != null">
+                and   modify_time = #{modifyTime}
+            </if>
+            and   del_flag = '0'
+        </where>
+    </select>
+</mapper>

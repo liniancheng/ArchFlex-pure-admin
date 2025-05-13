@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.anno.mapper.SysAnnoUserOperMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.anno.model.po.SysAnnoUserOper" id="SysAnnoUserOperMap">
+            <id property="annoId" column="anno_id"/>
+            <result property="userId" column="user_id"/>
+            <result property="readFlag" column="read_flag"/>
+            <result property="deleFlag" column="dele_flag"/>
+    </resultMap>
+
+   
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adtec.rdc.base.gen.mapper.ColumnInfoMapper">
+    <select id="listByTableName" resultType="ColumnInfo">
+    	<!-- MYSQL -->
+		        
+		select column_name, data_type , column_comment ,
+		column_key, is_nullable , extra from information_schema.columns
+		where table_name = #{tableName} and table_schema = (select database()) 
+		
+		<!-- ORACLE -->
+		<!-- SELECT A.COLUMN_NAME, A.DATA_TYPE, B.COMMENTS AS COLUMN_COMMENT ,
+			(CASE WHEN D.COLUMN_NAME IS NOT NULL THEN 'PRI' ELSE ''	END) AS COLUMN_KEY ,
+			(CASE WHEN A.NULLABLE = 'N' THEN 'NO' ELSE 'YES' END) AS IS_NULLABLE,'' AS EXTRA
+		FROM user_tab_columns A
+		LEFT JOIN USER_COL_COMMENTS B ON A.COLUMN_NAME = B.COLUMN_NAME AND A.TABLE_NAME = B.TABLE_NAME
+		LEFT JOIN USER_CONSTRAINTS C ON	A.TABLE_NAME = C.TABLE_NAME	AND C.CONSTRAINT_TYPE = 'P'
+		LEFT JOIN user_cons_columns D ON C.INDEX_NAME = D.CONSTRAINT_NAME AND A.COLUMN_NAME = D.COLUMN_NAME
+		WHERE
+			A.TABLE_NAME = #{tableName} -->
+		<!-- DB2 -->
+		<!-- SELECT COLNAME AS COLUMN_NAME,TYPENAME AS DATA_TYPE, REMARKS AS COLUMN_COMMENT, 
+		(CASE WHEN KEYSEQ = '1' THEN 'PRI' ELSE '' END) AS COLUMN_KEY, 
+		(CASE WHEN NULLS = 'N' THEN 'NO' ELSE 'YES' END) AS IS_NULLABLE, '' AS EXTRA 
+		FROM SYSCAT.COLUMNS WHERE TABNAME =  #{tableName} -->
+				
+    </select>
+</mapper>

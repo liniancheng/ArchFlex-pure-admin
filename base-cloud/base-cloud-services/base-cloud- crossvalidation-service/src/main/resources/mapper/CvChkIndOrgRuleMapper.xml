@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.crossvalidation.mapper.CvChkIndOrgRuleMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.crossvalidation.model.po.CvChkIndOrgRule" id="CvChkIndOrgRuleMap">
+        <id property="id" column="ID"/>
+        <result property="orgVal" column="ORG_VAL"/>
+        <result property="indNo" column="IND_NO"/>
+        <result property="isUse" column="IS_USE"/>
+        <result property="isShow" column="IS_SHOW"/>
+    </resultMap>
+
+    <select id="pageByQuery" resultMap="CvChkIndOrgRuleMap">
+        select * from cv_chk_ind_org_rule
+        <where>
+            <if test=" orgVal != '' and  orgVal != null">
+                and ORG_VAL = #{ orgVal}
+            </if>
+            <if test=" indNo != '' and  indNo != null">
+                and IND_NO = #{ indNo}
+            </if>
+        </where>
+    </select>
+</mapper>

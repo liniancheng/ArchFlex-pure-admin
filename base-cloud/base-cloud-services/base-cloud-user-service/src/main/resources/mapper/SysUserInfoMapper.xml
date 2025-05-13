@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adtec.rdc.base.user.mapper.SysUserInfoMapper">
+
+    <resultMap id="userResultMap" type="SysUserInfo">
+        <id column="user_id" property="userId"/>
+        <result column="app_id" property="appId"/>
+        <result column="login_name" property="loginName"/>
+        <result column="user_name" property="userName"/>
+        <result column="login_pwd" property="loginPwd"/>
+        <result column="user_email" property="userEmail"/>
+        <result column="user_mob_tel" property="userMobTel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="branch_no" property="branchNo"/>
+        <result column="crypt_pwd" property="cryptPwd"/>
+        <result column="login_time" property="loginTime"/>
+    </resultMap>
+
+    <!-- SysUserVo 结果集 -->
+    <resultMap id="userVOResultMap" type="SysUserVo" extends="userResultMap">
+        <result column="branch_name" property="branchName"/>
+        <collection property="sysRoleVoList" ofType="SysRoleVo">
+            <id column="role_id" property="roleId"/>
+            <result column="app_id" property="appId"/>
+            <result column="role_code" property="roleCode"/>
+            <result column="role_name" property="roleName"/>
+            <result column="rcreate_time" property="createTime"/>
+            <result column="rmodify_time" property="modifyTime"/>
+            <result column="rdel_flag" property="delFlag"/>
+        </collection>
+    </resultMap>
+
+    <sql id="selectUser">
+        select
+             u.user_id,
+             u.login_name,
+             u.user_name,
+             u.login_pwd,
+             u.user_email,
+             u.user_mob_tel,
+             u.create_time,
+             u.branch_no,
+             u.crypt_pwd,
+             u.modify_time,
+             u.del_flag,
+             u.login_time,
+             sr.role_id,
+             sr.role_name,
+             sr.role_code,
+             sr.create_time as rcreate_time,
+             sr.modify_time as rmodify_time,
+             sr.del_flag as rdel_flag,
+             sr.app_id as app_id,
+             si.branch_name
+         from
+             sys_user_info u 
+             left join sys_role_user_rel sur on sur.user_id = u.user_id
+             left join sys_role_info sr on sr.role_id = sur.role_id
+             left join sys_branch_info si on u.branch_no = si.branch_no
+    </sql>
+    
+    <sql id="pageUser">
+        select
+             u.user_id,
+             u.login_name,
+             u.user_name,
+             u.login_pwd,
+             u.user_email,
+             u.user_mob_tel,
+             u.create_time,
+             u.branch_no,
+             u.crypt_pwd,
+             u.modify_time,
+             u.del_flag,
+             u.login_time,
+             si.branch_name
+         from
+             sys_user_info u 
+             left join sys_branch_info si on u.branch_no = si.branch_no
+    </sql>
+    <sql id="pageCondition">
+        <where>
+            <if test="username != null and username != ''">
+            	<bind name="username2" value="'%'+ username + '%'"/>
+                u.user_name like #{username2}
+            </if>
+            <if test="loginName != null and loginName != ''">
+            	<bind name="loginName2" value="'%'+ loginName + '%'"/>
+                u.login_name like #{loginName2}
+            </if>
+            <if test="delFlag != null and delFlag != ''">
+                and u.del_flag in
+                <foreach collection="delFlag.split(',')" item="id" index="index" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </sql>
+    <select id="pageUserVoByQuery" resultMap="userVOResultMap"
+            parameterType="SysUserVoQuery">
+        <include refid="pageUser"></include>
+        <include refid="pageCondition"></include>
+    </select>
+
+    <select id="loadUserById" resultMap="userVOResultMap">
+        <include refid="selectUser"></include>
+        where u.user_id = #{id} 
+    </select>
+
+    <select id="loadUserByUsername" resultMap="userVOResultMap">
+        <include refid="selectUser"></include>
+        where u.login_name = #{username} 
+    </select>
+
+    <select id="loadUserByMobile" resultMap="userVOResultMap">
+        <include refid="selectUser"></include>
+        where u.user_mob_tel = #{mobile}
+    </select>
+    <select id="countUserByQuery" resultType="integer">
+        select
+        count(1)
+        from
+        sys_user_info u
+        <include refid="pageCondition"></include>
+    </select>
+    <select id="loadUserByEmail" resultMap="userVOResultMap">
+        <include refid="selectUser"></include>
+        where u.user_email = #{email}
+    </select>
+    
+    <select id="queryUserByLoginNameOrUserName" resultMap="userResultMap">
+        select * from sys_user_info where login_name=#{loginName} or user_name=#{loginName}
+    </select>
+    
+    <select id="queryUserIdByUserNames" resultType="java.lang.String">
+		select USER_ID from SYS_USER_INFO where LOGIN_NAME in 
+        <foreach collection="userNames" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="loadAllUserByAppId" resultMap="userResultMap">
+        select * from sys_user_info where app_id = #{appId}
+    </select>
+    
+    <select id="queryUserByLoginName" resultMap="userResultMap">
+        select * from sys_user_info where login_name = #{loginName}
+    </select>
+</mapper>

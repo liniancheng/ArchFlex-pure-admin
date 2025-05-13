@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.crossvalidation.mapper.CvChkPlanMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.crossvalidation.model.po.CvChkPlan" id="CvChkPlanMap">
+        <id property="id" column="ID"/>
+        <result property="planName" column="PLAN_NAME"/>
+        <result property="planState" column="PLAN_STATE"/>
+        <result property="planType" column="PLAN_TYPE"/>
+        <result property="execTime" column="EXEC_TIME"/>
+        <result property="orgVal" column="ORG_VAL"/>
+        <result property="dateVal" column="DATE_VAL"/>
+        <result property="currencyVal" column="CURRENCY_VAL"/>
+        <result property="indList" column="IND_LIST"/>
+        <result property="sysList" column="SYS_LIST"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="createUser" column="CREATE_USER"/>
+        <result property="dataTime" column="DATA_TIME"/>
+    </resultMap>
+
+    <select id="pageByQuery" resultMap="CvChkPlanMap">
+        select * from cv_chk_plan p
+        <where>
+            <if test=" orgVal != '' and  orgVal != null">
+                and p.ORG_VAL = #{ orgVal}
+            </if>
+            <if test=" planName != '' and  planName != null">
+                and p.PLAN_NAME = #{ planName}
+            </if>
+            <if test=" sysVal != '' and  sysVal != null">
+                and p.SYS_LIST = #{ sysVal}
+            </if>
+            <if test=" dataTime != '' and  dataTime != null">
+                and p.DATA_TIME = #{ dataTime}
+            </if>
+            <if test=" planState != '' and  planState != null">
+                and p.PLAN_STATE = #{ planState}
+            </if>
+        </where>
+    </select>
+</mapper>

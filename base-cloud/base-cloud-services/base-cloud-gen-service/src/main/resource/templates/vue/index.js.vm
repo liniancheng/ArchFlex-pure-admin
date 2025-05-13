@@ -1,0 +1,32 @@
+/*
+ * @Author: ${tableInfo.authorName}
+ * @Date: ${datetime}
+ * @Descripttion:${tableInfo.funcDesc}接口定义
+ * @version: 1.0
+ * @Copyright: adtec
+ * @LastEditors: ${tableInfo.authorName}
+ * @LastEditTime: ${datetime}
+ */
+import request from '@/utils/request'
+
+export function fetch (params) {
+    return request('/${tableInfo.moduleName}/${tableInfo.funcName}/page', {
+        params: params
+    })
+}
+
+export function fetchOne (id) {
+    return request.get('/${tableInfo.moduleName}/${tableInfo.funcName}/' + id)
+}
+
+export function save (params) {
+    return request.post('/${tableInfo.moduleName}/${tableInfo.funcName}', params)
+}
+
+export function updateById (params) {
+    return request.put('/${tableInfo.moduleName}/${tableInfo.funcName}', params)
+}
+
+export function removeById (id) {
+    return request.delete('/${tableInfo.moduleName}/${tableInfo.funcName}/' + id)
+}

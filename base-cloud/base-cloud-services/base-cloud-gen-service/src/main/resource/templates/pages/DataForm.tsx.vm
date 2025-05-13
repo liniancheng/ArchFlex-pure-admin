@@ -1,0 +1,68 @@
+import { Form, Input, Modal,InputNumber,Switch,DatePicker } from 'antd';
+import { formatMessage } from 'umi-plugin-react/locale';
+import { FormComponentProps } from 'antd/es/form';
+import React from 'react';
+
+import { DataTableListItem } from '../data';
+
+const FormItem = Form.Item;
+
+interface FormProps extends FormComponentProps {
+    modalVisible: boolean;
+    type: 1 | 2;
+    values: Partial<DataTableListItem>;
+    handleSave: (values: Partial<DataTableListItem>) => void;
+    handleModalVisible: () => void;
+}
+const DataForm: React.FunctionComponent<FormProps> = props => {
+    const { modalVisible, type, form, handleSave, handleModalVisible, values } = props;
+    const okHandle = () => {
+        form.validateFields((err, fieldsValue) => {
+            if (err) return;
+            form.resetFields();
+            handleSave({ ...values, ...fieldsValue});
+        });
+    };
+
+    return (
+        <Modal
+            destroyOnClose
+            title={type === 1 ? formatMessage({id: '${tableInfo.moduleName}.${tableInfo.funcName}.create'}) : formatMessage({id: '${tableInfo.moduleName}.${tableInfo.funcName}.edit'}) }
+            visible={modalVisible}
+            onOk={okHandle}
+            onCancel={() => handleModalVisible()}
+        >
+            #foreach ($column in ${tableInfo.columnInfo})
+                #if($!tableInfo.pk.attrName !=  $column.attrName)
+                    <FormItem labelCol={{ span: 6 }} wrapperCol={{ span: 15 }} label={formatMessage({id: '${tableInfo.moduleName}.${tableInfo.funcName}.$column.attrName'})}>
+                        {form.getFieldDecorator('$column.attrName', {
+                            initialValue: values.$column.attrName,
+                        #if($column.tsType == "boolean")
+                            valuePropName: 'checked',
+                        #end
+                        #if(!$column.nullable)
+                            rules: [
+                                {
+                                    required: true,
+                                    message: formatMessage({id: '${tableInfo.moduleName}.${tableInfo.funcName}.$column.attrName'}) + formatMessage({id: 'common.rule.message.required'})
+                                }],
+                        #end
+                        })(
+                        #if($column.tsType == "number")
+                            <InputNumber placeholder={formatMessage({id: 'common.placeholder.input'}) + formatMessage({id: '${tableInfo.moduleName}.${tableInfo.funcName}.$column.attrName'})} />
+                        #elseif($column.tsType == "boolean")
+                            <Switch checkedChildren={formatMessage({id: 'common.flag.yes'})} unCheckedChildren={formatMessage({id: 'common.flag.no'})} />
+                        #elseif($column.tsType == "Date")
+                            <DatePicker />
+                        #else
+                            <Input placeholder={formatMessage({id: 'common.placeholder.input'}) + formatMessage({id: '${tableInfo.moduleName}.${tableInfo.funcName}.$column.attrName'})} />
+                        #end
+                            )}
+                    </FormItem>
+                #end
+            #end
+        </Modal>
+    );
+};
+
+export default Form.create<FormProps>()(DataForm);

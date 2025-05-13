@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.anno.mapper.SysAnnoInfoMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.anno.model.po.SysAnnoInfo" id="SysAnnoInfoMap">
+            <id property="annoId" column="anno_id"/>
+            <result property="appId" column="app_id"/>
+            <result property="annoLevel" column="anno_level"/>
+            <result property="isValid" column="is_valid"/>
+            <result property="annoTitle" column="anno_title"/>
+            <result property="annoContent" column="anno_content"/>
+            <result property="loginName" column="login_name"/>
+            <result property="typeId" column="type_id"/>
+			<result property="createTime" column="create_time"/>
+            <result property="modifyTime" column="modify_time"/>            
+            <result property="startTime" column="start_time"/>
+            <result property="endTime" column="end_time"/>
+            <!-- 用于租户公告查询 -->
+            <result property="userId" column="user_id"/>
+            <result property="typeName" column="type_name"/>
+            <result property="readFlag" column="read_flag"/>
+            <result property="deleFlag" column="dele_flag"/>
+    </resultMap>
+
+    <select id="pageByQuery" resultMap="SysAnnoInfoMap">
+    	select * from sys_anno_info
+        <where >
+            <if test=" annoTitle != '' and  annoTitle != null">
+                and   anno_title = #{ annoTitle}
+            </if>
+            <if test=" loginName != '' and  loginName != null">
+                and   login_name = #{ loginName}
+            </if>
+            <if test="appId != null">
+                and   app_id = #{ appId}
+            </if>
+        </where>
+    </select>
+    
+    <select id="isExistAnnoTitle" resultType="java.lang.Boolean">
+    	select count(*) from sys_anno_info
+    	<where>
+    		<if test="annoId != '' and annoId != null">
+                and  anno_id <![CDATA[ <> ]]> #{ annoId}
+    		</if>
+    		<if test="annoTitle != '' and annoTitle != null">
+                and  anno_title = #{ annoTitle}
+    		</if>
+    		<if test="appId != null">
+                and   app_id = #{ appId}
+            </if>
+    	</where>
+    </select>
+    
+    <select id="appPageByQuery" resultMap="SysAnnoInfoMap">
+		<if test='readFlag != null and  readFlag == "0"'>
+    		select a.*,b.type_name,'0' as read_flag from 
+        	sys_anno_info a, sys_anno_type_info b where a.type_id=b.type_id
+        	and a.anno_id not in (select anno_id from SYS_ANNO_USER_OPER where read_flag='1' or dele_flag='1' and user_id=#{userId}) 
+    	</if>
+    	<if test='readFlag == null or readFlag != "0"'>
+    		select a.*,b.type_name,c.read_flag from 
+        	sys_anno_info a left join SYS_ANNO_USER_OPER c on a.anno_id=c.anno_id and c.dele_flag='0'
+        	<if test="userId != null">
+            	and   c.user_id = #{ userId}
+        	</if>
+        	, sys_anno_type_info b where a.type_id=b.type_id
+        	<if test="userId != null">
+        		and a.anno_id not in (select anno_id from SYS_ANNO_USER_OPER where dele_flag='1' and user_id=#{userId}) 
+        	</if>
+    	</if>
+        
+        <if test="isValid != null">
+            and   a.is_valid = #{ isValid}
+        </if>
+        <if test=" loginName != '' and  loginName != null">
+            and   a.login_name = #{ loginName}
+        </if>
+        <if test="endTime != null">
+            and   a.end_time <![CDATA[ >= ]]> #{ endTime} and a.start_time <![CDATA[ <= ]]> #{ endTime}
+        </if>
+        <if test="appId != null">
+            and   a.app_id = #{ appId}
+        </if>
+        <if test=" annoTitle != '' and  annoTitle != null">
+        	<bind name="annoTitle2" value="'%'+ annoTitle + '%'"/>
+            and   a.anno_title like #{annoTitle2}
+        </if>
+        <if test=" annoContent != '' and  annoContent != null">
+        	<bind name="annoContent2" value="'%'+ annoContent + '%'"/>
+            and   a.anno_content like #{annoContent2}
+        </if>
+        <if test=" keyword != '' and  keyword != null">
+        	<bind name="keyword2" value="'%'+ keyword + '%'"/>
+	        and   (a.anno_title like #{keyword2} or a.anno_content like #{keyword2})
+		</if>
+        order by a.create_time desc
+	</select>
+	
+	
+	<select id="queryAnnoListUserOper" resultMap="SysAnnoInfoMap">
+    	select * from SYS_ANNO_USER_OPER where user_id=#{userId}
+    </select>
+    
+    <insert id="insertAnnoUserOper" parameterType="java.util.List" useGeneratedKeys="false">
+		insert into SYS_ANNO_USER_OPER(anno_id, user_id, read_flag, dele_flag) 
+		values
+		<foreach collection="inserts" item="item" index="index" separator=",">
+    		(
+    			#{item.annoId},
+    			#{item.userId},
+    			#{item.readFlag},
+    			#{item.deleFlag}
+    		)
+        </foreach>	
+	</insert>
+	
+	<update id="updateAnnoUserOper" parameterType="java.util.List">
+		 update SYS_ANNO_USER_OPER
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="read_flag =case" suffix="end,">
+                <foreach collection="updates" item="item">
+	                when anno_id = #{item.annoId} and user_id = #{item.userId} then #{item.readFlag}
+                </foreach>
+            </trim>
+            <trim prefix="dele_flag =case" suffix="end,">
+                <foreach collection="updates" item="item">
+	                when anno_id = #{item.annoId} and user_id = #{item.userId} then #{item.deleFlag}
+                </foreach>
+            </trim>
+        </trim>
+        <where>
+            <foreach collection="updates" separator="or" item="item">
+                anno_id = #{item.annoId} and user_id = #{item.userId}
+            </foreach>
+        </where>
+	</update>
+</mapper>

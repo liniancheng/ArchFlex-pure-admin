@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.layout.mapper.SysLayoutItemInfoMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.layout.model.po.SysLayoutItemInfo" id="SysLayoutItemInfoMap">
+            <id property="itemId" column="ITEM_ID"/>
+            <result property="itemName" column="ITEM_NAME"/>
+            <result property="appId" column="APP_ID"/>
+            <result property="itemComp" column="ITEM_COMP"/>
+            <result property="minWidth" column="MIN_WIDTH"/>
+            <result property="minHeight" column="MIN_HEIGHT"/>
+            <result property="loginName" column="LOGIN_NAME"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="modifyTime" column="MODIFY_TIME"/>
+            
+    </resultMap>
+    
+    <resultMap type="com.adtec.rdc.base.layout.model.po.SysLayoutItemInfo" id="SysLayoutItemInfoMap2"  extends="SysLayoutItemInfoMap">
+            <result property="layId" column="LAY_ID"/>
+            <result property="relX" column="REL_X"/>
+            <result property="relY" column="REL_Y"/>
+            <result property="relW" column="REL_W"/>
+            <result property="relH" column="REL_H"/>
+    </resultMap>
+    
+    <select id="listItems" resultMap="SysLayoutItemInfoMap">
+    	SELECT
+			T1.*, T2.LAY_ID, T2.REL_H, T2.REL_W, T2.REL_X, T2.REL_Y
+		FROM
+			SYS_LAYOUT_ITEM_INFO T1, SYS_LAYOUT_ITEM_REL T2
+		WHERE
+			T1.ITEM_ID = T2.ITEM_ID	AND T2.LAY_ID = #{ layId} AND T1.APP_ID = #{ appId}
+    </select>
+    
+
+    <select id="fetchPerson" resultMap="SysLayoutItemInfoMap">
+        select	distinct(T1.ITEM_ID),T1.ITEM_NAME,T1.APP_ID,T1.ITEM_COMP,T1.MIN_WIDTH,	T1.MIN_HEIGHT,
+        	T1.LOGIN_NAME,T1.ITEM_ORDER,T1.ITEM_RMK,T1.CREATE_TIME,T1.MODIFY_TIME
+		from
+			SYS_LAYOUT_ITEM_INFO T1
+		left join SYS_ROLE_LAYOUT_ITEM_REL T2 on T1.ITEM_ID = T2.ITEM_ID
+		where
+			T1.APP_ID = #{ appId}
+			and T2.ROLE_ID in (
+		<foreach collection="roleIds" item="roleId" separator=",">
+    		#{roleId}
+    	</foreach>
+			)
+    </select>
+    
+    
+    <select id="pageByQuery" resultMap="SysLayoutItemInfoMap">
+        select * from sys_layout_item_info
+        <where >
+            <if test=" itemId != '' and  itemId != null">
+                and   ITEM_ID = #{ itemId}
+            </if>
+            <if test=" itemName != '' and  itemName != null">
+            	<bind name="name" value="'%'+ itemName + '%'"/>
+                and   ITEM_NAME like #{name}
+            </if>
+            <if test=" appId != '' and  appId != null">
+                and   APP_ID = #{ appId}
+            </if>
+            <if test=" itemComp != '' and  itemComp != null">
+                and   ITEM_COMP = #{ itemComp}
+            </if>
+            <if test=" loginName != '' and  loginName != null">
+                and   LOGIN_NAME = #{ loginName}
+            </if>
+        </where>
+    </select>
+    
+    <select id="isExist" resultType="java.lang.Boolean">
+    	select count(1) from sys_layout_item_info
+        <where >
+            <if test=" itemId != '' and  itemId != null">
+                and   ITEM_ID <![CDATA[ <> ]]> #{ itemId}
+            </if>
+            <if test=" itemName != '' and  itemName != null">
+                and   ITEM_NAME = #{ itemName}
+            </if>
+            <if test=" appId != '' and  appId != null">
+                and   APP_ID = #{ appId}
+            </if>
+        </where>
+    </select>
+</mapper>

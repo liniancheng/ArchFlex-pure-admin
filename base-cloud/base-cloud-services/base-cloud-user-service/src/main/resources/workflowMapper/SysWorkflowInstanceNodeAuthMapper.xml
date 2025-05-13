@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.adtec.rdc.base.workflow.mapper.SysWorkflowInstanceNodeAuthMapper">
+
+	<!-- 基本resultMap -->
+	<resultMap
+		type="com.adtec.rdc.base.workflow.model.po.SysWorkflowInstanceNodeAuth"
+		id="SysWorkflowInstanceNodeAuthMap">
+		<id property="authId" column="AUTH_ID" />
+		<result property="authType" column="AUTH_TYPE" />
+		<result property="objId" column="OBJ_ID" />
+		<result property="inodeId" column="INODE_ID" />
+		<result property="createTime" column="CREATE_TIME" />
+	</resultMap>
+
+	<select id="pageByQuery"
+		resultMap="SysWorkflowInstanceNodeAuthMap">
+		select * from SYS_WORKFLOW_INST_NODE_AUTH
+		<where>
+			<if test=" authId != '' and  authId != null">
+				and AUTH_ID = #{ authId}
+			</if>
+			<if test=" authType != '' and  authType != null">
+				and AUTH_TYPE = #{ authType}
+			</if>
+			<if test=" objId != '' and  objId != null">
+				and OBJ_ID = #{ objId}
+			</if>
+			<if test=" inodeId != '' and  inodeId != null">
+				and INODE_ID = #{ inodeId}
+			</if>
+			<if test="createTime != null">
+				and CREATE_TIME = #{ createTime}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="false">
+		insert into SYS_WORKFLOW_INST_NODE_AUTH(AUTH_ID, AUTH_TYPE, OBJ_ID, INODE_ID, CREATE_TIME) 
+    	values
+		<foreach collection="instanceNodeAuths" item="item" index="index" separator=",">
+    		(
+    			#{item.authId},
+    			#{item.authType},
+    			#{item.objId},
+    			#{item.inodeId},
+    			#{item.createTime}
+    		)
+        </foreach>	
+	</insert>
+	
+	<delete id="deleteByInstanceId" parameterType="String">
+		delete from SYS_WORKFLOW_INST_NODE_AUTH where inode_id in (select inode_id from sys_workflow_inst_node where instance_id=#{instanceId})
+	</delete>
+</mapper>

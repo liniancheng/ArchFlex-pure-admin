@@ -1,0 +1,20 @@
+/*
+ * @Author: ${tableInfo.authorName}
+ * @Date: ${datetime}
+ * @Descripttion:${tableInfo.funcDesc}接口定义
+ * @version: 1.0
+ * @Copyright: adtec
+ * @LastEditors: ${tableInfo.authorName}
+ * @LastEditTime: ${datetime}
+ */
+export interface DataTableListItem extends TableListItem {
+    #foreach ($column in ${tableInfo.columnInfo})
+        $column.attrName?: $column.tsType;
+    #end
+}
+
+export interface DataTableListParams extends TableListParams {
+    #foreach ($column in ${tableInfo.columnInfo})
+        $column.attrName?: $column.tsType;
+    #end
+}

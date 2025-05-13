@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adtec.rdc.base.user.mapper.SysMenuInfoMapper">
+
+    <resultMap id="menuResultMap" type="SysMenuInfo">
+        <id column="menu_id" property="menuId"/>
+        <result column="menu_name" property="menuName"/>
+        <result column="menu_route_name" property="menuRouteName"/>
+        <result column="menu_type" property="menuType"/>
+        <result column="menu_path" property="menuPath"/>
+        <result column="button_permission" property="buttonPermission"/>
+        <result column="menu_color" property="menuColor"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="menu_icon" property="menuIcon"/>
+        <result column="component_path" property="componentPath"/>
+        <result column="menu_sort" property="menuSort"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="menu_url" property="menuUrl"/>
+        <result column="http_method" property="httpMethod"/>
+        <result column="app_id" property="appId"/>
+        <result column="auth_flag" property="authFlag"/>
+        <result column="hide_flag" property="hideFlag"/>
+        <result column="alive_flag" property="aliveFlag"/>
+    </resultMap>
+    
+    <select id="isExistBtnPremission" resultType="java.lang.Boolean">
+		SELECT COUNT(*) FROM sys_menu_info
+		<where>
+			<if test="appId != null and appId != ''">
+				and app_Id = #{appId}
+			</if>
+			<if test="buttonPermission != null and buttonPermission != ''">
+				and button_permission = #{buttonPermission}
+			</if>
+			<if test="menuId != null and menuId != ''">
+				and menu_id <![CDATA[ <> ]]> #{menuId}
+			</if>
+		</where>
+	</select>
+    <select id="isExistMenuPath" resultType="java.lang.Boolean">
+		SELECT COUNT(*) FROM sys_menu_info
+		<where>
+			<if test="appId != null and appId != ''">
+				and app_Id = #{appId}
+			</if>
+			<if test="menuPath != null and menuPath != ''">
+				and menu_path = #{menuPath}
+			</if>
+			<if test="menuId != null and menuId != ''">
+				and menu_id <![CDATA[ <> ]]> #{menuId}
+			</if>
+		</where>
+	</select>
+    <select id="isExistMenuRouteName" resultType="java.lang.Boolean">
+		SELECT COUNT(*) FROM sys_menu_info
+		<where>
+			<if test="appId != null and appId != ''">
+				and app_Id = #{appId}
+			</if>
+			<if test="menuRouteName != null and menuRouteName != ''">
+				and menu_route_name = #{menuRouteName}
+			</if>
+			<if test="menuId != null and menuId != ''">
+				and menu_id <![CDATA[ <> ]]> #{menuId}
+			</if>
+		</where>
+	</select>
+    <select id="isExistName" resultType="java.lang.Boolean">
+		SELECT COUNT(*) FROM sys_menu_info
+		<where>
+			<if test="appId != null and appId != ''">
+				and app_Id = #{appId}
+			</if>
+			<if test="menuName != null and menuName != ''">
+				and menu_name = #{menuName}
+			</if>
+			<if test="menuId != null and menuId != ''">
+				and menu_id <![CDATA[ <> ]]> #{menuId}
+			</if>
+		</where>
+	</select>
+    
+    <select id="findMenuListByRoleCode" resultMap="menuResultMap">
+	    SELECT * FROM (
+			SELECT T1.* FROM SYS_MENU_INFO T1
+				LEFT JOIN SYS_ROLE_MENU_REL T2 ON T1.MENU_ID = T2.MENU_ID
+				LEFT JOIN SYS_ROLE_INFO T3 ON T2.ROLE_ID = T3.ROLE_ID
+				WHERE
+				 T1.DEL_FLAG = 0 AND T3.DEL_FLAG = 0 AND T1.APP_ID = #{appId}
+				 <if test="roleCodes != null and roleCodes.size()>0" >
+		            and  T3.ROLE_CODE in
+		            <foreach collection="roleCodes" item="roleCode" index="index" open="(" close=")" separator=",">
+		        	  #{roleCode}
+					</foreach>
+		          </if>
+			UNION ALL
+			SELECT * FROM SYS_MENU_INFO WHERE DEL_FLAG = 0 AND APP_ID=#{appId} AND AUTH_FLAG = 0 
+		) MENU ORDER BY MENU_SORT DESC, CREATE_TIME DESC
+    </select>
+    
+    <select id="findAllMenusByAppId" resultMap="menuResultMap">
+    	select * from sys_menu_info where app_id=#{appId}
+    </select>
+    
+    <insert id="batchInsertMenus" parameterType="java.util.List" useGeneratedKeys="false">
+    	INSERT INTO sys_menu_info
+    		(menu_id, menu_name, menu_route_name, menu_type, menu_url, http_method, menu_path, button_permission, menu_color, parent_id, menu_icon, component_path, menu_sort, create_time, modify_time, del_flag, app_id) 
+    	VALUES
+    	<foreach collection="list" item="item" index="index" separator=",">
+    		(
+    			#{item.menuId},
+    			#{item.menuName},
+    			#{item.menuRouteName},
+    			#{item.menuType},
+    			#{item.menuUrl},
+    			#{item.httpMethod},
+    			#{item.menuPath},
+    			#{item.buttonPermission},
+    			#{item.menuColor},
+    			#{item.parentId},
+    			#{item.menuIcon},
+    			#{item.componentPath},
+    			#{item.menuSort},
+    			#{item.createTime},
+    			#{item.modifyTime},
+    			#{item.delFlag},
+    			#{item.appId}
+    		)
+    	</foreach>
+    </insert>
+</mapper>

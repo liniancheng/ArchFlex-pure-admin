@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.crossvalidation.mapper.CvChkPlanResultMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.crossvalidation.model.po.CvChkPlanResult" id="CvChkPlanResultMap">
+        <id property="id" column="ID"/>
+        <result property="planId" column="PLAN_ID"/>
+        <result property="indNo" column="IND_NO"/>
+        <result property="orgVal" column="ORG_VAL"/>
+        <result property="dateVal" column="DATE_VAL"/>
+        <result property="currencyVal" column="CURRENCY_VAL"/>
+        <result property="sysVal" column="SYS_VAL"/>
+        <result property="resultVal" column="RESULT_VAL"/>
+    </resultMap>
+
+    <select id="showResult" resultType="com.adtec.rdc.base.crossvalidation.model.po.CvChkPlanResult">
+        SELECT c.*,d.EXEC_SQL as CHK_SQL
+        FROM (select a.*,b.IND_NM from cv_chk_plan_result a left join cv_chk_ind b on a.IND_NO=b.IND_NO
+        <where>
+            and a.CURRENCY_VAL='BWB'
+            <if test=" planId != '' and  planId != null">
+                and a.PLAN_ID = #{ planId}
+            </if>
+        </where>
+        ) c
+        left join cv_chk_plan_detail d on c.IND_NO=d.IND_NO AND c.PLAN_ID=d.PLAN_ID AND c.SYS_VAL=d.SYS_VAL
+        ORDER BY IND_NO
+    </select>
+    <select id="getIndNo" resultType="java.lang.String">
+        select DISTINCT(IND_NO) FROM cv_chk_plan_result
+        <where>
+            <if test=" planId != '' and  planId != null">
+                and PLAN_ID = #{ planId}
+            </if>
+            <if test=" orgVal != '' and  orgVal != null">
+                and ORG_VAL = #{ orgVal}
+            </if>
+        </where>
+        order by IND_NO
+    </select>
+</mapper>

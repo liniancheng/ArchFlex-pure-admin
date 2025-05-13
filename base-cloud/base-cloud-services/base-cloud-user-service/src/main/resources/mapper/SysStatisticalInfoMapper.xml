@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.statistics.mapper.SysStatisticalInfoMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.statistics.model.po.SysStatisticalInfo" id="SysStatisticalInfoMap">
+            <id property="statisticalId" column="statistical_id"/>
+            <result property="strategyId" column="strategy_id"/>
+            <result property="requestUrl" column="request_url"/>
+            <result property="requestUserId" column="request_user_id"/>
+            <result property="requestUserName" column="user_name"/>
+            <result property="requestHost" column="request_host"/>
+            <result property="userAgent" column="user_agent"/>
+            <result property="requestMethod" column="request_method"/>
+            <result property="requestTime" column="request_time"/>
+            <result property="responseStatus" column="response_status"/>
+            <result property="responseDataSize" column="response_data_size"/>
+            <association property="strategy" javaType="com.adtec.rdc.base.statistics.model.po.SysStatisticalStrategy">
+                <result property="serviceUrl" column="service_url"/>
+                <result property="functionName" column="function_name"/>
+                <result property="repeatFlag" column="repeat_flag"/>
+            </association>
+    </resultMap>
+
+    <select id="pageByQuery" resultMap="SysStatisticalInfoMap">
+        select
+            s.*,
+            ss.service_url,
+            ss.function_name,
+            ss.repeat_flag,
+            u.user_name
+        from sys_statistical_info s
+        left join sys_statistical_strategy ss on s.strategy_id = ss.strategy_id
+        left join sys_user_info u on u.user_id = s.request_user_id
+        <where>
+            <if test=" strategyId != '' and  strategyId != null">
+                and   s.strategy_id = #{strategyId}
+            </if>
+            <if test=" requestUrl != '' and  requestUrl != null">
+            	<bind name="requestUrl2" value="'%'+ requestUrl + '%'"/>
+                and   s.request_url like #{requestUrl2}
+            </if>
+            <if test=" requestHost != '' and  requestHost != null">
+            	<bind name="requestHost2" value="'%'+ requestHost + '%'"/>
+                and   s.request_host like #{requestHost2}
+            </if>
+            <if test=" requestMethod != '' and  requestMethod != null">
+                and   s.request_method = #{requestMethod}
+            </if>
+            <if test=" requestTimeStart != '' and  requestTimeStart != null">
+                and   s.request_time &gt;= #{requestTimeStart}
+            </if>
+            <if test=" requestTimeEnd != '' and  requestTimeEnd != null">
+                and   s.request_time &lt;= #{requestTimeEnd}
+            </if>
+            <if test=" responseStatus != '' and  responseStatus != null">
+                and   s.response_status = #{responseStatus}
+            </if>
+        </where>
+    </select>
+</mapper>

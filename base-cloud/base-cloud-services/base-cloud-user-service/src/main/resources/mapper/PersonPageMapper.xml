@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.user.mapper.PersonPageMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.user.model.bo.MessageInfo" id="MessageInfoMap">
+            <id property="id" column="message_id"/>
+            <result property="typeId" column="message_type"/>
+            <result property="typeName" column="message_type_name"/>
+            <result property="title" column="message_title"/>
+            <result property="content" column="message_content"/>
+            <result property="fromTime" column="create_time"/>
+            <result property="status" column="message_status"/>
+    </resultMap>
+
+    <select id="pageByQuery" resultMap="MessageInfoMap">
+        select * from (
+	        select message_id,'mess' as message_type,'我的消息' as message_type_name,message_title,message_content,create_time,message_status from sys_message_info
+	        <where >
+	        	<if test=" appId != '' and  appId != null">
+	                and   app_id = #{appId}
+	            </if>
+	            <if test=" messageStatus != '' and  messageStatus != null">
+	                and   message_status = #{messageStatus}
+	            </if>
+	            <if test=" keyword != '' and  keyword != null">
+	                and   (message_title like concat('%', #{keyword}, '%') or message_content like concat('%',#{keyword}, '%'))
+	            </if>
+	            <if test=" messageRevUser != '' and  messageRevUser != null">
+	                and   message_rev_user = #{messageRevUser}
+	            </if>
+	            and del_flag = '0'
+	        </where>
+	        <if test='messageStatus != null and  messageStatus == "0"'>
+	        	union all
+		        select a.anno_id as message_id,'anno' as message_type,'系统公告' as message_type_name,a.anno_title as message_title,
+		        a.anno_content as message_content,a.create_time,'0' as message_status 
+		        from sys_anno_info a 
+		        where a.app_id=#{appId} and a.anno_id not in (select anno_id from SYS_ANNO_USER_OPER where read_flag='1' or dele_flag='1' and user_id=#{messageRevUser}) 
+		        and a.is_valid = 1
+		        <if test=" keyword != '' and  keyword != null">
+		            and   (anno_title like concat('%', #{keyword}, '%') or anno_content like concat('%',#{keyword}, '%'))
+	            </if>
+	        </if>
+	        <if test='messageStatus == null or messageStatus != "0"'>
+	        	union all
+		        select a.anno_id as message_id,'anno' as message_type,'系统公告' as message_type_name,a.anno_title as message_title,
+		        a.anno_content as message_content,a.create_time,b.read_flag as message_status 
+		        from sys_anno_info a left join SYS_ANNO_USER_OPER b on a.anno_id=b.anno_id and b.dele_flag='0' and b.user_id = #{messageRevUser}
+		        where a.app_id=#{appId} and a.is_valid = 1
+		        and a.anno_id not in (select anno_id from SYS_ANNO_USER_OPER where dele_flag='1' and user_id=#{messageRevUser})
+		        <if test=" keyword != '' and  keyword != null">
+		        	and   (anno_title like concat('%', #{keyword}, '%') or anno_content like concat('%',#{keyword}, '%'))
+		        </if>
+	        </if>	        
+	    ) as temp_table order by create_time desc 
+    </select>
+</mapper>

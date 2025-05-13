@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.adtec.rdc.base.dict.mapper.SysDictItemMapper">
+
+	<!-- 基本resultMap -->
+	<resultMap
+		type="com.adtec.rdc.base.dict.model.po.SysDictItem"
+		id="SysDictItemMap">
+		<id property="id" column="ID" />
+		<result property="dictId" column="DICT_ID" />
+		<result property="itemText" column="ITEM_TEXT" />
+		<result property="itemValue" column="ITEM_VALUE" />
+		<result property="description" column="DESCRIPTION" />
+		<result property="sortOrder" column="SORT_ORDER" />
+		<result property="status" column="STATUS" />
+		<result property="createTime" column="CREATE_TIME" />
+	</resultMap>
+	<!-- 通过字典code获取字典数据 -->
+	<select id="queryDictItemsByCode" parameterType="String"
+		resultType="com.adtec.rdc.base.dict.model.vo.DictModel">
+		SELECT S.ITEM_VALUE as value,S.ITEM_TEXT as text FROM SYS_DICT_ITEM S
+		WHERE DICT_ID = (SELECT ID FROM SYS_DICT WHERE DICT_CODE = #{dictCode})
+		ORDER BY S.SORT_ORDER ASC
+	</select>
+    <!-- 查询所有字典数据 -->
+	<select id="queryAllDictItems"
+		resultType="com.adtec.rdc.base.dict.model.vo.DictModel">
+		SELECT S.ITEM_VALUE as value,S.ITEM_TEXT as text FROM SYS_DICT_ITEM S
+		WHERE DICT_ID = (SELECT ID FROM SYS_DICT)
+		ORDER BY S.SORT_ORDER ASC
+	</select>
+	<!-- 通过字典code获取字典数据 -->
+	<select id="queryDictTextByKey" parameterType="String"
+		resultType="String">
+		SELECT S.ITEM_TEXT FROM SYS_DICT_ITEM S
+		WHERE S.DICT_ID = (SELECT ID FROM SYS_DICT WHERE DICT_CODE = #{code})
+		AND S.ITEM_VALUE = #{key}
+	</select>
+	<!-- 通过字典id获取字典数据 -->
+	<select id="selectItemsByDictId" parameterType="String" resultType="com.adtec.rdc.base.dict.model.po.SysDictItem">
+		SELECT * FROM SYS_DICT_ITEM WHERE DICT_ID = #{dictId} ORDER BY SORT_ORDER
+		ASC, ITEM_VALUE ASC
+	</select>
+	<!--通过查询指定table的 text code 获取字典-->
+	<select id="queryTableDictItemsByCode" parameterType="String"  resultType="com.adtec.rdc.base.dict.model.vo.DictModel">
+		   select ${text} as "text",${code} as "value" from ${table}
+	</select>
+	<select id="pageByQuery" resultMap="SysDictItemMap">
+		SELECT * FROM SYS_DICT_ITEM
+		<where>
+			<if test=" dictId != '' and  dictId != null">
+				and DICT_ID = #{ dictId}
+			</if>
+			<if test=" itemText != '' and  itemText != null">
+			<bind name="itemText2" value="'%'+ itemText + '%'"/>
+				and ITEM_TEXT like #{itemText2}
+			</if>
+			<if test=" itemValue != '' and  itemValue != null">
+				and ITEM_VALUE = #{ itemValue}
+			</if>
+			<if test=" description != '' and  description != null">
+				and DESCRIPTION = #{ description}
+			</if>
+			<if test="status != null">
+				and STATUS = #{ status}
+			</if>
+		</where>
+	</select>
+</mapper>

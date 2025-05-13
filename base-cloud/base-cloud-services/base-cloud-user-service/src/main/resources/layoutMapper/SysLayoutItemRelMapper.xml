@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.layout.mapper.SysLayoutItemRelMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.layout.model.po.SysLayoutItemRel" id="SysLayoutItemRelMap">
+            <id property="layId" column="LAY_ID"/>
+            <id property="itemId" column="ITEM_ID"/>
+            <result property="relX" column="REL_X"/>
+            <result property="relY" column="REL_Y"/>
+            <result property="relW" column="REL_W"/>
+            <result property="relH" column="REL_H"/>
+            <result property="minW" column="MIN_W"/>
+            <result property="minH" column="MIN_H"/>
+            <result property="itemName" column="ITEM_NAME"/>
+    </resultMap>
+
+    <select id="listRels" resultMap="SysLayoutItemRelMap">
+        SELECT T1.LAY_ID, T1.ITEM_ID, T1.REL_X, T1.REL_Y, T1.REL_W, T1.REL_H,
+			T2.MIN_WIDTH AS MIN_W, T2.MIN_HEIGHT AS MIN_H, T2.ITEM_NAME AS ITEM_NAME 
+		FROM SYS_LAYOUT_ITEM_REL T1,SYS_LAYOUT_ITEM_INFO T2
+		WHERE T1.ITEM_ID = T2.ITEM_ID AND T1.LAY_ID = #{layId} AND T2.APP_ID = #{appId}
+		        
+    </select>
+    <insert id="batchSave" >
+    	INSERT INTO SYS_LAYOUT_ITEM_REL(LAY_ID, ITEM_ID, REL_X, REL_Y, REL_W, REL_H)
+		VALUES
+		<foreach collection="listRels" item="rel" separator=",">
+		(#{rel.layId}, #{rel.itemId}, #{rel.relX}, #{rel.relY}, #{rel.relW}, #{rel.relH})
+		</foreach>
+    </insert>
+</mapper>

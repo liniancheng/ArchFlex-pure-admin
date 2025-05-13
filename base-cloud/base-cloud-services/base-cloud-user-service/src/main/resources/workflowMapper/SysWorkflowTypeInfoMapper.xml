@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.adtec.rdc.base.workflow.mapper.SysWorkflowTypeInfoMapper">
+
+	<!-- 基本resultMap -->
+	<resultMap
+		type="com.adtec.rdc.base.workflow.model.po.SysWorkflowTypeInfo"
+		id="SysWorkflowTypeInfoMap">
+		<id property="typeId" column="TYPE_ID" />
+		<result property="typeName" column="TYPE_NAME" />
+		<result property="typeRmk" column="TYPE_RMK" />
+		<result property="appId" column="APP_ID" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="modifyTime" column="MODIFY_TIME" />
+	</resultMap>
+
+	<select id="pageByQuery" resultMap="SysWorkflowTypeInfoMap">
+		select * from sys_workflow_type_info
+		<where>
+			<if test=" typeId != '' and  typeId != null">
+				and TYPE_ID = #{ typeId}
+			</if>
+			<if test=" typeName != '' and  typeName != null">
+				and TYPE_NAME = #{ typeName}
+			</if>
+			<if test=" typeRmk != '' and  typeRmk != null">
+				and TYPE_RMK = #{ typeRmk}
+			</if>
+			<if test=" appId != '' and  appId != null">
+				and APP_ID = #{ appId}
+			</if>
+			<if test="createTime != null">
+				and CREATE_TIME = #{ createTime}
+			</if>
+			<if test="modifyTime != null">
+				and MODIFY_TIME = #{ modifyTime}
+			</if>
+		</where>
+	</select>
+
+	<select id="isExistName" resultType="java.lang.Boolean">
+		select count(*) from sys_workflow_type_info
+		<where>
+			<if test="typeId != '' and typeId != null">
+				and TYPE_ID <![CDATA[ <> ]]>
+				#{ typeId}
+			</if>
+			<if test="typeName != '' and typeName != null">
+				and TYPE_NAME = #{ typeName}
+			</if>
+		</where>
+	</select>
+
+	<select id="isExistWorkflow" resultType="java.lang.Boolean">
+		select count(*) from sys_workflow_info where TYPE_ID = #{typeId}
+	</select>
+</mapper>

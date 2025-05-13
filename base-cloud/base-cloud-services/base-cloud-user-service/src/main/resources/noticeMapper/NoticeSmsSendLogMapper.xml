@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.resource.mapper.NoticeSmsSendLogMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.resource.model.po.NoticeSmsSendLog" id="NoticeSmsSendLogMap">
+            <id property="logId" column="LOG_ID"/>
+            <result property="srvId" column="SRV_ID"/>
+            <result property="smsSendTime" column="SMS_SEND_TIME"/>
+            <result property="smsSendUser" column="SMS_SEND_USER"/>
+            <result property="smsReceiveUser" column="SMS_RECEIVE_USER"/>
+            <result property="sendContent" column="SEND_CONTENT"/>
+            <result property="sendStatus" column="SEND_STATUS"/>
+    </resultMap>
+
+    <select id="pageByQuery" resultMap="NoticeSmsSendLogMap">
+        select * from notice_sms_send_log
+        <where >
+            <if test=" logId != '' and  logId != null">
+                and   LOG_ID = #{ logId}
+            </if>
+            <if test=" srvId != '' and  srvId != null">
+                and   SRV_ID = #{ srvId}
+            </if>
+            <if test=" smsSendTime != '' and  smsSendTime != null">
+                and   SMS_SEND_TIME = #{ smsSendTime}
+            </if>
+            <if test=" smsSendUser != '' and  smsSendUser != null">
+            	<bind name="smsSendUser" value="'%'+ smsSendUser + '%'"/>
+                and   SMS_SEND_USER    like #{smsSendUser}
+            </if>
+            <if test=" smsReceiveUser != '' and  smsReceiveUser != null">
+                and   SMS_RECEIVE_USER = #{ smsReceiveUser}
+            </if>
+            <if test=" sendContent != '' and  sendContent != null">
+            	<bind name="sendContent2" value="'%'+ sendContent + '%'"/>
+                and   SEND_CONTENT    like #{sendContent2}
+            </if>
+            <if test=" sendStatus != '' and  sendStatus != null">
+                and   SEND_STATUS = #{ sendStatus}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.adtec.rdc.base.tenant.mapper.SysAppInfoMapper">
+
+	<!-- 基本resultMap -->
+	<resultMap
+		type="com.adtec.rdc.base.tenant.model.po.SysAppInfo"
+		id="SysAppInfoMap">
+		<id property="appId" column="app_id" />
+		<result property="appLogo" column="app_logo" />
+		<result property="appName" column="app_name" />
+		<result property="appOrder" column="app_order" />
+		<result property="appRel" column="app_rel" />
+		<result property="appRmk" column="app_rmk" />
+		<result property="appState" column="app_state" />
+		<result property="appUrl" column="app_url" />
+		<result property="browserTitle" column="browser_title" />
+	</resultMap>
+
+	<select id="pageByQuery" resultMap="SysAppInfoMap">
+		select * from sys_app_info
+		<where>
+			<if test=" appId != '' and  appId != null">
+				and app_id = #{ appId}
+			</if>
+			<if test=" appLogo != '' and  appLogo != null">
+				and app_logo = #{ appLogo}
+			</if>
+			<if test=" appName != '' and  appName != null">
+				and app_name = #{ appName}
+			</if>
+			<if test="appOrder != null">
+				and app_order = #{ appOrder}
+			</if>
+			<if test=" appRel != '' and  appRel != null">
+				and app_rel = #{ appRel}
+			</if>
+			<if test=" appRmk != '' and  appRmk != null">
+				and app_rmk = #{ appRmk}
+			</if>
+			<if test=" appState != '' and  appState != null">
+				and app_state = #{ appState}
+			</if>
+			<if test=" appUrl != '' and  appUrl != null">
+				and app_url = #{ appUrl}
+			</if>
+			<if test=" browserTitle != '' and  browserTitle != null">
+				and browser_title = #{ browserTitle}
+			</if>
+		</where>
+	</select>
+
+	<select id="getAppsByUserId" resultMap="SysAppInfoMap">
+		select
+			app.*
+		from
+			sys_user_app_rel rel
+			left join sys_app_info app on
+			rel.app_id = app.app_id
+		where
+			rel.user_id = #{userId}
+		<if test=" appId != '' and  appId != null">
+			and rel.app_id = #{appId}
+		</if>
+		<if test=" appState != '' and  appState != null">
+			and app.app_state = #{appState}
+		</if>
+		order by app.app_order
+	</select>
+	
+	<update id="updateStateById" parameterType="java.util.Map">
+		 update sys_app_info
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="app_state =case" suffix="end,">
+                <foreach collection="list" item="app">
+	                when app_id=#{app.appId} then #{app.appState}
+                </foreach>
+            </trim>
+        </trim>
+        <where>
+            <foreach collection="list" separator="or" item="app">
+                app_id = #{app.appId}
+            </foreach>
+        </where>
+	</update>
+	
+	<select id="getCountByName" resultType="java.lang.Integer">
+		select count(*) from sys_app_info where app_name = #{appName}
+	</select>
+	
+	<select id="getAppsByAppId" resultMap="SysAppInfoMap">
+		select * from sys_app_info where app_rel=#{appId}
+	</select>
+</mapper>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.layout.mapper.SysLayoutInfoMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.layout.model.po.SysLayoutInfo" id="SysLayoutInfoMap">
+            <id property="layId" column="LAY_ID"/>
+            <result property="layName" column="LAY_NAME"/>
+            <result property="appId" column="APP_ID"/>
+            <result property="layType" column="LAY_TYPE"/>
+            <result property="layLevel" column="LAY_LEVEL"/>
+            <result property="loginName" column="LOGIN_NAME"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="modifyTime" column="MODIFY_TIME"/>
+    </resultMap>
+
+    <select id="pageByQuery" resultMap="SysLayoutInfoMap">
+        select * from sys_layout_info
+        where LAY_TYPE in ('0','1')
+        <if test=" layName != '' and  layName != null">
+       		<bind name="name" value="'%'+ layName + '%'"/>
+            and   LAY_NAME like #{name}
+        </if>
+        <if test=" appId != '' and  appId != null">
+            and   APP_ID = #{ appId}
+        </if>
+        <if test="layLevel != null">
+            and   LAY_LEVEL = #{ layLevel}
+        </if>
+        <if test=" loginName != '' and  loginName != null">
+            and   LOGIN_NAME = #{ loginName}
+        </if>
+    </select>
+    
+    <select id="queryOne" resultMap="SysLayoutInfoMap">
+    	SELECT * FROM (
+			SELECT *
+			FROM SYS_LAYOUT_INFO
+			WHERE APP_ID = #{appId}
+				AND ( LAY_TYPE = '0' OR (LAY_TYPE = '2' AND LOGIN_NAME = #{loginName}) )
+			UNION
+			SELECT T1.*
+			FROM SYS_LAYOUT_INFO T1
+			LEFT JOIN SYS_ROLE_LAYOUT_REL T2 ON	T1.LAY_ID = T2.LAY_ID
+			WHERE T2.ROLE_ID IN (
+			<foreach collection="roleIds" item="roleId" separator=",">
+	    		#{roleId}
+	    	</foreach>
+			) ) LAY_TEMP
+		ORDER BY LAY_TYPE DESC, LAY_LEVEL ASC
+    </select>
+    
+    <select id="isExistName" resultType="java.lang.Boolean">
+    	select count(1) from sys_layout_info
+    	where LAY_TYPE = '1'
+        <if test=" layId != '' and  layId != null">
+            and   LAY_ID <![CDATA[ <> ]]> #{ layId}
+        </if>
+        <if test=" layName != '' and  layName != null">
+            and   LAY_NAME = #{ layName}
+        </if>
+        <if test=" appId != '' and  appId != null">
+            and   APP_ID = #{ appId}
+        </if>
+    </select>
+    
+    <select id="isExistLevel" resultType="java.lang.Boolean">
+    	select count(1) from sys_layout_info
+    	where LAY_TYPE = '1'
+        <if test=" layId != '' and  layId != null">
+            and   LAY_ID <![CDATA[ <> ]]> #{ layId}
+        </if>
+        <if test="layLevel != null">
+            and   LAY_LEVEL = #{ layLevel}
+        </if>
+        <if test=" appId != '' and  appId != null">
+            and   APP_ID = #{ appId}
+        </if>
+    </select>
+</mapper>

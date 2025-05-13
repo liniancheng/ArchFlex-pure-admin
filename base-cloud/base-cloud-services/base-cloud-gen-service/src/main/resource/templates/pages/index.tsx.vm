@@ -1,0 +1,406 @@
+import {
+    Button,
+    Card,
+    Col,
+    Divider,
+    Form,
+    Input,
+    InputNumber,
+    Popconfirm,
+    Row,
+    message,
+    Modal,
+    Switch,
+    DatePicker,
+} from 'antd';
+import React, { Component, Fragment } from 'react';
+
+import { Dispatch, Action } from 'redux';
+import { FormComponentProps } from 'antd/es/form';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { SorterResult } from 'antd/es/table';
+import { connect } from 'dva';
+import moment from 'moment';
+import { StateType } from './model';
+import DataForm from './components/DataForm'
+import StandardTable, { StandardTableColumnProps } from '@/components/StandardTable';
+import { DataTableListItem, DataTableListParams } from './data';
+import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
+
+import styles from '@/styles/style.less';
+import { getValue, checkPermission } from '@/utils/utils'
+
+const FormItem = Form.Item;
+const { confirm } = Modal;
+
+const permissions = {
+    update: "/${tableInfo.moduleName}/${tableInfo.funcName}:update",
+    add: "/${tableInfo.moduleName}/${tableInfo.funcName}:add",
+    delete: '/${tableInfo.moduleName}/${tableInfo.funcName}:delete',
+    select: '/${tableInfo.moduleName}/${tableInfo.funcName}:select'
+};
+
+interface TableListProps extends FormComponentProps {
+    dispatch: Dispatch<
+        Action<
+            | '${tableInfo.funcName}TableList/add'
+            | '${tableInfo.funcName}TableList/fetch'
+            | '${tableInfo.funcName}TableList/fetchOne'
+            | '${tableInfo.funcName}TableList/remove'
+            | '${tableInfo.funcName}TableList/update'
+            >
+        >;
+    loading: boolean;
+    ${tableInfo.funcName}TableList: StateType;
+    result: ResultType;
+}
+
+interface TableListState {
+    modalVisible: boolean;
+    modalType: 1 | 2;
+    selectedRows: DataTableListItem[];
+    formValues: Partial<DataTableListItem>;
+    searchValues: Partial<DataTableListParams>;
+}
+
+/* eslint react/no-multi-comp:0 */
+class TableList extends Component<TableListProps, TableListState> {
+    state: TableListState = {
+        modalVisible: false,
+        modalType: 1,
+        selectedRows: [],
+        formValues: {  },
+        searchValues: {},
+    };
+
+    columns: StandardTableColumnProps[] = [
+        #foreach ($column in ${tableInfo.columnInfo})
+            #if($!tableInfo.pk.attrName !=  $column.attrName)
+                {
+                    title: () => formatMessage({id: '${tableInfo.moduleName}.${tableInfo.funcName}.$column.attrName'}),
+                    dataIndex: '$column.attrName',
+                    align: 'center',
+                    #if($column.tsType == "Date")
+                        render: (val: Date) => <span>{moment(val, moment.ISO_8601).format('YYYY-MM-DD HH:mm:ss')}</span>,
+                    #elseif($column.tsType == "boolean")
+                        render: (val: boolean) => <span>{val ? formatMessage({id: 'common.flag.yes'}) : formatMessage({id: 'common.flag.no'})}</span>,
+                    #end
+                },
+            #end
+        #end
+        {
+            title: () => formatMessage({id: 'common.oper'}),
+            align: 'center',
+            render: (text, record) => (
+                <Fragment>
+                    {
+                        checkPermission(permissions.update) && (
+                            <Fragment>
+                                <Button type="primary" size="small" onClick={() => this.handleUpdate((record as DataTableListItem).$!tableInfo.pk.attrName)}>
+                                    <FormattedMessage id="common.edit"/>
+                                </Button>
+                                <Divider type="vertical" />
+                            </Fragment>
+                        )
+                    }
+                    {
+                        checkPermission(permissions.delete) && (
+                            <Fragment>
+                                <Popconfirm
+                                    title={formatMessage({id: 'common.delete.confirm'}) + '?'}
+                                    onConfirm={() => this.handleDelete((record as DataTableListItem).$!tableInfo.pk.attrName)}
+                                >
+                                    <Button type="danger" size="small">
+                                        <FormattedMessage id="common.delete"/>
+                                    </Button>
+                                </Popconfirm>
+                                {/* <Button type="danger" size="small" onClick={this.confirmDelete}><FormattedMessage id="common.delete"/></Button> */}
+                            </Fragment>
+                        )
+                    }
+                </Fragment>
+            ),
+        },
+    ];
+
+    componentDidMount() {
+        if (!checkPermission(permissions.select)) {
+            return;
+        }
+        const { dispatch } = this.props;
+        dispatch({
+            type: '${tableInfo.funcName}TableList/fetch',
+        });
+    }
+
+    handleStandardTableChange = (
+        pagination: Partial<TableListPagination>,
+        filtersArg: Record<keyof DataTableListItem, string[]>,
+        sorter: SorterResult<DataTableListItem>,
+    ) => {
+        if (!checkPermission(permissions.select)) {
+            return;
+        }
+        const { dispatch } = this.props;
+        const { searchValues } = this.state;
+
+        const filters = Object.keys(filtersArg).reduce((obj, key) => {
+            const newObj = { ...obj };
+            newObj[key] = getValue(filtersArg[key]);
+            return newObj;
+        }, {});
+
+        const params: Partial<DataTableListParams> = {
+            current: pagination.current,
+            size: pagination.pageSize,
+            ...searchValues,
+            ...filters,
+        };
+        if (sorter.field) {
+            params.sorter = `${sorter.field}_${sorter.order}`;
+        }
+
+        dispatch({
+            type: '${tableInfo.funcName}TableList/fetch',
+            payload: params,
+        });
+    };
+
+    handleFormReset = () => {
+        const { form, dispatch } = this.props;
+        form.resetFields();
+        this.setState({
+            searchValues: {},
+        });
+        dispatch({
+            type: '${tableInfo.funcName}TableList/fetch',
+            payload: {},
+        });
+    };
+
+    handleDelete = (id: string) => {
+        const { dispatch } = this.props;
+
+        dispatch({
+            type: '${tableInfo.funcName}TableList/remove',
+            payload: id,
+            callback: (result: ResultType) => {
+                this.setState({
+                    selectedRows: [],
+                });
+                if (result.code === 0) {
+                    message.success(formatMessage({id: 'common.delete.success'}));
+                    dispatch({
+                        type: '${tableInfo.funcName}TableList/fetch',
+                        payload: this.state.searchValues,
+                    });
+                } else {
+                    message.error(result.message);
+                }
+            },
+        });
+    };
+
+    // 弹出式删除，备用
+    confirmDelete = (id: string) => {
+        const _this = this;
+        confirm({
+            title: formatMessage({id: 'common.delete.confirm'}) + '?',
+            onOk() {
+                _this.handleDelete(id);
+            }
+        });
+    }
+
+    handleSelectRows = (rows: DataTableListItem[]) => {
+        this.setState({
+            selectedRows: rows,
+        });
+    };
+
+    handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const { dispatch, form } = this.props;
+
+        form.validateFields((err, fieldsValue) => {
+            if (err) return;
+
+            const values = {
+                ...fieldsValue,
+            };
+
+            this.setState({
+                searchValues: values,
+            });
+
+            dispatch({
+                type: '${tableInfo.funcName}TableList/fetch',
+                payload: values,
+            });
+        });
+    };
+
+    handleModalVisible = (flag?: boolean) => {
+        this.setState({
+            modalVisible: !!flag,
+        });
+    };
+
+    handleAdd = () => {
+        this.setState({
+            modalType: 1,
+            formValues: {  }
+        });
+        this.handleModalVisible(true);
+    };
+
+    handleUpdate = (id: string) => {
+        const { dispatch } = this.props;
+
+        dispatch({
+            type: '${tableInfo.funcName}TableList/fetchOne',
+            payload: id,
+            callback: (result: ResultType) => {
+                if (result.code === 0) {
+                    this.setState({
+                        modalType: 2,
+                        formValues: result.data
+                    });
+                    this.handleModalVisible(true);
+                } else {
+                    message.error(result.message);
+                }
+            }
+        });
+    };
+
+    handleSave = (fields: Partial<DataTableListItem>) => {
+        const { dispatch } = this.props;
+
+        dispatch({
+            type: this.state.modalType === 1 ? '${tableInfo.funcName}TableList/add' : '${tableInfo.funcName}TableList/update',
+            payload: fields,
+            callback: (result: ResultType) => {
+                if (result.code === 0) {
+                    message.success(this.state.modalType === 1 ? formatMessage({id: 'common.create.success'}) : formatMessage({id: 'common.edit.success'}));
+                    dispatch({
+                        type: '${tableInfo.funcName}TableList/fetch',
+                        payload: this.state.searchValues,
+                    });
+                } else {
+                    message.error(result.message);
+                }
+            }
+        });
+
+        this.handleModalVisible();
+    };
+
+    renderHead() {
+        const { form } = this.props;
+        const { getFieldDecorator } = form;
+        return (
+            <Form onSubmit={this.handleSearch} layout="inline">
+                <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+                    #foreach ($column in ${tableInfo.columnInfo})
+                        #if($!tableInfo.pk.attrName !=  $column.attrName)
+                            <Col md={8} sm={24}>
+                                <FormItem label={formatMessage({id: '${tableInfo.moduleName}.${tableInfo.funcName}.$column.attrName'})}>
+                                    {getFieldDecorator('$column.attrName')(
+                                        #if($column.tsType == "number")
+                                            <InputNumber placeholder={formatMessage({id: 'common.placeholder.input'}) + formatMessage({id: '${tableInfo.moduleName}.${tableInfo.funcName}.$column.attrName'})} allowClear/>
+                                        #elseif($column.tsType == "boolean")
+                                            <Switch checkedChildren={formatMessage({id: 'common.flag.yes'})} unCheckedChildren={formatMessage({id: 'common.flag.no'})} />
+                                        #elseif($column.tsType == "Date")
+                                            <DatePicker />
+                                        #else
+                                            <Input placeholder={formatMessage({id: 'common.placeholder.input'}) + formatMessage({id: '${tableInfo.moduleName}.${tableInfo.funcName}.$column.attrName'})} allowClear/>
+                                        #end
+                                        )}
+                                </FormItem>
+                            </Col>
+                        #end
+                    #end
+
+                    <Col md={8} sm={24}>
+                        <span className={styles.submitButtons}>
+                            {
+                                checkPermission(permissions.select) && (
+                                    <Fragment>
+                                        <Button icon="search" type="primary" htmlType="submit">
+                                            <FormattedMessage id="common.search"/>
+                                        </Button>
+                                        <Button icon="reload" style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
+                                            <FormattedMessage id="common.reset"/>
+                                        </Button>
+                                    </Fragment>
+                                )
+                            }
+                            {
+                                checkPermission(permissions.add) && (
+                                    <Button icon="plus" type="primary" onClick={this.handleAdd} style={{ marginLeft: 8 }}>
+                                        <FormattedMessage id="common.create"/>
+                                    </Button>
+                                )
+                            }
+                        </span>
+                    </Col>
+                </Row>
+            </Form>
+        );
+    }
+
+    render() {
+        const {
+            ${tableInfo.funcName}TableList: { data },
+            loading,
+        } = this.props;
+
+        const { selectedRows, modalVisible, formValues, modalType } = this.state;
+
+        const methods = {
+            handleSave: this.handleSave,
+            handleModalVisible: this.handleModalVisible,
+        };
+        return (
+            <PageHeaderWrapper title={false}>
+                <Card bordered={false}>
+                    <div className={styles.tableList}>
+                        <div className={styles.tableListForm}>{this.renderHead()}</div>
+                        <StandardTable
+                            rowKey="$!tableInfo.pk.attrName"
+                            selectedRows={selectedRows}
+                            loading={loading}
+                            data={data}
+                            columns={this.columns}
+                            onSelectRow={this.handleSelectRows}
+                            onChange={this.handleStandardTableChange}
+                        />
+                    </div>
+                </Card>
+                <DataForm {...methods}
+                          modalVisible={modalVisible}
+                          type={modalType}
+                          values={formValues} />
+            </PageHeaderWrapper>
+        );
+    }
+}
+
+export default connect(
+    ({
+             ${tableInfo.funcName}TableList,
+         loading,
+     }: {
+            ${tableInfo.funcName}TableList: StateType;
+        loading: {
+            models: {
+                [key: string]: boolean;
+            };
+        };
+    }) => ({
+            ${tableInfo.funcName}TableList,
+        loading: loading.models.${tableInfo.funcName}TableList,
+    }),
+)(Form.create<TableListProps>()(TableList));

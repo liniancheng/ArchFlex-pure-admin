@@ -1,0 +1,21 @@
+/*
+ * @Author: ${tableInfo.authorName}
+ * @Date: ${datetime}
+ * @Descripttion:${tableInfo.funcDesc} 英文定义
+ * @version: 1.0
+ * @Copyright: adtec
+ * @LastEditors: ${tableInfo.authorName}
+ * @LastEditTime: ${datetime}
+ */
+
+export default {
+    #set ($funcName = $tableInfo.funcName.substring(0,1).toUpperCase() + $tableInfo.funcName.substring(1,$tableInfo.funcName.length()))
+    '${tableInfo.moduleName}.${tableInfo.funcName}.create': '${funcName} Create',
+    '${tableInfo.moduleName}.${tableInfo.funcName}.edit': '${funcName} Edit',
+    #foreach ($column in ${tableInfo.columnInfo})
+        #if($!tableInfo.pk.attrName !=  $column.attrName)
+            #set ($attrName = $column.attrName.substring(0,1).toUpperCase() + $column.attrName.substring(1,$column.attrName.length()))
+            '${tableInfo.moduleName}.${tableInfo.funcName}.$column.attrName': '$attrName',
+        #end
+    #end
+}

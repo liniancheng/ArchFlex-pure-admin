@@ -1,0 +1,12 @@
+package ${tableInfo.mapperPackageName};
+
+import ${tableInfo.poPackageName}.${tableInfo.className};
+import com.adtec.rdc.base.common.base.mapper.BaseMapper;
+
+/**
+ * @author $tableInfo.authorName
+ * @date ${datetime}
+ */
+public interface ${tableInfo.className}Mapper extends BaseMapper<$!{tableInfo.className}> {
+
+}

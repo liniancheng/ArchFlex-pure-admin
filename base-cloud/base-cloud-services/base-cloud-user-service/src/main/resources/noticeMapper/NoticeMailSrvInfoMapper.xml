@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.resource.mapper.NoticeMailSrvInfoMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.resource.model.po.NoticeMailSrvInfo" id="NoticeMailSrvInfoMap">
+            <id property="srvId" column="SRV_ID"/>
+            <result property="srvName" column="SRV_NAME"/>
+            <result property="srvRmk" column="SRV_RMK"/>
+            <result property="loginName" column="LOGIN_NAME"/>
+            <result property="loginPwd" column="LOGIN_PWD"/>
+            <result property="srvUrl" column="SRV_URL"/>
+            <result property="srvPort" column="SRV_PORT"/>
+            <result property="defaultFrom" column="DEFAULT_FROM"/>
+            <result property="showName" column="SHOW_NAME"/>
+            <result property="sslFlag" column="SSL_FLAG"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="modifyTime" column="MODIFY_TIME"/>
+            <result property="appId" column="APP_ID"/>
+    </resultMap>
+
+    <select id="pageByQuery" resultMap="NoticeMailSrvInfoMap">
+        SELECT * FROM NOTICE_MAIL_SRV_INFO
+        <where >
+            <if test=" srvName != '' and  srvName != null">
+            <bind name="srvName" value="'%'+ srvName + '%'"/>
+                and SRV_NAME like #{ srvName2}
+            </if>
+            <if test=" loginName != '' and  loginName != null">
+            <bind name="loginName" value="'%'+ loginName + '%'"/>
+                and LOGIN_NAME like #{ loginName2}
+            </if>
+            <if test=" srvRmk != '' and  srvRmk != null">
+            <bind name="srvRmk" value="'%'+ srvRmk + '%'"/>
+                and SRV_RMK like #{ srvRmk2} 
+            </if>
+            <if test=" appId != '' and  appId != null">
+                and APP_ID = #{ appId}
+            </if>
+        </where>
+    </select>
+    <select id="isExistSrvTitle" resultType="java.lang.Boolean">
+    	select count(*) from NOTICE_MAIL_SRV_INFO
+    	<where>
+    		<if test=" srvId != '' and  srvId != null">
+                and  SRV_ID <![CDATA[ <> ]]> #{ srvId}
+            </if>
+    		<if test=" srvName != '' and  srvName != null">
+                and   SRV_NAME  = #{srvName} 
+            </if>
+            <if test=" appId != '' and  appId != null">
+                and   APP_ID = #{ appId}
+            </if>
+    	</where>
+    </select>
+    <select id="isSameSrvName" resultType="java.lang.Integer">
+		select count(*) from NOTICE_MAIL_SRV_INFO where SRV_NAME=#{srvName} and APP_ID = #{ appId}
+	</select>
+	
+	<select id="queryMailSrvListByAppId" resultMap="NoticeMailSrvInfoMap">
+        SELECT * FROM NOTICE_MAIL_SRV_INFO where APP_ID = #{appId}
+    </select>
+</mapper>

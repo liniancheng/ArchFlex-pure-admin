@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.user.mapper.SysUserGroupInfoMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.user.model.po.SysUserGroupInfo" id="SysUserGroupInfoMap">
+            <id property="groupId" column="group_id"/>
+            <result property="appId" column="app_id"/>
+            <result property="groupName" column="group_name"/>
+            <result property="groupRmk" column="group_rmk"/>
+    </resultMap>
+    
+    <!-- SysBranchInfoQuery 结果集 -->
+    <resultMap id="usergroupVOResultMap" type="SysUserGroupInfoQuery" extends="SysUserGroupInfoMap">
+        <collection property="sysUserVoList" ofType="SysUserVo">
+           <id column="user_id" property="userId"/>
+	        <result column="app_id" property="appId"/>
+	        <result column="login_name" property="loginName"/>
+	        <result column="user_name" property="userName"/>
+	        <result column="login_pwd" property="loginPwd"/>
+	        <result column="user_email" property="userEmail"/>
+	        <result column="user_mob_tel" property="userMobTel"/>
+	        <result column="create_time" property="createTime"/>
+	        <result column="modify_time" property="modifyTime"/>
+	        <result column="del_flag" property="delFlag"/>
+        </collection>
+    </resultMap>
+    
+    <sql id="selectGroup">
+        select
+             g.group_id,
+             g.app_id,
+             g.group_name,
+             g.group_rmk,
+             u.user_id,
+             u.app_id,
+             u.login_name,
+             u.user_name,
+             u.login_pwd,
+             u.user_email,
+             u.user_mob_tel,
+             u.create_time,
+             u.modify_time,
+             u.del_flag
+         from
+             sys_user_group_info g
+             left join sys_user_group_rel grel on grel.group_id = g.group_id
+             left join sys_user_info u on grel.user_id = u.user_id
+    </sql>
+
+    <select id="pageByQuery" resultMap="SysUserGroupInfoMap">
+        select * from sys_user_group_info
+        <where >
+            <if test=" groupId != '' and  groupId != null">
+                and   group_id = #{ groupId}
+            </if>
+            <if test=" groupName != '' and  groupName != null">
+            	<bind name="groupName2" value="'%'+ groupName + '%'"/>
+                and   group_name like #{groupName2}
+            </if>
+            <if test=" groupRmk != '' and  groupRmk != null">
+                and   group_rmk = #{ groupRmk}
+            </if>
+            <if test=" appId != '' and  appId != null">
+                and   app_id = #{ appId}
+            </if>
+        </where>
+        order by group_name
+    </select>
+    
+    <select id="loadGroupById" resultMap="usergroupVOResultMap">
+        <include refid="selectGroup"></include>
+        where g.group_id = #{groupId}
+    </select>
+    
+    <select id="getGroupByName" resultType="java.lang.Integer">
+    	select count(*) from sys_user_group_info where group_name = #{groupName}
+    </select>
+    
+    <select id="getGroupByNameAndId" resultType="java.lang.Integer">
+    	select count(*) from sys_user_group_info where group_name = #{groupName} and group_id != #{groupId}
+    </select>
+</mapper>

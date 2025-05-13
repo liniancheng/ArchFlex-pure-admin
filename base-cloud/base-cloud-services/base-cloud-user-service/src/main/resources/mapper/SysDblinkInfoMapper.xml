@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.resource.mapper.SysDblinkInfoMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.resource.model.po.SysDblinkInfo" id="SysDblinkInfoMap">
+            <id property="dblinkId" column="dblink_id"/>
+            <result property="dblinkName" column="dblink_name"/>
+            <result property="dblinkRmk" column="dblink_rmk"/>
+            <result property="dblinkType" column="dblink_type"/>
+            <result property="dblinkDriver" column="dblink_driver"/>
+            <result property="dblinkUrl" column="dblink_url"/>
+            <result property="dblinkUser" column="dblink_user"/>
+            <result property="dblinkPwd" column="dblink_pwd"/>
+            <result property="poolType" column="pool_type"/>
+            <result property="createTime" column="create_time"/>
+            <result property="modifyTime" column="modify_time"/>
+            <result property="initialSize" column="initial_size"/>
+            <result property="maxActive" column="max_active"/>
+            <result property="minIdle" column="min_idle"/>
+            <result property="cacheFlag" column="cache_flag"/>
+            <result property="maxPsCatch" column="max_ps_catch"/>
+            <result property="validationQuery" column="validation_query"/>
+            <result property="maxWait" column="max_wait"/>
+            <result property="testOnBorrow" column="test_on_borrow"/>
+            <result property="testOnReturn" column="test_on_return"/>
+            <result property="testWhileIdle" column="test_while_idle"/>
+            <result property="timeBtnEvictionRunsMillis" column="time_btn_eviction_runs_millis"/>
+            <result property="minEvictableIdleTimeMillis" column="min_evictable_idle_time_millis"/>
+            <result property="poolPreparedStatements" column="pool_prepared_statements"/>
+            <result property="maxPsCatchSize" column="max_ps_catch_size"/>
+            <result property="removeAbandoned" column="remove_abandoned"/>
+            <result property="removeAbandonedTimeout" column="remove_abandoned_timeout"/>
+            <result property="filters" column="filters"/>
+    </resultMap>
+    
+    <resultMap id="dblinkVoResultMap" type="com.adtec.rdc.base.common.model.vo.SysDblinkVo" extends="SysDblinkInfoMap">
+    </resultMap>
+
+    <select id="pageByQuery" resultMap="SysDblinkInfoMap">
+        select * from sys_dblink_info
+        <where >
+            <if test=" dblinkName != '' and  dblinkName != null">
+                and   dblink_name = #{ dblinkName}
+            </if>
+            <if test=" dblinkType != '' and  dblinkType != null">
+                and   dblink_type = #{ dblinkType}
+            </if>
+        </where>
+    </select>
+    
+    <select id="isExistName" resultType="java.lang.Boolean">
+    	select count(1) from sys_dblink_info
+    	<where >
+            <if test=" dblinkId != '' and  dblinkId != null">
+                and dblink_id <![CDATA[ <> ]]> #{ dblinkId}
+            </if>
+            <if test=" dblinkName != '' and  dblinkName != null">
+                and dblink_name = #{ dblinkName}
+            </if>
+        </where>
+    </select>
+    
+    <select id="getVoById" resultMap="dblinkVoResultMap">
+    	select * from sys_dblink_info where dblink_id = #{id}
+    </select>
+    <select id="listDbVo" resultMap="dblinkVoResultMap">
+    	select * from sys_dblink_info
+    </select>
+    
+</mapper>

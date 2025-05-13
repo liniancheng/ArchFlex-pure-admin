@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.workflow.mapper.WorkflowMapper">
+
+	<!-- 基本resultMap -->
+	<resultMap type="com.adtec.rdc.base.workflow.model.bo.Workflow" id="WorkflowMap">
+		<result property="instanceId" column="INSTANCE_ID" />
+		<result property="instanceName" column="INSTANCE_NAME" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="createUser" column="CREATE_USER" />
+		<result property="createUserName" column="CREATE_USER_NAME" />
+		<result property="inodeId" column="INODE_ID" />
+		<result property="nodeName" column="NODE_NAME" />
+		<result property="instanceStatus" column="INSTANCE_STATUS" />
+		<result property="operStatus" column="OPER_STATUS" />
+		<result property="operTime" column="OPER_TIME" />
+		<result property="operUser" column="OPER_USER" />
+		<result property="agreeFlag" column="AGREE_FLAG" />
+		<result property="operRmk" column="OPER_RMK" />
+		<result property="detailUrl" column="DETAIL_URL" />
+	</resultMap>
+
+	<!-- 待处理流程 -->
+	<select id="pageByQuery" resultMap="WorkflowMap">
+		select * from (
+			<if test='status0=="1"'>
+				SELECT d.instance_id, d.instance_name, d.instance_status, d.create_time, d.create_user, f.user_name as CREATE_USER_NAME, e.node_name,
+					'0' OPER_STATUS, '' oper_time, '' oper_user, '' agree_flag, '' oper_rmk, g.DETAIL_URL, c.INODE_ID
+				FROM SYS_WORKFLOW_INST_NODE c, 
+					SYS_WORKFLOW_INST_NODE_AUTH a, 
+					sys_user_info b, 
+					SYS_WORKFLOW_INSTANCE d,
+					SYS_WORKFLOW_NODE_INFO e,
+					sys_user_info f,
+					SYS_WORKFLOW_INFO g
+				WHERE d.APP_ID=#{appId} 
+					and a.auth_type='user' 
+					and a.obj_id=b.USER_ID 
+					AND b.LOGIN_NAME = #{loginName}
+					AND a.inode_id=c.inode_id 
+					AND c.active_flag='1' 
+					AND c.instance_id=d.instance_id
+					AND c.node_id=e.node_id
+					and d.create_user=f.user_id
+					and d.WORKFLOW_ID=g.WORKFLOW_ID
+				<if test=" roleIds != null and  roleIds.size > 0">
+	            UNION 
+				SELECT d.instance_id, d.instance_name, d.instance_status, d.create_time, d.create_user, f.user_name as CREATE_USER_NAME, e.node_name,
+					'0' OPER_STATUS, '' oper_time, '' oper_user, '' agree_flag, '' oper_rmk, g.DETAIL_URL, c.INODE_ID
+				FROM SYS_WORKFLOW_INST_NODE c, 
+					SYS_WORKFLOW_INST_NODE_AUTH a, 
+					sys_role_info b, 
+					SYS_WORKFLOW_INSTANCE d,
+					SYS_WORKFLOW_NODE_INFO e,
+					sys_user_info f,
+					SYS_WORKFLOW_INFO g
+					WHERE d.APP_ID=#{appId} 
+					and a.auth_type='role' 
+					and a.obj_id=b.role_id 
+					AND b.role_id IN 
+					<foreach collection="roleIds" item="item" open="(" separator="," close=")">
+					#{item}
+					</foreach>
+					AND a.inode_id=c.inode_id 
+					AND c.active_flag='1' 
+					AND c.instance_id=d.instance_id
+					AND c.node_id=e.node_id
+					and d.create_user=f.user_id
+					and d.WORKFLOW_ID=g.WORKFLOW_ID
+	            </if>
+	            <if test=" taskExtUndoSqls != null and  taskExtUndoSqls.size > 0">
+	            	<foreach collection="taskExtUndoSqls" item="taskExtUndoSql">
+					union ${taskExtUndoSql}
+					</foreach>
+	            </if>
+	        </if>
+	        <if test='status1=="1"'>
+	        	<if test='status0=="1"'>
+	        	UNION
+	        	</if>
+	        	SELECT a.INSTANCE_ID, b.INSTANCE_NAME, b.INSTANCE_STATUS, b.create_time, b.CREATE_USER, d.user_name as CREATE_USER_NAME, c.NODE_NAME,
+	        		'1' OPER_STATUS, a.OPER_TIME, #{loginName} as OPER_USER, a.AGREE_FLAG, a.OPER_RMK, e.DETAIL_URL, a.INODE_ID 
+				FROM SYS_WORKFLOW_INST_NODE_OPER a, 
+					sys_workflow_instance b, 
+					sys_workflow_node_info c, 
+					sys_user_info d,
+					SYS_WORKFLOW_INFO e,
+					sys_workflow_inst_node f 
+				WHERE a.login_name=#{loginName} AND b.APP_ID=#{appId}  
+					AND a.INSTANCE_ID=b.INSTANCE_ID 
+					AND a.INODE_ID=f.INODE_ID
+					AND f.NODE_ID=c.NODE_ID
+					and b.create_user=d.user_id
+					and b.WORKFLOW_ID=e.WORKFLOW_ID
+				<if test=" taskExtDoneSqls != null and  taskExtDoneSqls.size > 0">
+	            	<foreach collection="taskExtDoneSqls" item="taskExtDoneSql">
+					union ${taskExtDoneSql}
+					</foreach>
+	            </if>
+	        </if>            
+		) temp_table order by INSTANCE_STATUS, create_time desc
+	</select>
+	
+</mapper>

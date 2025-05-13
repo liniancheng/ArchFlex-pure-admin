@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.knowledge.mapper.KnowKnowledgeDirInfoMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.knowledge.model.po.KnowKnowledgeDirInfo" id="KnowKnowledgeDirInfoMap">
+            <id property="dirId" column="DIR_ID"/>
+            <result property="dirName" column="DIR_NAME"/>
+            <result property="parentId" column="PARENT_ID"/>
+            <result property="dirRmk" column="DIR_RMK"/>
+            <result property="dirOrder" column="DIR_ORDER"/>
+            <result property="appId" column="APP_ID"/>
+    </resultMap>
+    <select id="isExistKnowTitle" resultType="java.lang.Boolean">
+    	select count(*) from KNOW_KNOWLEDGE_DIR_INFO
+    	<where>
+    		 <if test=" dirId != '' and  dirId != null">
+                and  DIR_ID <![CDATA[ <> ]]> #{ dirId}
+            </if>
+    		 <if test=" dirName != '' and  dirName != null">
+                and   DIR_NAME = #{ dirName}
+            </if>
+             <if test=" appId != '' and  appId != null">
+                and   APP_ID = #{ appId}
+            </if>
+             <if test=" parentId != '' and  parentId != null">
+                and   PARENT_ID = #{ parentId}
+            </if>
+    	</where>
+    </select>
+    <select id="isExsitByParentId"   resultType="java.lang.Boolean">
+		SELECT count(*) FROM KNOW_KNOWLEDGE_DIR_INFO
+		<where>
+		 <if test=" parentId != '' and  parentId != null">
+                and   PARENT_ID = #{ parentId}
+            </if>
+		</where>
+	</select>
+   <select id="isSameTitle" resultType="java.lang.Integer">
+		select count(*) from KNOW_KNOWLEDGE_DIR_INFO WHERE DIR_NAME=#{dirName}
+	</select>
+    <select id="pageByQuery" resultMap="KnowKnowledgeDirInfoMap">
+        select * from know_knowledge_dir_info
+        <where >
+            <if test=" appId != '' and  appId != null">
+                and   APP_ID = #{ appId}
+            </if>
+            <if test=" dirId != '' and  dirId != null">
+                and   DIR_ID = #{ dirId}
+            </if>
+            <if test=" dirName != '' and  dirName != null">
+                and   DIR_NAME = #{ dirName}
+            </if>
+            <if test=" parentId != '' and  parentId != null">
+                and   PARENT_ID = #{ parentId}
+            </if>
+            <if test=" dirRmk != '' and  dirRmk != null">
+                and   DIR_RMK = #{ dirRmk}
+            </if>
+            <if test="dirOrder != null">
+                and   DIR_ORDER = #{ dirOrder}
+            </if>
+        </where>
+    </select>
+</mapper>

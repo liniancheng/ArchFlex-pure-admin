@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.adtec.rdc.base.workflow.mapper.SysWorkflowInstanceMapper">
+
+	<!-- 基本resultMap -->
+	<resultMap
+		type="com.adtec.rdc.base.workflow.model.po.SysWorkflowInstance"
+		id="SysWorkflowInstanceMap">
+		<id property="instanceId" column="INSTANCE_ID" />
+		<result property="workflowId" column="WORKFLOW_ID" />
+		<result property="instanceName" column="INSTANCE_NAME" />
+		<result property="instanceRmk" column="INSTANCE_RMK" />
+		<result property="instanceStatus" column="INSTANCE_STATUS" />
+		<result property="createUser" column="CREATE_USER" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="modifyTime" column="MODIFY_TIME" />
+	</resultMap>
+
+	<select id="pageByQuery" resultMap="SysWorkflowInstanceMap">
+		select * from sys_workflow_instance
+		<where>
+			<if test=" instanceId != '' and  instanceId != null">
+				and INSTANCE_ID = #{ instanceId}
+			</if>
+			<if test=" workflowId != '' and  workflowId != null">
+				and WORKFLOW_ID = #{ workflowId}
+			</if>
+			<if test=" instanceName != '' and  instanceName != null">
+			<bind name="instanceName2" value="'%'+ instanceName + '%'"/>
+				and INSTANCE_NAME like #{instanceName2}
+			</if>
+			<if test=" instanceRmk != '' and  instanceRmk != null">
+				and INSTANCE_RMK = #{ instanceRmk}
+			</if>
+			<if test=" instanceStatus != '' and  instanceStatus != null">
+				and INSTANCE_STATUS = #{ instanceStatus}
+			</if>
+			<if test=" createUser != '' and  createUser != null">
+				and CREATE_USER = #{ createUser}
+			</if>
+			<if test="createTime != null">
+				and CREATE_TIME = #{ createTime}
+			</if>
+			<if test="modifyTime != null">
+				and MODIFY_TIME = #{ modifyTime}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryInstanceListForSearch" resultMap="SysWorkflowInstanceMap">
+		select * from sys_workflow_instance
+		<where>
+			<if test=" instanceName != '' and  instanceName != null">
+				<bind name="instanceName2" value="'%'+ instanceName + '%'"/>
+				and INSTANCE_NAME like #{instanceName2}
+			</if>
+			<if test=" instanceStatus != '' and  instanceStatus != null">
+				and INSTANCE_STATUS = #{ instanceStatus}
+			</if>
+			<if test=" appId != '' and  appId != null">
+				and APP_ID = #{ appId}
+			</if>
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.entrancevalidation.mapper.ChkVerifyConfigMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.entrancevalidation.model.po.ChkVerifyConfig" id="ChkVerifyConfigMap">
+        <id property="ruleNo" column="RULE_NO"/>
+        <result property="sysNm" column="SYS_NM"/>
+        <result property="sysTabNm" column="SYS_TAB_NM"/>
+        <result property="sysTabChnNm" column="SYS_TAB_CHN_NM"/>
+        <result property="colNm" column="COL_NM"/>
+        <result property="colChnNm" column="COL_CHN_NM"/>
+        <result property="rltypDsc" column="RLTYP_DSC"/>
+        <result property="ruleDsc" column="RULE_DSC"/>
+        <result property="verisqlInf" column="VERISQL_INF"/>
+        <result property="vldFlg" column="VLD_FLG"/>
+    </resultMap>
+
+    <select id="pageByQuery" resultMap="ChkVerifyConfigMap">
+        select * from chk_verify_config
+        <where>
+            <if test=" sysNm != '' and  sysNm != null">
+                and SYS_NM = #{ indNo}
+            </if>
+            <if test=" sysTabNm != '' and  sysTabNm != null">
+                and SYS_TAB_NM = #{ sysTabNm}
+            </if>
+            <if test=" colNm != '' and  colNm != null">
+                and COL_NM = #{ colNm}
+            </if>
+        </where>
+        order by RULE_NO
+    </select>
+
+    <select id="selectSysNms" resultType="java.lang.String">
+        select distinct SYS_NM from chk_verify_config
+    </select>
+
+    <select id="selectTabNmsBySysNm" resultType="java.lang.String">
+        select distinct SYS_TAB_NM from chk_verify_config where SYS_NM = #{sysNm}
+    </select>
+
+    <select id="getColumnNm" resultType="java.lang.String">
+        select distinct COL_NM from chk_verify_config where SYS_TAB_NM = #{sysTabNm}
+    </select>
+
+    <update id="updateVldFlg" >
+        update chk_verify_config set VLD_FLG SET = #{vldFlg}
+        where RULE_NO in(ruleNos)
+    </update>
+
+</mapper>

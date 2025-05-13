@@ -1,0 +1,699 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="73fb5c64-c6f1-4f3e-bb50-ba1c3c33c248" name="Default Changelist" comment="" />
+    <ignored path="$PROJECT_DIR$/classes/" />
+    <ignored path="$PROJECT_DIR$/bin/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DefaultGradleProjectSettings">
+    <option name="isMigrated" value="true" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>resetFields</find>
+      <find>-1</find>
+      <find>dragControllerDiv</find>
+      <find>data</find>
+      <find>resetSearchForm</find>
+      <find>console</find>
+      <find>length</find>
+      <find>isNullOrEmpty</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/vue.config.js" />
+        <option value="$PROJECT_DIR$/src/api/crossvalidation/cvrule/index.js" />
+        <option value="$PROJECT_DIR$/src/api/crossvalidation/cvchkplan/index.js" />
+        <option value="$PROJECT_DIR$/src/api/crossvalidation/cvchkresult/index.js" />
+        <option value="$PROJECT_DIR$/src/api/admin/branch/index.js" />
+        <option value="$PROJECT_DIR$/src/views/crossvalidation/cvrule/modules/DataForm.vue" />
+        <option value="$PROJECT_DIR$/src/views/admin/system/res/index.vue" />
+        <option value="$PROJECT_DIR$/src/api/admin/res/index.js" />
+        <option value="$PROJECT_DIR$/src/views/admin/system/res/modules/DataForm.vue" />
+        <option value="$PROJECT_DIR$/src/api/crossvalidation/cvdict/index.js" />
+        <option value="$PROJECT_DIR$/src/api/crossvalidation/cvplandetail/index.js" />
+        <option value="$PROJECT_DIR$/src/views/crossvalidation/cvindorg/index.vue" />
+        <option value="$PROJECT_DIR$/src/views/crossvalidation/cvchkind/modules/DataMend.vue" />
+        <option value="$PROJECT_DIR$/src/views/crossvalidation/cvchkind/modules/DataForm.vue" />
+        <option value="$PROJECT_DIR$/src/views/crossvalidation/cvindorg/modules/DataMend.vue" />
+        <option value="$PROJECT_DIR$/src/views/crossvalidation/cvchkresult/index.vue" />
+        <option value="$PROJECT_DIR$/src/components/Table/index.js" />
+        <option value="$PROJECT_DIR$/src/views/crossvalidation/cvindrule/modules/DataMend.vue" />
+        <option value="$PROJECT_DIR$/src/views/crossvalidation/cvindrule/modules/DataForm.vue" />
+        <option value="$PROJECT_DIR$/src/views/admin/system/res/chkres/modules/SelectForm.vue" />
+        <option value="$PROJECT_DIR$/src/views/crossvalidation/cvindorg/modules/DataForm.vue" />
+        <option value="$PROJECT_DIR$/src/views/admin/system/res/chkres/index.vue" />
+        <option value="$PROJECT_DIR$/src/views/crossvalidation/cvrule/modules/CheckForm.vue" />
+        <option value="$PROJECT_DIR$/src/views/crossvalidation/cvrule/index.vue" />
+        <option value="$PROJECT_DIR$/src/views/crossvalidation/cvchkresult/modules/DataForm.vue" />
+        <option value="$PROJECT_DIR$/src/locales/lang/zh-CN.js" />
+        <option value="$PROJECT_DIR$/src/views/crossvalidation/qwe/index.vue" />
+        <option value="$PROJECT_DIR$/src/api/crossvalidation/cvchkind/index.js" />
+        <option value="$PROJECT_DIR$/src/views/crossvalidation/cvchkind/index.vue" />
+        <option value="$PROJECT_DIR$/src/views/crossvalidation/cvindrule/index.vue" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBowerSettings">
+    <node-interpreter value="project" />
+    <bower-package value="" />
+    <bower.json value="" />
+  </component>
+  <component name="JsFlowSettings">
+    <service-enabled>true</service-enabled>
+    <exe-path />
+    <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="C:/workspace/apache-maven-3.3.9/bin" />
+        <option name="userSettingsFile" value="C:\workspace\apache-maven-3.3.9\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="width" value="1890" />
+    <option name="height" value="960" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane" />
+      <pane id="PackagesPane" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="editor.config.ad.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.jscs" value="true" />
+    <property name="node.js.detected.package.standard" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.jscs" value="project" />
+    <property name="node.js.path.for.package.standard" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.jscs" value="" />
+    <property name="node.js.selected.package.standard" value="" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_interpreter_path" value="node" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Problems" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="Settings.JavaScript.Bower" />
+    <property name="ts.external.directory.path" value="C:\workspace\IntelliJ IDEA 2019.1.4\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\workcode\basecode\base-cloud-web\src\views\crossvalidation\cvchkind" />
+      <recent name="C:\workcode\basecode\base-cloud-web\src\views\crossvalidation\qwe" />
+      <recent name="C:\workcode\MoiaBase3.1\base-cloud-web\src\views\crossvalidation\cvchkind" />
+      <recent name="C:\workcode\MoiaBase3.1\base-cloud-web\src\views\crossvalidation\cvindorg" />
+      <recent name="C:\workcode\MoiaBase3.1\base-cloud-web\src\api\crossvalidation" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\workcode\MoiaBase3.1\base-cloud-web\src\views\admin\system\res\chkres\modules" />
+      <recent name="C:\workcode\MoiaBase3.1\base-cloud-web\src\views\admin\system\res" />
+      <recent name="C:\workcode\MoiaBase3.1\base-cloud-web\src\api\admin\res" />
+      <recent name="C:\workcode\MoiaBase3.1\base-cloud-web\src\api\crossvalidation\cvplandetail" />
+      <recent name="C:\workcode\MoiaBase3.1\base-cloud-web\src\views\crossvalidation\cvchkresult" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="serve" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="serve" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.serve" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration>C:\Users\nsm\AppData\Roaming\Subversion</configuration>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="73fb5c64-c6f1-4f3e-bb50-ba1c3c33c248" name="Default Changelist" comment="" />
+      <created>1645691442193</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1645691442193</updated>
+      <workItem from="1645691443536" duration="1422000" />
+      <workItem from="1646186123029" duration="1425000" />
+      <workItem from="1646198756881" duration="1858000" />
+      <workItem from="1646204843933" duration="1198000" />
+      <workItem from="1646206900661" duration="1129000" />
+      <workItem from="1646211234144" duration="611000" />
+      <workItem from="1646270741321" duration="5000" />
+      <workItem from="1646274930939" duration="1194000" />
+      <workItem from="1646279626143" duration="3458000" />
+      <workItem from="1646294258023" duration="29000" />
+      <workItem from="1646294309305" duration="7000" />
+      <workItem from="1646294378713" duration="2221000" />
+      <workItem from="1646357426654" duration="5000" />
+      <workItem from="1646362190019" duration="4400000" />
+      <workItem from="1646653516522" duration="888000" />
+      <workItem from="1646701735401" duration="24000" />
+      <workItem from="1646706674157" duration="3034000" />
+      <workItem from="1646788082048" duration="2602000" />
+      <workItem from="1646815260884" duration="641000" />
+      <workItem from="1646875153025" duration="3324000" />
+      <workItem from="1646898117477" duration="2923000" />
+      <workItem from="1646960930455" duration="28000" />
+      <workItem from="1646960964781" duration="2546000" />
+      <workItem from="1646965729597" duration="2379000" />
+      <workItem from="1646975651710" duration="370000" />
+      <workItem from="1646978796392" duration="2150000" />
+      <workItem from="1646981286096" duration="3319000" />
+      <workItem from="1647220449628" duration="42000" />
+      <workItem from="1647220672276" duration="5000" />
+      <workItem from="1647236516041" duration="6187000" />
+      <workItem from="1647305342750" duration="1674000" />
+      <workItem from="1647310525955" duration="13846000" />
+      <workItem from="1647391828431" duration="606000" />
+      <workItem from="1647419332131" duration="3457000" />
+      <workItem from="1647488636140" duration="483000" />
+      <workItem from="1647504126141" duration="5232000" />
+      <workItem from="1647565921318" duration="2923000" />
+      <workItem from="1647910559413" duration="2291000" />
+      <workItem from="1647914477086" duration="21000" />
+      <workItem from="1647914613518" duration="3327000" />
+      <workItem from="1647937228520" duration="595000" />
+      <workItem from="1647997107920" duration="3562000" />
+      <workItem from="1648083387551" duration="12103000" />
+      <workItem from="1648169352489" duration="597000" />
+      <workItem from="1648174123127" duration="1847000" />
+      <workItem from="1648190124467" duration="10000" />
+      <workItem from="1648190144255" duration="1031000" />
+      <workItem from="1648428586043" duration="1855000" />
+      <workItem from="1648433463637" duration="582000" />
+      <workItem from="1648446260068" duration="7182000" />
+      <workItem from="1648515377331" duration="386000" />
+      <workItem from="1648522748310" duration="746000" />
+      <workItem from="1648531867133" duration="9263000" />
+      <workItem from="1648546134028" duration="23000" />
+      <workItem from="1648687970081" duration="15255000" />
+      <workItem from="1648775174008" duration="6914000" />
+      <workItem from="1648783875012" duration="9592000" />
+      <workItem from="1648861473610" duration="12589000" />
+      <workItem from="1649206561176" duration="21000" />
+      <workItem from="1649206592754" duration="12598000" />
+      <workItem from="1649230695194" duration="1664000" />
+      <workItem from="1649292685060" duration="5273000" />
+      <workItem from="1649314947379" duration="597000" />
+      <workItem from="1649379428227" duration="6393000" />
+      <workItem from="1649811603373" duration="6899000" />
+      <workItem from="1649830780455" duration="1116000" />
+      <workItem from="1649897516445" duration="5952000" />
+      <workItem from="1649926176148" duration="1328000" />
+      <workItem from="1649984156177" duration="3804000" />
+      <workItem from="1650007664298" duration="1191000" />
+      <workItem from="1650253079901" duration="235000" />
+      <workItem from="1650264164313" duration="3745000" />
+      <workItem from="1650330348779" duration="3849000" />
+      <workItem from="1650415945912" duration="1840000" />
+      <workItem from="1650421440177" duration="1462000" />
+      <workItem from="1650437232412" duration="2914000" />
+      <workItem from="1650592980274" duration="2485000" />
+      <workItem from="1654757072110" duration="1856000" />
+      <workItem from="1654761107126" duration="688000" />
+      <workItem from="1654822424842" duration="1214000" />
+      <workItem from="1654831019282" duration="1686000" />
+      <workItem from="1654839491957" duration="2995000" />
+      <workItem from="1655345681922" duration="610000" />
+      <workItem from="1655431575213" duration="1361000" />
+      <workItem from="1655446154656" duration="235000" />
+      <workItem from="1655449552857" duration="15000" />
+      <workItem from="1655970673965" duration="747000" />
+      <workItem from="1656036385985" duration="157000" />
+      <workItem from="1656049983739" duration="625000" />
+      <workItem from="1656568628118" duration="11051000" />
+      <workItem from="1656580903392" duration="1085000" />
+      <workItem from="1656637011994" duration="4535000" />
+      <workItem from="1656654662167" duration="1542000" />
+      <workItem from="1656656690468" duration="653000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="261837000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23876593" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Designer" order="2" />
+      <window_info id="Image Layers" order="3" />
+      <window_info id="Capture Tool" order="4" />
+      <window_info id="UI Designer" order="5" />
+      <window_info id="Favorites" order="6" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32956153" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49932975" weight="0.25318247" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39886847" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32956153" />
+      <window_info anchor="bottom" id="Terminal" order="7" />
+      <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50067025" side_tool="true" weight="0.1768034" />
+      <window_info anchor="bottom" id="Database Changes" order="10" />
+      <window_info anchor="bottom" id="Version Control" order="11" />
+      <window_info anchor="bottom" id="MyBatis Log" order="12" />
+      <window_info anchor="bottom" id="TypeScript" order="13" weight="0.32956153" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Maven" order="3" />
+      <window_info anchor="right" id="Palette" order="4" />
+      <window_info anchor="right" id="Codota" order="5" />
+      <window_info anchor="right" id="Capture Analysis" order="6" />
+      <window_info anchor="right" id="Word Book" order="7" side_tool="true" />
+      <window_info anchor="right" id="Database" order="8" />
+      <window_info anchor="right" id="Palette&#9;" order="9" />
+      <window_info anchor="right" id="Theme Preview" order="10" />
+      <window_info anchor="right" id="leetcode" order="11" side_tool="true" />
+    </layout>
+    <layout-to-restore>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2533512" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Designer" order="2" />
+      <window_info id="Image Layers" order="3" />
+      <window_info id="Capture Tool" order="4" />
+      <window_info id="UI Designer" order="5" />
+      <window_info id="Favorites" order="6" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32956153" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49932975" weight="0.22206506" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39886847" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32956153" />
+      <window_info anchor="bottom" id="Terminal" order="7" />
+      <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50067025" side_tool="true" weight="0.1768034" />
+      <window_info anchor="bottom" id="Database Changes" order="10" />
+      <window_info anchor="bottom" id="Version Control" order="11" />
+      <window_info anchor="bottom" id="MyBatis Log" order="12" />
+      <window_info anchor="bottom" id="TypeScript" order="13" weight="0.32956153" />
+      <window_info anchor="right" id="leetcode" order="0" side_tool="true" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="1" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
+      <window_info anchor="right" id="Maven" order="4" />
+      <window_info anchor="right" id="Palette" order="5" />
+      <window_info anchor="right" id="Codota" order="6" />
+      <window_info anchor="right" id="Capture Analysis" order="7" />
+      <window_info anchor="right" id="Word Book" order="8" side_tool="true" />
+      <window_info anchor="right" id="Database" order="9" />
+      <window_info anchor="right" id="Palette&#9;" order="10" />
+      <window_info anchor="right" id="Theme Preview" order="11" />
+    </layout-to-restore>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/assets/img/excle_att.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/img/img_att.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/img/login_img.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/img/login_left3.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/img/other_att.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/img/pdf_att.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/img/pl.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/img/png_35.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/img/png_36.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/img/ppt_att.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/img/rar_att.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/img/word_att.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/logo.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/logo.svg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/logoimg.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/icons/icon_user.svg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/icons/icon_todo.svg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/icons/icon_task.svg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/icons/icon_msg.svg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/icons/icon_more.svg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/icons/bx-analyse.svg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/img/index_banner.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/img/login_banner.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/img/login_banner1.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/img/login_banner2.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/logo/logo_index.svg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/logo/logo_login_text.svg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/logo/logo_login.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/config.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/index.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/logo.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/404.vue">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/App.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-846" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/crossvalidation/cvrule/modules/CheckForm.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="389">
+          <caret line="115" column="13" selection-start-line="115" selection-start-column="13" selection-end-line="115" selection-end-column="13" />
+          <folding>
+            <element signature="n#style#0;n#a-select#0;n#a-form-item#2;n#a-form#0;n#a-spin#0;n#a-modal#0;n#template#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/locales/lang/zh-CN.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="350">
+          <caret line="29" column="15" lean-forward="true" selection-start-line="29" selection-start-column="15" selection-end-line="29" selection-end-column="15" />
+          <folding>
+            <element signature="e#0#58#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@types/webpack-sources/lib/ReplaceSource.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="226">
+          <caret line="19" column="4" selection-start-line="19" selection-start-column="4" selection-end-line="19" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/vue-grid-layout/website/docs/.vuepress/config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="275">
+          <caret line="11" column="13" lean-forward="true" selection-start-line="11" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-impl.jar!/resources/html5-schema/html5/web-components.rnc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="503">
+          <caret line="54" column="34" selection-start-line="54" selection-start-column="34" selection-end-line="54" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/crossvalidation/cvindorg/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7275" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/crossvalidation/cvindorg/modules/DataForm.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="204" column="33" selection-start-line="204" selection-start-column="33" selection-end-line="204" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/crossvalidation/cvchkresult/modules/DataForm.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2375">
+          <caret line="52" column="26" lean-forward="true" selection-start-line="52" selection-start-column="8" selection-end-line="52" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/crossvalidation/qwe/index.vue" />
+    <entry file="file://$PROJECT_DIR$/node_modules/vue/types/options.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="158">
+          <caret line="63" column="28" lean-forward="true" selection-start-line="63" selection-start-column="23" selection-end-line="63" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.es5.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-23459">
+          <caret line="526" column="12" selection-start-line="526" selection-start-column="12" selection-end-line="526" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/core-js/modules/es.string.replace-all.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-259">
+          <caret line="40" column="23" selection-start-line="40" selection-start-column="23" selection-end-line="40" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/crossvalidation/cvchkind/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3032">
+          <caret line="42" column="11" lean-forward="true" selection-start-line="42" selection-start-column="11" selection-end-line="42" selection-end-column="11" />
+          <folding>
+            <element signature="n#style#0;n#a-input-search#0;n#div#1;n#a-card#0;n#div#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="e#4245#6366#0" />
+            <element signature="e#9402#9893#0" />
+            <element signature="e#9916#10858#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/api/crossvalidation/cvchkind/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="379">
+          <caret line="38" column="1" lean-forward="true" selection-start-line="38" selection-start-column="1" selection-end-line="38" selection-end-column="1" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/crossvalidation/cvindrule/modules/DataMend.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="100" column="14" selection-start-line="100" selection-start-column="14" selection-end-line="100" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/crossvalidation/cvrule/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="243">
+          <caret line="345" column="42" selection-start-line="345" selection-start-column="42" selection-end-line="345" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/crossvalidation/cvchkresult/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3125">
+          <caret line="259" column="17" selection-start-line="259" selection-start-column="17" selection-end-line="259" selection-end-column="17" />
+          <folding>
+            <element signature="n#div#0;n#s-table#0;n#a-card#0;n#div#0;n#template#0;n#!!top" />
+            <element signature="e#4064#4111#0" expanded="true" />
+            <element signature="e#4944#7673#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/crossvalidation/cvindrule/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="16" column="44" selection-start-line="16" selection-start-column="44" selection-end-line="16" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>base-cloud-web</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

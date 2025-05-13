@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/base-cloud/base-cloud-auth/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/base-cloud/base-cloud-common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/base-cloud/base-cloud-config-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/base-cloud/base-cloud-gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/base-cloud/base-cloud-monitor/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/base-cloud/base-cloud-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/base-cloud/base-cloud-services/base-cloud- crossvalidation-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/base-cloud/base-cloud-services/base-cloud-gen-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/base-cloud/base-cloud-services/base-cloud-message-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/base-cloud/base-cloud-services/base-cloud-user-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/base-cloud/base-cloud-services/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/base-cloud/base-cloud-services/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/base-cloud/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/base-cloud/src/main/resources" charset="UTF-8" />
+  </component>
+</project>

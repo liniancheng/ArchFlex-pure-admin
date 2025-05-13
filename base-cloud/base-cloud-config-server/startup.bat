@@ -1,0 +1,1 @@
+java -jar target/base-cloud-config-server-1.0.0-SNAPSHOT.jar

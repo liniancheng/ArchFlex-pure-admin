@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.user.mapper.SysHelpFileMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.user.model.po.SysHelpFileInfo" id="SysHelpFileMap">
+            <id property="fileId" column="help_file_id"/>
+            <result property="fileSize" column="help_file_size"/>
+            <result property="fileType" column="help_file_type"/>
+            <result property="fileName" column="help_file_name"/>
+            <result property="fileContent" column="help_file_content"/>
+    </resultMap>
+	
+	<select id="pageByQuery" resultMap="SysHelpFileMap">
+        select help_file_id,help_file_size,help_file_type,help_file_name from sys_help_file_info
+        <where>
+            <if test="fileName != '' and fileName != null">
+            	<bind name="fileName2" value="'%'+ fileName + '%'"/>
+                and help_file_name like #{fileName2}
+            </if>
+        </where>
+    </select>
+	
+</mapper>

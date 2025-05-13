@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adtec.rdc.base.user.mapper.SysRoleMenuRelMapper">
+
+	<insert id="batchInsertMenuRel">
+		INSERT INTO sys_role_menu_rel(role_id, menu_id)
+		VALUES
+		<foreach collection="menuRels" item="menuRel" separator=",">
+			(#{menuRel.roleId},#{menuRel.menuId})
+		</foreach>
+	</insert>
+	
+	<delete id="removeByIds" parameterType="java.util.List">
+		DELETE FROM sys_role_menu_rel WHERE role_id = #{roleId,jdbcType=VARCHAR} AND menu_id in
+		<foreach collection="menuIds" item="item" open="(" separator="," close=")">
+	#{item}
+		</foreach>
+	</delete>
+	
+	<resultMap id="menuRelResultMap" type="com.adtec.rdc.base.user.model.po.SysRoleMenuRel">
+        <id column="menu_id" property="menuId"/>
+    </resultMap>
+    
+    <select id="getRoleMenuRels" resultType="com.adtec.rdc.base.user.model.po.SysRoleMenuRel">
+    	select t2.menu_id as menuId
+    		from sys_menu_info t1
+			left join sys_role_menu_rel t2 on t1.menu_id=t2.menu_id where t2.role_id=#{roleId}
+		order by t1.menu_sort, t1.menu_name
+    </select>
+</mapper>

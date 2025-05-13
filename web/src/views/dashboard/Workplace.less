@@ -1,0 +1,134 @@
+@import '~ant-design-vue/es/style/themes/default.less';
+@import '../../components/theme.less';
+
+.content_zh_item {
+  .ant-col{
+    .ant-statistic-content {
+      color: @primary-color;
+    }
+  }
+}
+.content_zh_item.a_card {
+  .ant-card-head-wrapper{
+    .ant-card-head-title{
+      color: @primary-color;
+      .icon{
+        fill: @primary-color;
+      }
+    }
+  }
+  .ant-card-body{
+    .more_icon{
+      fill: @primary-color;
+      stroke: @primary-color;
+    }
+  }
+}
+
+.content_zh_item {
+  .ant-col{
+    .ant-statistic-title{
+      font-size: 14px;
+    }
+    .ant-statistic-content {
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+  .ant-col:nth-child(4) {
+    .ant-statistic-content {
+      color: #e13b08;
+    }
+  }
+}
+.content_zh_item.a_card {
+  .ant-card-head-wrapper{
+    height: 35px;
+    border-bottom: 1px solid #e8e8e8;
+    .ant-card-extra{
+      padding: 0;
+    }
+    .ant-card-head-title{
+      height: 25px;
+      line-height: 25px;
+      min-height: 25px;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 0;
+      .notice_zh_img{
+        margin-right: 10px;
+      }
+      .icon{
+        position: relative;
+        top:3px
+      }
+    }
+  }
+}
+.content_zh_item.ant-card {
+  .ant-card-body {
+    padding: 0;
+    width: 100%;
+  }
+  .ant-card-head {
+    padding: 0 15px;
+    border-bottom: none;
+  }
+  .care_left_img {
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 4px;
+    height: 26px;
+  }
+}
+.content_zh_item{
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  .icon{
+    margin-right: 10px;
+  }
+  .ant-card-extra {
+    .icon {
+      margin-top: 5px;
+    }
+  }
+  .imoia-card-tip{
+    float: left;
+    .ant-descriptions-item-label{
+      font-size: 14px;
+      font-weight: 400;
+      color: #666;
+      margin-left: 15px;
+    }
+    .ant-descriptions-item-content{
+      font-size: 22px;
+      font-weight: 700;
+      color: #333;
+      margin-left: 14px;
+    }
+  }
+  .imoia-char-div{
+    height: 100%;
+    padding-bottom: 56px;
+  }
+}
+/*滚动条样式*/
+.ant-layout-sider-children::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width: 5px; /*高宽分别对应横竖滚动条的尺寸*/
+  height: 6px;
+}
+.ant-layout-sider-children::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.2);
+}
+.ant-layout-sider-children::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0);
+  border-radius: 0;
+  background: rgba(0, 0, 0, 0);
+}

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.resource.mapper.NoticeMailSendLogMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.resource.model.po.NoticeMailSendLog" id="NoticeMailLogInfoMap">
+            <id property="logId" column="LOG_ID"/>
+            <result property="loginName" column="LOGIN_NAME"/>
+            <result property="srvId" column="SRV_ID"/>
+            <result property="logState" column="LOG_STATE"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="tempId" column="TEMP_ID"/>
+            <result property="errorStr" column="ERROR_STR"/>
+            <result property="srvName" column="SRV_NAME"/>
+            <result property="tempName" column="TEMP_NAME"/>
+            <result property="errorStr" column="ERROR_STR"/>
+    </resultMap>
+
+    <select id="pageByQuery" resultMap="NoticeMailLogInfoMap">
+        select smli.*,smsi.SRV_NAME,smti.TEMP_NAME from notice_mail_send_log smli
+        left join notice_mail_srv_info smsi on smli.srv_id = smsi.srv_id and smsi.app_id=#{appId}
+        left join notice_mail_temp_info smti on smli.TEMP_ID = smti.TEMP_ID
+        <where >
+            <if test="loginName != '' and loginName != null">
+                and smli.LOGIN_NAME = #{loginName}
+            </if>
+            <if test="logState != '' and logState != null">
+                and smli.LOG_STATE = #{logState}
+            </if>
+            <if test="srvName != null and srvName != ''">
+            <bind name="srvName2" value="'%'+ srvName + '%'"/>
+                and smsi.SRV_NAME like #{srvName2}
+            </if>
+            <if test="tempName != '' and tempName != null">
+            <bind name="tempName2" value="'%'+ tempName + '%'"/>
+                and smti.TEMP_NAME like #{tempName2}
+            </if>
+        </where>
+    </select>
+</mapper>

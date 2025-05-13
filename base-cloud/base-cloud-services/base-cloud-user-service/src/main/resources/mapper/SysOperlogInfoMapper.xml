@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.user.mapper.SysOperlogInfoMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="SysOperlogInfo" id="SysOperlogMap">
+            <id property="logId" column="log_id"/>
+            <result property="logType" column="log_type"/>
+            <result property="moduleName" column="module_name"/>
+            <result property="actionName" column="action_name"/>
+            <result property="serviceId" column="service_id"/>
+            <result property="remoteAddr" column="remote_addr"/>
+            <result property="userAgent" column="user_agent"/>
+            <result property="requestUri" column="request_uri"/>
+            <result property="methodName" column="method_name"/>
+            <result property="params" column="params"/>
+            <result property="operTime" column="oper_time"/>
+            <result property="exceptionStr" column="exception_str"/>
+            <result property="delFlag" column="del_flag"/>
+            <result property="createBy" column="create_by"/>
+            <result property="createTime" column="create_time"/>
+            <result property="updateTime" column="update_time"/>
+            <result property="logStatus" column="log_status"/>
+    </resultMap>
+    
+    <select id="pageByQuery" resultMap="SysOperlogMap">
+        select * from sys_operlog_info
+        <where >
+            <if test="logId != '' and logId != null" >
+                and log_id = #{logId}
+            </if>
+            <if test="logType != '' and logType != null">
+                and log_type = #{logType}
+            </if>
+            <if test="moduleName != '' and moduleName != null">
+                and module_name like concat('%',#{moduleName},'%')
+            </if>
+            <if test="createBy != '' and createBy != null">
+                and create_by like concat('%',#{createBy},'%')
+            </if>
+            <if test="logStatus != '' and logStatus != null">
+                and log_status = #{logStatus}
+            </if>
+        </where>
+    </select>    
+
+</mapper>

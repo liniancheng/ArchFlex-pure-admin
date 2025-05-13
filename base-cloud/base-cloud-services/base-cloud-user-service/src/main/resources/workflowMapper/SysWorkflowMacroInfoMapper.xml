@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.adtec.rdc.base.workflow.mapper.SysWorkflowMacroInfoMapper">
+
+	<!-- 基本resultMap -->
+	<resultMap
+		type="com.adtec.rdc.base.workflow.model.po.SysWorkflowMacroInfo"
+		id="SysWorkflowMacroInfoMap">
+		<id property="macroId" column="MACRO_ID" />
+		<result property="macroCode" column="MACRO_CODE" />
+		<result property="macroName" column="MACRO_NAME" />
+		<result property="macroType" column="MACRO_TYPE" />
+		<result property="workflowId" column="WORKFLOW_ID" />
+		<result property="macroRmk" column="MACRO_RMK" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="modifyTime" column="MODIFY_TIME" />
+	</resultMap>
+
+	<select id="pageByQuery" resultMap="SysWorkflowMacroInfoMap">
+		select * from sys_workflow_macro_info
+		<where>
+			<if test=" macroId != '' and  macroId != null">
+				and MACRO_ID = #{ macroId}
+			</if>
+			<if test=" macroCode != '' and  macroCode != null">
+				and MACRO_CODE = #{ macroCode}
+			</if>
+			<if test=" macroName != '' and  macroName != null">
+				and MACRO_NAME = #{ macroName}
+			</if>
+			<if test=" macroType != '' and  macroType != null">
+				and MACRO_TYPE = #{ macroType}
+			</if>
+			<if test=" workflowId != '' and  workflowId != null">
+				and WORKFLOW_ID = #{ workflowId}
+			</if>
+			<if test=" macroRmk != '' and  macroRmk != null">
+				and MACRO_RMK = #{ macroRmk}
+			</if>
+			<if test="createTime != null">
+				and CREATE_TIME = #{ createTime}
+			</if>
+			<if test="modifyTime != null">
+				and MODIFY_TIME = #{ modifyTime}
+			</if>
+		</where>
+	</select>
+	
+		<select id="isExistName" resultType="java.lang.Boolean">
+    	select count(*) from sys_workflow_macro_info
+    	<where>
+    		<if test="macroId != '' and macroId != null">
+                and  MACRO_ID <![CDATA[ <> ]]> #{ macroId}
+    		</if>
+    		<if test="macroName != '' and macroName != null">
+                and  MACRO_NAME = #{ macroName}
+    		</if>
+    		<if test="workflowId != '' and workflowId != null">
+                and  WORKFLOW_ID = #{ workflowId}
+    		</if>
+    	</where>
+    </select>
+    
+    <select id="isExistCode" resultType="java.lang.Boolean">
+    	select count(*) from sys_workflow_macro_info
+    	<where>
+    		<if test="macroId != '' and macroId != null">
+                and  MACRO_ID <![CDATA[ <> ]]> #{ macroId}
+    		</if>
+    		<if test="macroCode != '' and macroCode != null">
+                and  MACRO_CODE = #{ macroCode}
+    		</if>
+    		<if test="workflowId != '' and workflowId != null">
+                and  WORKFLOW_ID = #{ workflowId}
+    		</if>
+    	</where>
+    </select>
+    
+    <delete id="deleteByWorkflowId" parameterType="String">
+		delete from sys_workflow_macro_info where workflow_id=#{workflowId}
+	</delete>
+	
+	<insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="false">
+		insert into sys_workflow_macro_info(MACRO_ID, MACRO_CODE, MACRO_NAME, MACRO_TYPE, WORKFLOW_ID, MACRO_RMK, CREATE_TIME, MODIFY_TIME) 
+    	values
+    	<foreach collection="macros" item="item" index="index" separator=",">
+    		(
+    			#{item.macroId},
+    			#{item.macroCode},
+    			#{item.macroName},
+    			#{item.macroType},
+    			#{item.workflowId},
+    			#{item.macroRmk},
+    			#{item.createTime},
+    			#{item.modifyTime}
+    		)
+        </foreach>	
+	</insert>
+</mapper>

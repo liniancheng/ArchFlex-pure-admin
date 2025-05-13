@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.resource.mapper.NoticeSmsTempInfoMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.resource.model.po.NoticeSmsTempInfo" id="NoticeSmsTempInfoMap">
+            <id property="tempId" column="TEMP_ID"/>
+            <result property="extAttr1" column="EXT_ATTR1"/>
+            <result property="extAttr2" column="EXT_ATTR2"/>
+            <result property="extAttr3" column="EXT_ATTR3"/>
+            <result property="tempHtml" column="TEMP_HTML"/>
+            <result property="tempName" column="TEMP_NAME"/>
+            <result property="tempRmk" column="TEMP_RMK"/>
+            <result property="tempUser" column="TEMP_USER"/>
+            <result property="appId" column="APP_ID"/>
+    </resultMap>
+    <select id="isExistSmsTitle" resultType="java.lang.Boolean">
+    	select count(*) from NOTICE_SMS_TEMP_INFO
+    	<where>
+    		<if test=" tempId != '' and  tempId != null">
+                and  TEMP_ID <![CDATA[ <> ]]> #{ tempId}
+            </if>
+    		<if test=" tempName != '' and  tempName != null">
+                and   TEMP_NAME = #{tempName}
+            </if>
+            <if test=" appId != '' and  appId != null">
+                and   APP_ID = #{ appId}
+            </if>
+    	</where>
+    </select>
+    <select id="isSameTempName" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM NOTICE_SMS_TEMP_INFO WHERE TEMP_NAME=#{tempName}  and   APP_ID = #{ appId}
+	</select>
+    <select id="pageByQuery" resultMap="NoticeSmsTempInfoMap">
+        SELECT * FROM NOTICE_SMS_TEMP_INFO
+        <where >
+            <if test=" appId != '' and  appId != null">
+                and   APP_ID = #{ appId}
+            </if>
+            <if test=" tempId != '' and  tempId != null">
+                and   TEMP_ID = #{ tempId}
+            </if>
+            <if test=" extAttr1 != '' and  extAttr1 != null">
+                and   EXT_ATTR1 = #{ extAttr1}
+            </if>
+            <if test=" extAttr2 != '' and  extAttr2 != null">
+                and   EXT_ATTR2 = #{ extAttr2}
+            </if>
+            <if test=" extAttr3 != '' and  extAttr3 != null">
+                and   EXT_ATTR3 = #{ extAttr3}
+            </if>
+            <if test=" tempHtml != '' and  tempHtml != null">
+            <bind name="tempHtml2" value="'%'+ tempHtml + '%'"/>
+                and   TEMP_HTML like #{tempHtml2}
+            </if>
+            <if test=" tempName != '' and  tempName != null">
+            <bind name="tempName2" value="'%'+ tempName + '%'"/>
+                and   TEMP_NAME like #{tempName2}
+            </if>
+            <if test=" tempRmk != '' and  tempRmk != null">
+            <bind name="tempRmk2" value="'%'+ tempRmk + '%'"/>
+                and   TEMP_RMK like #{tempRmk2}
+            </if>
+            <if test=" tempUser != '' and  tempUser != null">
+                and   TEMP_USER = #{ tempUser}
+            </if>
+        </where>
+    </select>
+</mapper>

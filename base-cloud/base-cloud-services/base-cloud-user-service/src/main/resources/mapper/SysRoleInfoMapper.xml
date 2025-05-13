@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adtec.rdc.base.user.mapper.SysRoleInfoMapper">
+
+    <select id="pageByQuery" resultType="SysRoleInfo">
+        select * from sys_role_info
+        <where>
+            <if test="roleName != '' and roleName != null">
+            	<bind name="roleName2" value="'%'+ roleName + '%'"/>
+                and role_name like #{roleName2}
+            </if>
+            <if test="roleCode != '' and roleCode != null">
+            	<bind name="roleCode2" value="'%'+ roleCode + '%'"/>
+                and role_code like #{roleCode2}
+            </if>
+             <if test="delFlag != '' and delFlag != null">
+                and DEL_FLAG = #{delFlag}
+            </if>
+            <if test="appId != '' and appId != null">
+                and app_id = #{appId}
+            </if>
+        </where>
+    </select>
+    
+    <select id="findRoleByName" resultType="java.lang.Integer">
+    	select count(*) from sys_role_info
+    	where role_name =#{roleName} and app_id = #{appId}
+    </select>
+    
+    <select id="findRoleByCode" resultType="java.lang.Integer">
+    	select count(*) from sys_role_info
+    	where role_code =#{roleCode} and app_id = #{appId}
+    </select>
+    
+    <select id="findRoleByUserRel" resultType="SysRoleInfoQuery">
+    	select 
+    		info.*,usr.user_id  
+    	from 
+    		sys_role_user_rel srmr 
+    	left join 
+    		sys_role_info info  on srmr.role_id =info.role_id 
+    	left join sys_user_info  usr on usr.user_id =srmr.user_id 
+    	<where>
+    		<if test="appId != '' and appId != null">
+                and info.app_id = #{appId}
+            </if>
+    	</where>
+    </select>
+    	<resultMap
+		type="com.adtec.rdc.base.common.model.vo.SysRoleVo"
+		id="SysRoleVoMap">
+		<id property="roleId" column="ROLE_ID" />
+		<result property="roleCode" column="ROLE_CODE" />
+		<result property="roleName" column="ROLE_NAME" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="modifyTime" column="MODIFY_TIME" />
+		<result property="delFlag" column="DEL_FLAG" />
+		<result property="appId" column="APP_ID" />
+	</resultMap>
+	<select id="queryRolesByAppIdAndRoleCodes" resultMap="SysRoleVoMap">
+		select * from SYS_ROLE_INFO where APP_ID = #{appId} and ROLE_CODE in 
+         <foreach collection="roleCodes" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	<select id="queryExistRolesByRoleCodes" resultMap="SysRoleVoMap">
+		select * from SYS_ROLE_INFO where APP_ID = #{appId} and ROLE_CODE not in 
+         <foreach collection="roleCodes" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	<select id="queryRoleVos" resultMap="SysRoleVoMap">
+		select * from SYS_ROLE_INFO where APP_ID = #{appId} 
+	</select>
+</mapper>

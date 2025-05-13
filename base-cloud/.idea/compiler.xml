@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="base-cloud-common" />
+        <module name="base-cloud-monitor" />
+        <module name="base-cloud- crossvalidation-service" />
+        <module name="base-cloud-message-service" />
+        <module name="base-cloud-gen-service" />
+        <module name="base-cloud-config-server" />
+        <module name="base-cloud-server" />
+        <module name="base-cloud-user-service" />
+        <module name="base-cloud-auth" />
+        <module name="base-cloud-gateway" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="8">
+      <module name="base-cloud" target="1.8" />
+      <module name="base-cloud- crossvalidation-service" target="1.8" />
+      <module name="base-cloud-auth" target="1.8" />
+      <module name="base-cloud-common" target="1.8" />
+      <module name="base-cloud-config-server" target="1.8" />
+      <module name="base-cloud-gateway" target="1.8" />
+      <module name="base-cloud-gen-service" target="1.8" />
+      <module name="base-cloud-message-service" target="1.8" />
+      <module name="base-cloud-monitor" target="1.8" />
+      <module name="base-cloud-server" target="1.8" />
+      <module name="base-cloud-services" target="1.8" />
+      <module name="base-cloud-user-service" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="base-cloud- crossvalidation-service" options="-parameters" />
+      <module name="base-cloud-auth" options="-parameters" />
+      <module name="base-cloud-common" options="-parameters" />
+      <module name="base-cloud-config-server" options="-parameters" />
+      <module name="base-cloud-gateway" options="-parameters" />
+      <module name="base-cloud-gen-service" options="-parameters" />
+      <module name="base-cloud-message-service" options="-parameters" />
+      <module name="base-cloud-monitor" options="-parameters" />
+      <module name="base-cloud-server" options="-parameters" />
+      <module name="base-cloud-user-service" options="-parameters" />
+    </option>
+  </component>
+</project>

@@ -1,0 +1,578 @@
+@import './components/theme.less';
+html,
+body,
+#app,
+#root {
+  height: 100%;
+}
+
+.colorWeak {
+  filter: invert(80%);
+}
+
+.ant-layout.layout-basic {
+  height: 100vh;
+  min-height: 100vh;
+}
+canvas {
+  display: block;
+}
+
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+.__view {
+  height: 100%;
+}
+
+// 数据列表 样式
+.table-alert {
+  margin-bottom: 16px;
+}
+// 数据列表 操作
+.table-operator {
+  margin-bottom: 18px;
+
+  button {
+    margin-right: 8px;
+  }
+}
+// 数据列表 搜索条件
+.table-page-search-wrapper {
+  .ant-form-inline {
+    .ant-form-item {
+      display: flex;
+      margin-bottom: 24px;
+      margin-right: 0;
+
+      .ant-form-item-control-wrapper {
+        flex: 1 1;
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      > .ant-form-item-label {
+        line-height: 32px;
+        padding-right: 8px;
+        width: auto;
+      }
+      .ant-form-item-control {
+        height: 32px;
+        line-height: 32px;
+      }
+    }
+  }
+
+  .table-page-search-submitButtons {
+    display: block;
+    margin-bottom: 24px;
+    white-space: nowrap;
+  }
+}
+.ant-pro-page-header-wrap-children-content {
+  margin: 10px !important;
+}
+//表单文字
+.ant-form-item-label > label {
+  color: #56668d;
+}
+.ant-layout-sider {
+  .light {
+    background-color: #ffffff;
+  }
+  .dark {
+    background-color: #111111;
+  }
+}
+.ant-layout-header {
+  background: #ffffff;
+}
+
+.ant-layout-sider.light {
+  background-color: #ffffff;
+}
+//公共弹框修改
+.ant-modal-content {
+  .ant-modal-header {
+    box-shadow: 0px 0px 6px 0px rgba(9, 1, 3, 0.12);
+    padding: 9px 22px;
+  }
+  .ant-modal-title {
+    font-size: 18px;
+  }
+  .has-error .ant-input,
+  .has-error .ant-input:hover {
+    border-color: #f77f5b;
+  }
+  .has-error .ant-form-explain,
+  .has-error .ant-form-split {
+    color: #f77f5b;
+  }
+  .has-error .ant-input:not([disabled]):hover {
+    border-color: #f77f5b;
+  }
+  .has-error .ant-input:focus {
+    border-color: #f77f5b;
+    -webkit-box-shadow: 0 0 0 2px rgba(245, 34, 45, 0.2);
+    box-shadow: 0 0 0 2px rgba(245, 34, 45, 0.2);
+  }
+  .ant-modal-close-x {
+    display: block;
+    width: 16px;
+    height: 16px;
+    font-style: normal;
+    border-radius: 50px;
+    line-height: 0;
+    text-align: center;
+    text-transform: none;
+    text-rendering: auto;
+    margin: 10px 20px;
+    .anticon {
+      font-size: 12px;
+      line-height: 18px;
+    }
+  }
+  //弹框按钮
+  .ant-modal-footer {
+    .ant-btn {
+      height: 30px;
+      padding: 0px 33px;
+      border-radius: 50px;
+    }
+  }
+}
+.ant-modal {
+  .ant-modal-confirm-btns {
+    .ant-btn {
+      border-radius: 50px;
+    }
+  }
+}
+//表格
+.ant-table {
+  .ant-table-thead > tr > th {
+    background: #e9edf7;
+    border-bottom: 0px solid #e8e8e8;
+    color: #55658d;
+    font-size: 14px;
+  }
+  .ant-table-thead > tr > th,
+  .ant-table-tbody > tr > td {
+    padding: 7px 16px;
+  }
+  .ant-table-tbody > tr > td {
+    border-bottom: 0px solid #e8e8e8;
+  }
+  .ant-table-tbody > tr:nth-of-type(even) {
+    background: #f9f9f9;
+  }
+  .ant-checkbox-wrapper {
+    color: #333;
+    font-size: 12px;
+  }
+}
+//日期选择
+.ant-calendar-picker-container {
+  .ant-calendar-today .ant-calendar-date {
+    color: #45a9e5;
+    font-weight: initial;
+    background: #bae7ff;
+  }
+  .ant-calendar-selected-day .ant-calendar-date {
+    color: #fff;
+    font-weight: initial;
+    background: #45a9e5;
+  }
+  .ant-calendar-date {
+    border-radius: 50px;
+    border: 1px solid transparent;
+  }
+}
+//分页
+.ant-pagination {
+  .ant-pagination-prev .ant-pagination-item-link,
+  .ant-pagination-next .ant-pagination-item-link {
+    border: 0px solid #d9d9d9;
+    border-radius: 0px;
+  }
+  .ant-pagination-item {
+    border: 0px solid #d9d9d9;
+    min-width: 18px;
+    height: 18px;
+    line-height: 18px;
+    a {
+      color: #999;
+    }
+  }
+  .ant-pagination-item-active {
+    background: rgba(69, 169, 229, 1);
+    box-shadow: 0px 0px 5px 0px rgba(71, 119, 229, 0.5);
+    border-radius: 50px;
+    a {
+      color: #fff;
+    }
+  }
+}
+//多选框
+.ant-checkbox-wrapper {
+  .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: rgba(255, 255, 255, 1);
+    border-color: rgba(216, 220, 230, 1);
+  }
+  .ant-checkbox-checked .ant-checkbox-inner::after {
+    border: 2px solid #0097f3;
+    position: absolute;
+    display: table;
+    border-top: 0;
+    border-left: 0;
+    -webkit-transform: rotate(45deg) scale(1) translate(-50%, -50%);
+    transform: rotate(45deg) scale(1) translate(-50%, -50%);
+    opacity: 1;
+    -webkit-transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
+    transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
+    content: ' ';
+  }
+}
+//下拉框
+.ant-select-dropdown-menu-item:hover:not(.ant-select-dropdown-menu-item-disabled) {
+  background-color: #0097f3;
+  color: #fff;
+}
+//步骤条
+.ant-steps {
+  .ant-steps-item-icon {
+    width: 48px;
+    height: 48px;
+    padding: 2px 1px;
+    border-radius: 50px;
+    border: 6px solid #f6f6f6;
+    background: #f6f6f6;
+  }
+  .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon {
+    color: #fff;
+    display: block;
+    width: 34px;
+    height: 34px;
+    background: #ddddde;
+    border-radius: 50px;
+    box-shadow: 0px 0px 8px 0px #ababab;
+    line-height: 30px;
+  }
+  .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon {
+    color: #fff;
+    display: block;
+    width: 34px;
+    height: 34px;
+    border-radius: 50px;
+    line-height: 30px;
+  }
+  .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
+    color: #fff;
+    display: block;
+    width: 34px;
+    height: 34px;
+    border-radius: 50px;
+    line-height: 30px;
+  }
+  .ant-steps-item-process .ant-steps-item-icon,.ant-steps-item-finish .ant-steps-item-icon{
+    background: transparent;
+    border-color: transparent;
+  }
+  .ant-steps-item-tail{
+    top:19px
+  }
+}
+//隐藏页脚
+.ant-layout-footer {
+  display: none;
+}
+@media (max-width: @screen-xs) {
+  .ant-table {
+    width: 100%;
+    overflow-x: auto;
+    &-thead > tr,
+    &-tbody > tr {
+      > th,
+      > td {
+        white-space: pre;
+        > span {
+          display: block;
+        }
+      }
+    }
+  }
+}
+//表格公共标签
+.ant-tag-green {
+  color: #fff;
+  background: #36c98e;
+  border-color: #1bba7a;
+}
+.ant-tag-blue {
+  color: #fff;
+  background: #58bbf8;
+  border-color: #0585d4;
+}
+
+.table_yellow {
+  color: #f5bb4a;
+}
+.table_orange {
+  color: #f77f5b;
+}
+//状态颜色
+.table_black {
+  color: #333;
+}
+.table_ash {
+  color: #aaa;
+}
+.table_orange {
+  color: #f77f5b;
+}
+//公共列表样式
+.ant-list-pagination {
+  text-align: left;
+}
+.ant-list.custom-ant-list {
+  border-top: 1px solid #ccc;
+  color: #999;
+  .ant-list-item-meta-title {
+    margin-bottom: 0px;
+  }
+  .ant-list-item-action > li {
+    color: #666666;
+    font-size: 14px;
+  }
+  .ant-list-item-text {
+    color: #cccccc;
+  }
+  .item-meta-content {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+}
+.custom-ant-list.ant-list-something-after-last-item .ant-spin-container > .ant-list-items > .ant-list-item:last-child {
+  border-bottom: 1px solid #ccc;
+}
+.ant-input-affix-wrapper .ant-input {
+  max-height: 300px;
+}
+.problemSolving {
+  .from_head {
+    width: max-content;
+    float: left;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(86, 102, 141, 1);
+    margin: 0;
+    i {
+      display: block;
+      width: 20px;
+      height: 20px;
+      float: left;
+      margin-right: 15px;
+      background-repeat: no-repeat;
+    }
+  }
+  .from_span {
+    font-size: 14px;
+    font-weight: bold;
+    color: rgba(51, 51, 51, 1);
+  }
+  .questionRmk {
+    background: rgba(242, 249, 255, 1);
+    padding: 20px 0 20px 15px;
+    margin: 20px 0 20px 0;
+    .from_span_ {
+      width: 60%;
+      min-height: 116px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      line-clamp: 4;
+      -webkit-box-orient: vertical;
+    }
+  }
+  .enclosure {
+    margin: 20px 0 10px 0;
+    span {
+      float: left;
+      font-size: 12px;
+      display: inline-block;
+      white-space: nowrap;
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 10px;
+    }
+    .ant-col_ {
+      background: rgba(251, 251, 251, 1);
+      border: 1px solid rgba(230, 235, 245, 1);
+      margin-right: 16px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .col_span {
+      text-align: center;
+    }
+  }
+}
+/*表格滚动条样式*/
+.indexSystem {
+  .ant-table-body::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 5px; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 6px;
+  }
+  .ant-table-body::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.2);
+  }
+  .ant-table-body::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0);
+    border-radius: 0;
+    background: rgba(0, 0, 0, 0);
+  }
+}
+.iframe::-webkit-scrollbar,
+.s_table_class .ant-drawer-wrapper-body::-webkit-scrollbar,
+.table_scroll .ant-table-body-inner::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width: 5px; /*高宽分别对应横竖滚动条的尺寸*/
+  height: 6px;
+}
+.iframe::-webkit-scrollbar-thumb,
+.s_table_class .ant-drawer-wrapper-body::-webkit-scrollbar-thumb,
+.table_scroll .ant-table-body-inner::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.2);
+}
+.iframe::-webkit-scrollbar-track,
+.s_table_class .ant-drawer-wrapper-body::-webkit-scrollbar-track,
+.table_scroll .ant-table-body-inner::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0);
+  border-radius: 0;
+  background: rgba(0, 0, 0, 0);
+}
+.table_scroll .ant-table-fixed-right {
+  min-height: 35px;
+  height: -webkit-fill-available;
+}
+
+//分页
+.ant-pagination {
+  .ant-pagination-prev .ant-pagination-item-link,
+  .ant-pagination-next .ant-pagination-item-link {
+    border: 0px solid @borderColor;
+  }
+  .ant-pagination-item {
+    border: 0px solid @borderColor;
+    min-width: 18px;
+    height: 18px;
+    line-height: 18px;
+    a {
+      color: @fontColoe;
+    }
+  }
+  .ant-pagination-item-active {
+    background: @primary-color;
+    box-shadow: 0px 0px 5px 0px @primary-color;
+    border-radius: 50px;
+    a {
+      color: @whiteColor;
+    }
+  }
+}
+//公共弹框修改
+.ant-modal-content {
+  .ant-modal-header {
+    border-bottom: 0px solid @ashColor;
+    background: @primary-color;
+  }
+  .ant-modal-title {
+    color: @whiteColor;
+  }
+  .ant-modal-footer {
+    border-top: 0px solid @ashColor;
+  }
+  .ant-modal-close-x {
+    background: @whiteColor;
+    .anticon {
+      color: @primary-color;
+    }
+  }
+}
+//多选框
+.ant-checkbox-wrapper {
+  .ant-checkbox-checked .ant-checkbox-inner::after {
+    border: 2px solid @primary-color;
+    border-top: 0;
+    border-left: 0;
+  }
+}
+.ant-list.custom-ant-list {
+  .ant-list-item-meta-title {
+    > a {
+      color: @primary-color;
+    }
+  }
+}
+//步骤条
+.ant-steps {
+  .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon ,.ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
+    background:  @primary-color;
+    box-shadow: 0px 0px 8px 0px  @primary-color;
+  }
+}
+//表单中输入项宽度100%
+.ant-input-number,.ant-calendar-picker{
+  width: 100%;
+}
+.ant-table-row-selected {
+  .ant-table-selection-column,.ant-table-row-cell-break-word{
+    background: @primary-2 !important;  }
+}
+.ant-layout-content .__view{
+  background-color: #fff;
+}
+.table-wrapper .ant-pagination.ant-table-pagination{
+  position: fixed;
+  bottom: 30px;
+  right: 27px;
+}
+
+// 滚动条
+.ant-table-body-inner::-webkit-scrollbar,.ant-table-body::-webkit-scrollbar{/*高宽分别对应横竖滚动条的尺寸*/
+  width: 7px;
+  height: 6px;
+}
+.ant-table-body-inner::-webkit-scrollbar-thumb,.ant-table-body::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.ant-table-body-inner::-webkit-scrollbar-track ,.ant-table-body::-webkit-scrollbar-track {/*滚动条里面轨道*/
+  -webkit-box-shadow: inset 0 0 5px #fff;
+  border-radius: 0;
+  background: #fff;
+}
+

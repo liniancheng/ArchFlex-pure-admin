@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.workflow.mapper.SysWorkflowInfoMapper">
+
+	<!-- 基本resultMap -->
+	<resultMap type="com.adtec.rdc.base.workflow.model.po.SysWorkflowInfo" id="SysWorkflowInfoMap">
+		<id property="workflowId" column="WORKFLOW_ID" />
+		<result property="workflowName" column="WORKFLOW_NAME" />
+		<result property="workflowRmk" column="WORKFLOW_RMK" />
+		<result property="workflowLevel" column="WORKFLOW_LEVEL" />
+		<result property="typeId" column="TYPE_ID" />
+		<result property="wfId" column="WF_ID" />
+		<result property="appId" column="APP_ID" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="modifyTime" column="MODIFY_TIME" />
+		<result property="workflowCode" column="WORKFLOW_CODE" />
+		<result property="versionNum" column="VERSION_NUM" />
+		<result property="versionMax" column="VERSION_MAX" />
+		<result property="detailUrl" column="DETAIL_URL" />
+		<result property="finishService" column="FINISH_SERVICE" />
+	</resultMap>
+
+	<select id="pageByQuery" resultMap="SysWorkflowInfoMap">
+		select * from sys_workflow_info
+		<where>
+			<if test=" workflowId != '' and  workflowId != null">
+				and WORKFLOW_ID = #{ workflowId}
+			</if>
+			<if test=" workflowCode != '' and  workflowCode != null">
+				and WORKFLOW_CODE = #{ workflowCode}
+			</if>
+			<if test=" workflowName != '' and  workflowName != null">
+				and WORKFLOW_NAME = #{ workflowName}
+			</if>
+			<if test=" workflowRmk != '' and  workflowRmk != null">
+				and WORKFLOW_RMK = #{ workflowRmk}
+			</if>
+			<if test="workflowLevel != null">
+				and WORKFLOW_LEVEL = #{ workflowLevel}
+			</if>
+			<if test=" typeId != '' and  typeId != null">
+				and TYPE_ID = #{ typeId}
+			</if>
+			<if test=" wfId != '' and  wfId != null">
+				and WF_ID = #{ wfId}
+			</if>
+			<if test=" appId != '' and  appId != null">
+				and APP_ID = #{ appId}
+			</if>
+			<if test="createTime != null">
+				and CREATE_TIME = #{ createTime}
+			</if>
+			<if test="modifyTime != null">
+				and MODIFY_TIME = #{ modifyTime}
+			</if>
+			<if test=" versionNum != '' and  versionNum != null">
+				and VERSION_NUM = #{ versionNum}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryWorkflowListForSearch" resultMap="SysWorkflowInfoMap">
+		select * from sys_workflow_info
+		<where>
+			<if test=" workflowName != '' and  workflowName != null">
+			<bind name="workflowName2" value="'%'+ workflowName + '%'"/>
+				and WORKFLOW_NAME like #{workflowName2}
+			</if>
+			<if test=" workflowRmk != '' and  workflowRmk != null">
+			<bind name="workflowRmk2" value="'%'+ workflowRmk + '%'"/>
+				and WORKFLOW_RMK like #{workflowRmk2}
+			</if>
+			<if test=" appId != '' and  appId != null">
+				and APP_ID = #{ appId}
+			</if>
+		</where>
+		order by WORKFLOW_CODE, VERSION_NUM
+	</select>
+	
+	<select id="isExistName" resultType="java.lang.Boolean">
+    	select count(*) from sys_workflow_info
+    	<where>
+    		<if test="workflowId != '' and workflowId != null">
+                and  WORKFLOW_ID <![CDATA[ <> ]]> #{ workflowId}
+    		</if>
+    		<if test="workflowName != '' and workflowName != null">
+                and  WORKFLOW_NAME = #{ workflowName}
+    		</if>
+    		<if test="appId != '' and appId != null">
+                and  APP_ID = #{ appId}
+    		</if>
+    	</where>
+    </select>
+    
+    <select id="isExistCode" resultType="java.lang.Boolean">
+    	select count(*) from sys_workflow_info
+    	<where>
+    		<if test="workflowCode != '' and workflowCode != null">
+                and  WORKFLOW_CODE = #{ workflowCode}
+    		</if>
+    		<if test="appId != '' and appId != null">
+                and  APP_ID = #{ appId}
+    		</if>
+    	</where>
+    </select>
+    
+    <select id="isExistInstance" resultType="java.lang.Boolean">
+    	select count(*) from sys_workflow_instance where WORKFLOW_ID = #{workflowId}
+    </select>
+    
+    <select id="selectPreviousVersionInfoByWorkflowCodeAndVersionNum" resultMap="SysWorkflowInfoMap">
+    	select * from sys_workflow_info where workflow_code=#{workflowCode} and version_num=(select max(version_num) from sys_workflow_info WHERE workflow_code=#{workflowCode} and version_num <![CDATA[ <> ]]> #{versionNum})
+    </select>
+    
+    <select id="queryWorkflowListForCreate" resultMap="SysWorkflowInfoMap">
+		select * from sys_workflow_info
+		<where>
+			<if test=" workflowCode != '' and  workflowCode != null">
+				and WORKFLOW_CODE = #{workflowCode}
+			</if>
+			<if test=" appId != '' and  appId != null">
+				and APP_ID = #{ appId}
+			</if>
+		</where>
+		order by VERSION_NUM desc
+	</select>
+</mapper>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.resource.mapper.NoticeSmsSrvInfoMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.resource.model.po.NoticeSmsSrvInfo" id="NoticeSmsSrvInfoMap">
+            <id property="srvId" column="SRV_ID"/>
+            <result property="srvName" column="SRV_NAME"/>
+            <result property="srvSmsProgram" column="SRV_SMS_PROGRAM"/>
+            <result property="srvRmk" column="SRV_RMK"/>
+            <result property="srvExtendField" column="SRV_EXTEND_FIELD"/>
+            <result property="appId" column="APP_ID"/>
+    </resultMap>
+
+    <select id="pageByQuery" resultMap="NoticeSmsSrvInfoMap">
+        SELECT * FROM NOTICE_SMS_SRV_INFO
+        <where >
+            <if test=" srvId != '' and  srvId != null">
+                and   SRV_ID = #{ srvId}
+            </if>
+            <if test=" srvName != '' and  srvName != null">
+            <bind name="srvName2" value="'%'+ srvName + '%'"/>
+                and   SRV_NAME  like #{srvName2}
+            </if>
+            <if test=" srvSmsProgram != '' and  srvSmsProgram != null">
+            <bind name="srvSmsProgram2" value="'%'+ srvSmsProgram + '%'"/>
+                and   SRV_SMS_PROGRAM like #{srvSmsProgram2}
+            </if>
+            <if test=" srvRmk != '' and  srvRmk != null">
+            <bind name="srvRmk2" value="'%'+ srvRmk + '%'"/>
+                and   SRV_RMK like #{srvRmk2}
+            </if>
+            <if test=" srvExtendField != '' and  srvExtendField != null">
+            <bind name="srvExtendField2" value="'%'+ srvExtendField + '%'"/>
+                and   SRV_EXTEND_FIELD like #{srvExtendField2}
+            </if>
+            <if test=" appId != '' and  appId != null">
+                and   APP_ID = #{ appId}
+            </if>
+        </where>
+    </select>
+     <select id="isSameSrvName" resultType="java.lang.Integer">
+		select count(*) from NOTICE_SMS_SRV_INFO where SRV_NAME=#{srvName}  and   APP_ID = #{ appId}
+	</select>
+	
+	<select id="isExistSmsTitle" resultType="java.lang.Boolean">
+    	select count(*) from NOTICE_SMS_SRV_INFO
+    	<where>
+    		<if test=" srvId != '' and  srvId != null">
+                and  SRV_ID <![CDATA[ <> ]]> #{ srvId}
+            </if>
+    		<if test=" srvName != '' and  srvName != null">
+                and   SRV_NAME  = #{srvName} 
+            </if>
+            <if test=" appId != '' and  appId != null">
+                and   APP_ID = #{ appId}
+            </if>
+    	</where>
+    </select>
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.crossvalidation.mapper.CvChkPlanDetailMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.crossvalidation.model.po.CvChkPlanDetail" id="CvChkPlanDetailMap">
+                    <id property="id" column="ID"/>
+                                                            <result property="planId" column="PLAN_ID"/>
+                                            <result property="indNo" column="IND_NO"/>
+                                            <result property="orgVal" column="ORG_VAL"/>
+                                            <result property="dateVal" column="DATE_VAL"/>
+                                            <result property="sysVal" column="SYS_VAL"/>
+                                            <result property="execSql" column="EXEC_SQL"/>
+                                            <result property="resultStatus" column="RESULT_STATUS"/>
+                                            <result property="dataTime" column="DATA_TIME"/>
+                        </resultMap>
+
+    <select id="pageByQuery" resultMap="CvChkPlanDetailMap">
+        select * from cv_chk_plan_detail
+        <where >
+                                    <if test=" id != '' and  id != null">
+                and   ID = #{ id}
+            </if>
+                                                <if test=" planId != '' and  planId != null">
+                and   PLAN_ID = #{ planId}
+            </if>
+                                                <if test=" indNo != '' and  indNo != null">
+                and   IND_NO = #{ indNo}
+            </if>
+                                                <if test=" orgVal != '' and  orgVal != null">
+                and   ORG_VAL = #{ orgVal}
+            </if>
+                                                <if test=" dateVal != '' and  dateVal != null">
+                and   DATE_VAL = #{ dateVal}
+            </if>
+                                                <if test=" sysVal != '' and  sysVal != null">
+                and   SYS_VAL = #{ sysVal}
+            </if>
+                                                <if test=" execSql != '' and  execSql != null">
+                and   EXEC_SQL = #{ execSql}
+            </if>
+                                                <if test=" resultStatus != '' and  resultStatus != null">
+                and   RESULT_STATUS = #{ resultStatus}
+            </if>
+                                                <if test=" dataTime != '' and  dataTime != null">
+                and   DATA_TIME = #{ dataTime}
+            </if>
+                                </where>
+    </select>
+    <select id="selectWbAndZjj" resultType="com.adtec.rdc.base.crossvalidation.model.bo.ResultBo">
+        SELECT WB,ZJJ FROM east3_hlxxb_r
+        <where>
+            <if test=" dataTime != '' and  dataTime != null">
+                and   DIS_DATA_DATE = #{ dataTime}
+            </if>
+            <if test=" orgVal != '' and  orgVal != null">
+                and   LP_INST_ID = #{ orgVal}
+            </if>
+        </where>
+    </select>
+</mapper>

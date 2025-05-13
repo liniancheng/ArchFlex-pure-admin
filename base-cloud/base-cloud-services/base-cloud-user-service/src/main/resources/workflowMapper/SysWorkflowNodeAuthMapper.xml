@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.adtec.rdc.base.workflow.mapper.SysWorkflowNodeAuthMapper">
+
+	<!-- 基本resultMap -->
+	<resultMap
+		type="com.adtec.rdc.base.workflow.model.po.SysWorkflowNodeAuth"
+		id="SysWorkflowNodeAuthMap">
+		<id property="authId" column="AUTH_ID" />
+		<result property="authType" column="AUTH_TYPE" />
+		<result property="objId" column="OBJ_ID" />
+		<result property="nodeId" column="NODE_ID" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="objName" column="OBJ_NAME" />
+	</resultMap>
+
+	<select id="pageByQuery" resultMap="SysWorkflowNodeAuthMap">
+		select * from (
+			select a.*,b.role_name as obj_name from sys_workflow_node_auth a, sys_role_info b where auth_type='role' and a.obj_id=b.role_id
+			union all
+			select a.*,b.user_name as obj_name from sys_workflow_node_auth a, sys_user_info b where auth_type='user' and a.obj_id=b.user_id
+			union all
+			SELECT a.*,b.macro_name AS obj_name FROM sys_workflow_node_auth a, sys_workflow_macro_info b WHERE a.auth_type IN ('role_macro','user_macro') AND a.obj_id=b.macro_code
+		) temp_table where NODE_ID = #{ nodeId} 
+	</select>
+	
+	<select id="queryObjIdsByNodeIdAndAuthType" resultType="String">
+		select obj_id from sys_workflow_node_auth where node_id=#{nodeId} and auth_type=#{authType}
+	</select>
+	
+	<delete id="deleteByWorkflowId" parameterType="String">
+		delete from sys_workflow_node_auth where node_id in (select node_id from sys_workflow_node_info where workflow_id=#{workflowId})
+	</delete>
+	
+	<insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="false">
+		insert into sys_workflow_node_auth(AUTH_ID, AUTH_TYPE, OBJ_ID, NODE_ID, CREATE_TIME) 
+    	values
+		<foreach collection="nodes" item="item" index="index" separator=",">
+    		(
+    			#{item.authId},
+    			#{item.authType},
+    			#{item.objId},
+    			#{item.nodeId},
+    			#{item.createTime}
+    		)
+        </foreach>	
+	</insert>
+
+</mapper>

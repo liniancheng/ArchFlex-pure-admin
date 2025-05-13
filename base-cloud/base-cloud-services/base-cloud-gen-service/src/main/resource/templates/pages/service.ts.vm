@@ -1,0 +1,36 @@
+/*
+ * @Author: ${tableInfo.authorName}
+ * @Date: ${datetime}
+ * @Descripttion:${tableInfo.funcDesc}服务定义
+ * @version: 1.0
+ * @Copyright: adtec
+ * @LastEditors: ${tableInfo.authorName}
+ * @LastEditTime: ${datetime}
+ */
+import request from '@/utils/request';
+import { DataTableListItem, DataTableListParams } from './data';
+
+export async function fetchPage(param: DataTableListParams) {
+    return request('/${tableInfo.moduleName}/${tableInfo.funcName}/page', {
+        params: param
+    });
+}
+
+export async function getById(id: string) {
+    return request.get(`/${tableInfo.moduleName}/${tableInfo.funcName}/${id}`)
+}
+
+export async function save(data: DataTableListItem) {
+    return request.post('/${tableInfo.moduleName}/${tableInfo.funcName}', {
+        data: data
+    })
+}
+
+export async function update(data: DataTableListItem) {
+    return request.put('/${tableInfo.moduleName}/${tableInfo.funcName}', {
+        data: data
+    })
+}
+export async function deleteById(id: string) {
+    return request.delete(`/${tableInfo.moduleName}/${tableInfo.funcName}/${id}`)
+}

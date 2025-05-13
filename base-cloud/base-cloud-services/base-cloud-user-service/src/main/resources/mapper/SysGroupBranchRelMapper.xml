@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper	namespace="com.adtec.rdc.base.user.mapper.SysGroupBranchRelMapper">
+	<delete id="removeByIds" parameterType="java.util.List">
+		DELETE FROM sys_group_branch_rel WHERE group_id = #{groupId,jdbcType=VARCHAR} AND branch_no in
+		<foreach collection="branchNos" item="item" open="(" separator="," close=")">
+	#{item}
+		</foreach>
+	</delete>
+</mapper>

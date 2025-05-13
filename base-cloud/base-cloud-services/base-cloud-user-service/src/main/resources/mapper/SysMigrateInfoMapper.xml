@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.migrate.mapper.SysMigrateInfoMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.migrate.model.po.SysMigrateInfo" id="SysMigrateInfoMap">
+            <id property="migId" column="mig_id"/>
+            <result property="migColId" column="mig_col_id"/>
+            <result property="migColName" column="mig_col_name"/>
+            <result property="migEndSign" column="mig_end_sign"/>
+            <result property="migRelId" column="mig_rel_id"/>
+            <result property="migRelType" column="mig_rel_type"/>
+            <result property="migConverType" column="mig_conver_type"/>
+            <result property="migRelValue" column="mig_rel_value"/>
+            <result property="migTabCname" column="mig_tab_cname"/>
+            <result property="migTabName" column="mig_tab_name"/>
+            <result property="migType" column="mig_type"/>
+            <result property="parentMigId" column="parent_mig_id"/>
+    </resultMap>
+
+    <select id="pageByQuery" resultMap="SysMigrateInfoMap">
+        select * from sys_migrate_info
+        <where >
+            <if test=" migColId != '' and  migColId != null">
+                and   mig_col_id = #{ migColId}
+            </if>
+            <if test=" migColName != '' and  migColName != null">
+                and   mig_col_name = #{ migColName}
+            </if>
+            <if test=" migEndSign != '' and  migEndSign != null">
+                and   mig_end_sign = #{ migEndSign}
+            </if>
+            <if test=" migId != '' and  migId != null">
+                and   mig_id = #{ migId}
+            </if>
+            <if test=" migRelId != '' and  migRelId != null">
+                and   mig_rel_id = #{ migRelId}
+            </if>
+            <if test=" migRelType != '' and  migRelType != null">
+                and   mig_rel_type = #{ migRelType}
+            </if>
+            <if test=" migRelValue != '' and  migRelValue != null">
+                and   mig_rel_value = #{ migRelValue}
+            </if>
+            <if test=" migTabCname != '' and  migTabCname != null">
+                and   mig_tab_cname = #{ migTabCname}
+            </if>
+            <if test=" migTabName != '' and  migTabName != null">
+                and   mig_tab_name = #{ migTabName}
+            </if>
+            <if test=" migType != '' and  migType != null">
+                and   mig_type = #{ migType}
+            </if>
+            <if test=" parentMigId != '' and  parentMigId != null">
+                and   parent_mig_id = #{ parentMigId}
+            </if>
+        </where>
+    </select>
+    
+    <select id="findAll" resultMap="SysMigrateInfoMap">
+    	select * from sys_migrate_info
+    </select>
+</mapper>

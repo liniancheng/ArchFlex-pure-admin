@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.tenant.mapper.SysMenuTmpMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.tenant.model.po.SysMenuTmp" id="SysMenuTmpMap">
+            <id property="menuId" column="menu_id"/>
+            <result property="menuName" column="menu_name"/>
+            <result property="menuRouteName" column="menu_route_name"/>
+            <result property="menuType" column="menu_type"/>
+            <result property="menuUrl" column="menu_url"/>
+            <result property="httpMethod" column="http_method"/>
+            <result property="menuPath" column="menu_path"/>
+            <result property="buttonPermission" column="button_permission"/>
+            <result property="menuColor" column="menu_color"/>
+            <result property="parentId" column="parent_id"/>
+            <result property="menuIcon" column="menu_icon"/>
+            <result property="componentPath" column="component_path"/>
+            <result property="menuSort" column="menu_sort"/>
+            <result property="createTime" column="create_time"/>
+            <result property="modifyTime" column="modify_time"/>
+            <result property="delFlag" column="del_flag"/>
+            <result property="appId" column="app_id"/>
+            <result property="appFlag" column="app_flag"/>
+    </resultMap>
+
+    <select id="queryMenuTmps" resultMap="SysMenuTmpMap">
+        select * from sys_menu_tmp where app_flag = #{appFlag} order by parent_id asc
+        
+    </select>
+</mapper>

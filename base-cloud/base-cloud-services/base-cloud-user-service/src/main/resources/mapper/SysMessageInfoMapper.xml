@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.user.mapper.SysMessageInfoMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="SysMessageInfo" id="SysMessageInfoMap">
+            <id property="messageId" column="message_id"/>
+            <result property="messageType" column="message_type"/>
+            <result property="messageStatus" column="message_status"/>
+            <result property="messageTitle" column="message_title"/>
+            <result property="messageContent" column="message_content"/>
+            <result property="messageRevUser" column="message_rev_user"/>
+            <result property="delFlag" column="del_flag"/>
+            <result property="createTime" column="create_time"/>
+            <result property="modifyTime" column="modify_time"/>
+            <result property="appId" column="app_id"/>
+    </resultMap>
+
+    <select id="pageByQuery" resultMap="SysMessageInfoMap">
+        select * from sys_message_info
+        <where >
+        	<if test=" appId != '' and  appId != null">
+                and   app_id = #{appId}
+            </if>
+            <if test=" messageType != '' and  messageType != null">
+                and   message_type = #{messageType}
+            </if>
+            <if test=" messageStatus != '' and  messageStatus != null">
+                and   message_status = #{messageStatus}
+            </if>
+            <if test=" keyword != '' and  keyword != null">
+            	<bind name="keyword2" value="'%'+ keyword + '%'"/>
+                and   (message_title like #{keyword2} or message_content like #{keyword2})
+            </if>
+            <if test=" messageRevUser != '' and  messageRevUser != null">
+                and   message_rev_user = #{messageRevUser}
+            </if>
+            and   del_flag = '0'
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="queryMessageListByUserIdAndIdList" resultMap="SysMessageInfoMap">
+        select * from sys_message_info where message_rev_user=#{userId} and message_id in 
+        <foreach collection="idList" item="item" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+    </select>
+</mapper>

@@ -1,0 +1,27 @@
+package ${tableInfo.servicePackageName}.impl;
+
+import com.adtec.rdc.base.common.base.service.impl.BaseServiceImpl;
+import ${tableInfo.mapperPackageName}.${tableInfo.className}Mapper;
+import ${tableInfo.poPackageName}.${tableInfo.className};
+import $!{tableInfo.queryPackageName}.$!{tableInfo.className}Query;
+import ${tableInfo.servicePackageName}.${tableInfo.className}Service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+/**
+ * @author $tableInfo.authorName
+ * @date ${datetime}
+ */
+@Service
+public class ${tableInfo.className}ServiceImpl extends BaseServiceImpl<$!{tableInfo.className}Mapper, $!{tableInfo.className}> implements $!{tableInfo.className}Service {
+	@Autowired
+    private ${tableInfo.className}Mapper mapper;
+	
+	@Override
+	public $!{tableInfo.className}Query pageByQuery($!{tableInfo.className}Query query) {
+		query.setDesc("create_time", "modify_time");
+		mapper.pageByQuery(query);
+        return query;
+	}
+}

@@ -1,0 +1,97 @@
+/*
+ * @Author: ${tableInfo.authorName}
+ * @Date: ${datetime}
+ * @Descripttion:${tableInfo.funcDesc}Model定义
+ * @version: 1.0
+ * @Copyright: adtec
+ * @LastEditors: ${tableInfo.authorName}
+ * @LastEditTime: ${datetime}
+ */
+import { AnyAction, Reducer } from 'redux';
+import { EffectsCommandMap } from 'dva';
+import {
+    fetchPage,
+    getById,
+    save,
+    update,
+    deleteById
+} from './service'
+
+import { message } from 'antd';
+import { convertResult } from '@/utils/utils'
+
+export interface StateType {
+    data?: TableListData;
+}
+
+export type Effect = (
+    action: AnyAction,
+    effects: EffectsCommandMap & { select: <T>(func: (state: StateType) => T) => T },
+) => void;
+
+export interface ModelType {
+    namespace: string;
+    state: StateType;
+    effects: {
+        fetch: Effect;
+        fetchOne: Effect;
+        add: Effect;
+        remove: Effect;
+        update: Effect;
+    };
+    reducers: {
+        save: Reducer<StateType>;
+    };
+}
+
+const Model: ModelType = {
+    namespace: '${tableInfo.funcName}TableList',
+
+    state: {
+        data: {
+            list: [],
+            pagination: {},
+        },
+    },
+
+    effects: {
+        *fetch({ payload }, { call, put }) {
+            const response = yield call(fetchPage, { size: 10, current: 1, ...payload });
+            if (response.code === 0) {
+                yield put({
+                    type: 'save',
+                    payload: response.data,
+                });
+            } else if (response.code != undefined) {
+                message.error(response.message);
+            }
+        },
+        *fetchOne({ payload, callback }, { call }) {
+            const response = yield call(getById, payload);
+            if (callback && response.code != undefined) callback(response);
+        },
+        *add({ payload, callback }, { call }) {
+            const response = yield call(save, payload);
+            if (callback && response.code != undefined) callback(response);
+        },
+        *remove({ payload, callback }, { call }) {
+            const response = yield call(deleteById, payload);
+            if (callback && response.code != undefined) callback(response);
+        },
+        *update({ payload, callback }, { call }) {
+            const response = yield call(update, payload);
+            if (callback && response.code != undefined) callback(response);
+        },
+    },
+
+    reducers: {
+        save(state, action) {
+            return {
+                ...state,
+                data: convertResult(action.payload),
+            };
+        },
+    },
+};
+
+export default Model;

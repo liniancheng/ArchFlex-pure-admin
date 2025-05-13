@@ -1,0 +1,44 @@
+server:
+  port: 2005
+spring:
+  application:
+    name: api-gateway-dynamic
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: base-cloud-config-server
+      profile: dev
+      name: config
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+ignore:
+  urls:
+  - /admin/user/forgot/**
+  - /admin/user/changeLoginPwd/**
+  - /admin/public/index
+  - /**/*.css
+  - /auth/**
+  - /admin/user/mobile/**
+  - /admin/user/captcha
+  - /refresh/**
+  - /swagger-ui.html
+  - /swagger-resources/**
+  - /**/v2/api-docs
+  - /webjars/**
+
+swagger:
+  client:
+    - base-cloud-user-service
+    - base-cloud-gen-service
+    - dgmp-metadata-service
+    - dgmp-common-service
+    - dgmp-quality-service
+    - dgmp-standard-service
+
+# 关闭默认路由
+zuul:
+  ignoredServices: '*'

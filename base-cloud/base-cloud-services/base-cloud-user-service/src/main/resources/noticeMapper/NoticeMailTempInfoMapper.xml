@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.resource.mapper.NoticeMailTempInfoMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.resource.model.po.NoticeMailTempInfo" id="NoticeMailTempInfoMap">
+            <id property="tempId" column="TEMP_ID"/>
+            <result property="tempName" column="TEMP_NAME"/>
+            <result property="tempContent" column="TEMP_CONTENT"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="modifyTime" column="MODIFY_TIME"/>
+            <result property="appId" column="APP_ID"/>
+    </resultMap>
+
+    <select id="pageByQuery" resultMap="NoticeMailTempInfoMap">
+        SELECT * FROM NOTICE_MAIL_TEMP_INFO
+        <where >
+            <if test=" tempName != '' and  tempName != null">
+               <bind name="tempName2" value="'%'+ tempName + '%'"/>
+                and   TEMP_NAME like #{tempName2}
+            </if>
+             <if test=" tempContent != '' and  tempContent != null">
+               <bind name="tempContent2" value="'%'+ tempContent + '%'"/>
+                and   TEMP_CONTENT like #{tempContent2}
+            </if>
+            <if test=" appId != '' and  appId != null">
+                and   APP_ID = #{ appId}
+            </if>
+        </where>
+    </select>
+     <select id="isExistSrvTitle" resultType="java.lang.Boolean">
+    	select count(*) from NOTICE_MAIL_TEMP_INFO
+    	<where>
+    		<if test=" tempId != '' and  tempId != null">
+                and  TEMP_ID <![CDATA[ <> ]]> #{ tempId}
+            </if>
+    		<if test=" tempName != '' and  tempName != null">
+                and   TEMP_NAME  = #{tempName}
+            </if>
+            <if test=" appId != '' and  appId != null">
+                and   APP_ID = #{ appId}
+            </if>
+    	</where>
+    </select>
+     <select id="isSameTempName" resultType="java.lang.Integer">
+		select count(*) from NOTICE_MAIL_TEMP_INFO where TEMP_NAME=#{tempName}  and   APP_ID = #{ appId}
+	</select>
+	
+	<select id="queryMailTempListByAppId" resultMap="NoticeMailTempInfoMap">
+        SELECT * FROM NOTICE_MAIL_TEMP_INFO where APP_ID = #{appId}
+    </select>
+</mapper>

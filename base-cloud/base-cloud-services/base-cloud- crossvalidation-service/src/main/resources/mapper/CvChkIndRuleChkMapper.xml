@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.crossvalidation.mapper.CvChkIndRuleChkMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.crossvalidation.model.po.CvChkIndRuleChk" id="CvChkIndRuleChkMap">
+        <id property="id" column="ID"/>
+        <result property="indNo" column="IND_NO"/>
+        <result property="sysVal" column="SYS_VAL"/>
+        <result property="state" column="STATE"/>
+        <result property="ruleVal" column="RULE_VAL"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="createUser" column="CREATE_USER"/>
+        <result property="updateUser" column="UPDATE_USER"/>
+        <result property="orgVal" column="ORG_VAL"/>
+        <result property="chkSql" column="CHK_SQL"/>
+        <result property="custOrg" column="CUST_ORG"/>
+        <result property="eastFrq" column="EAST_FRQ"/>
+        <result property="finBaseDataFrq" column="FIN_BASE_DATA_FRQ"/>
+        <result property="custRskFrq" column="CUST_RSK_FRQ"/>
+        <result property="bigFocusFrq" column="BIG_FOCUS_FRQ"/>
+        <result property="t1104Frq" column="T1104_FRQ"/>
+    </resultMap>
+    <select id="pageByQuery" resultMap="CvChkIndRuleChkMap">
+        select * from cv_chk_ind_rule_chk
+        <where>
+            <if test=" indNo != '' and  indNo != null">
+                and IND_NO = #{ indNo}
+            </if>
+            <if test=" sysVal != '' and  sysVal != null">
+                and SYS_VAL = #{ sysVal}
+            </if>
+            <if test=" orgVal != '' and  orgVal != null">
+                and ORG_VAL = #{ orgVal}
+            </if>
+            <if test=" ruleVal != '' and  ruleVal != null">
+                and RULE_VAL = #{ ruleVal}
+            </if>
+        </where>
+        order by IND_NO
+    </select>
+    <select id="rulePageByQuery" resultType="com.adtec.rdc.base.crossvalidation.model.bo.CvChkIndRuleChkVo">
+        SELECT r.ID,r.IND_NO,i.IND_NM,r.SYS_VAL,r.ORG_VAL,i.CURRENCY_VAL,i.DATE_VAL,r.CHK_SQL
+        FROM `cv_chk_ind_rule_chk` r,`cv_chk_ind` i
+        <where>
+            r.IND_NO = i.IND_NO
+            <if test=" indNos != null">
+                and r.IND_NO in
+                <foreach collection="indNos" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test=" sysVals != null">
+                and r.SYS_VAL in
+                <foreach collection="sysVals" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test=" orgVal != '' and  orgVal != null">
+                and r.ORG_VAL = #{ orgVal}
+            </if>
+            <if test=" currencyVal != '' and  currencyVal != null">
+                and i.CURRENCY_Val = #{ currencyVal}
+            </if>
+            <if test=" ruleVal != '' and  ruleVal != null">
+                and r.RULE_VAL = #{ ruleVal}
+            </if>
+        </where>
+        order by r.IND_NO
+    </select>
+</mapper>

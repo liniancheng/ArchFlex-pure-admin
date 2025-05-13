@@ -1,0 +1,24 @@
+server:
+  port: 6868
+spring:
+  application:
+    name: base-cloud-auth
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: base-cloud-config-server
+      profile: dev
+      name: config
+      
+ignore:
+  urls:
+  - /token/**
+  - /mobile/**
+  - /**/*.css
+  - /auth/**
+  - /refresh/**
+  - /swagger-ui.html
+  - /swagger-resources/**
+  - /*/v2/api-docs
+  - /webjars/**

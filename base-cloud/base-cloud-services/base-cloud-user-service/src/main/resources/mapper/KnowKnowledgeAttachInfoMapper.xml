@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.knowledge.mapper.KnowKnowledgeAttachInfoMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.knowledge.model.po.KnowKnowledgeAttachInfo" id="KnowKnowledgeAttachInfoMap">
+            <id property="attId" column="ATT_ID"/>
+            <result property="knowledgeId" column="KNOWLEDGE_ID"/>
+            <result property="appId" column="APP_ID"/>
+            <result property="attName" column="ATT_NAME"/>
+            <result property="attContent" column="ATT_CONTENT"/>
+    </resultMap>
+    <resultMap type="com.adtec.rdc.base.knowledge.model.query.KnowKnowledgeAttach" id="KnowKnowledgeAttachMap">
+		<id property="uid" column="att_id"/>
+        <result property="name" column="att_name"/>
+    </resultMap>
+ <select id="getByKnowId" resultMap="KnowKnowledgeAttachMap">
+    	SELECT ATT_ID, ATT_NAME FROM KNOW_KNOWLEDGE_ATTACH_INFO
+          WHERE KNOWLEDGE_ID = #{ knowledgeId}
+    </select>
+    <select id="pageByQuery" resultMap="KnowKnowledgeAttachInfoMap">
+        SELECT * FROM KNOW_KNOWLEDGE_ATTACH_INFO
+        <where >
+            <if test=" attId != '' and  attId != null">
+                and   ATT_ID = #{ attId}
+            </if>
+            <if test=" knowledgeId != '' and  knowledgeId != null">
+                and   KNOWLEDGE_ID = #{ knowledgeId}
+            </if>
+            <if test=" appId != '' and  appId != null">
+                and   APP_ID = #{ appId}
+            </if>
+            <if test=" attName != '' and  attName != null">
+                and   ATT_NAME = #{ attName}
+            </if>
+        </where>
+    </select>
+    
+    <select id="getByKnowledgeId" resultMap="KnowKnowledgeAttachInfoMap">
+    	select ATT_ID, ATT_NAME,KNOWLEDGE_ID from know_knowledge_attach_info
+          where KNOWLEDGE_ID = #{ knowledgeId}  and   APP_ID = #{ appId} 
+    </select>
+    
+    <select id="isExistName" resultType="java.lang.Boolean">
+    	SELECT COUNT(*) FROM KNOW_KNOWLEDGE_ATTACH_INFO
+    	  WHERE  ATT_NAME = #{attName}   and   APP_ID = #{ appId}
+    </select>
+</mapper>
