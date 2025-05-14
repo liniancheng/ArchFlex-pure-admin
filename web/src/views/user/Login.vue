@@ -4,8 +4,8 @@
       {{ codeMap['system.login.logo.text'] }}
     </h2>
     <h4 class="title_h4">
-      数接千载
-      <i style="margin-left:20px"/>据联万里
+      基础构架
+      <i style="margin-left:20px"/>联通万物
     </h4>
     <a-form id="formLogin" class="user-layout-login" ref="formLogin" :form="form" @submit="handleSubmit">
       <a-alert v-if="isLoginError" type="error" showIcon style="margin-bottom: 24px;" message="用户名或密码错误" />
@@ -68,7 +68,7 @@
       </a-form-item>
 
       <div class="user-login-other">
-        <!-- <router-link class="register" :to="{ name: 'register' }">注册账户</router-link> -->
+        <router-link class="register" :to="{ name: 'register', path: '/user/register' }">注册账户</router-link>
       </div>
       <forget-password ref="forgetPassword" />
     </a-form>

@@ -37,6 +37,15 @@ const locale = {
         chkresult: '校验结果展示'
       }
     },
+    detect: {
+      self: '检测系统',
+      tobacco: {
+        self: '烟虫检测',
+        index: '检测首页',
+        image: '图像检测',
+        batch: '批量检测'
+      }
+    },
     admin: {
       self: '平台管理',
       system: {

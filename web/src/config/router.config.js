@@ -18,8 +18,8 @@ export const asyncRouterMap = [
     children: [
       // dashboard
       {
-        path: '/dashboard',
-        name: 'dashboard',
+        path: 'dashboard',
+        name: 'menu.dashboard',
         redirect: '/dashboard/workplace',
         component: RouteView,
         meta: { title: 'menu.dashboard', keepAlive: true, icon: bxAnaalyse, permission: [ 'dashboard' ] },
@@ -47,6 +47,16 @@ export const constantRouterMap = [
         path: 'login',
         name: 'login',
         component: () => import(/* webpackChunkName: "user" */ '@/views/user/Login')
+      },
+      {
+        path: 'register',
+        name: 'register',
+        component: () => import(/* webpackChunkName: "user" */ '@/views/user/Register')
+      },
+      {
+        path: 'registerResult',
+        name: 'registerResult',
+        component: () => import(/* webpackChunkName: "user" */ '@/views/user/RegisterResult')
       },
       {
         path: 'change',

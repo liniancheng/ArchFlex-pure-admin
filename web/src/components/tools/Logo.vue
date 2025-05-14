@@ -2,7 +2,7 @@
   <div class="imoia-left-logo">
     <router-link :to="{ path: '/dashboard/workplace' }">
       <img src="../../assets/datalog.svg" width="50px"/>
-      <span class="logoText">跨系统指标校验</span>
+      <span class="logoText">基础框架</span>
     </router-link>
     <!-- 基础平台原有logo大小 -->
     <!-- <img :src="`/logo/${codeMap['index.logo.image']}?inline`" /> -->
