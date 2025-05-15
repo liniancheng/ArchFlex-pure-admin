@@ -10,6 +10,7 @@
         <module name="base-cloud-monitor" />
         <module name="base-cloud-server" />
         <module name="base-cloud-auth" />
+        <module name="base-cloud-detect-service" />
         <module name="base-cloud-gateway" />
         <module name="base-cloud-message-service" />
         <module name="base-cloud-gen-service" />
@@ -25,6 +26,7 @@
       <module name="base-cloud-common" options="-parameters" />
       <module name="base-cloud-config-server" options="-parameters" />
       <module name="base-cloud-crossvalidation-service" options="-parameters" />
+      <module name="base-cloud-detect-service" options="-parameters" />
       <module name="base-cloud-gateway" options="-parameters" />
       <module name="base-cloud-gen-service" options="-parameters" />
       <module name="base-cloud-message-service" options="-parameters" />

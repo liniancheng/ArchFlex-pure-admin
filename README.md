@@ -26,3 +26,5 @@ Redis版本：Redis-x64-5.0.14.1
 ## 2. 前端配置
 
 Node版本：node-v16.20.2-x64
+
+框架：Ant Design Vue Pro

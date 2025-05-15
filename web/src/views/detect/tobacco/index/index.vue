@@ -1,358 +1,342 @@
 <template>
-  <!-- 校验结果展示 -->
-  <div class="indexSystem">
-    <a-card :bordered="false">
-      <div class="table-page-search-wrapper">
-        <a-form layout="inline">
-          <a-row :gutter="24">
-            <a-col :md="6" :sm="24">
-              <a-form-item label="法人" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                <a-select placeholder="请选择" v-model="queryParam.orgVal" allowClear>
-                  <a-select-option v-for="org in orgList" :value="org.branchNo" :key="org.branchName">
-                    {{ org.branchName }}
-                  </a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item label="任务名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                <a-input v-model="queryParam.planName" allowClear/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="12" :sm="24">
-              <a-form :form="form">
-                <a-form-item label="系统" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-select mode="tags" v-decorator="['sysVals']" :maxTagCount="4" :allowClear="true">
-                    <a-select-option v-for="sys in sysList" :value="sys.itemValue" :key="sys.itemText" >
-                      {{ sys.itemText }}
-                    </a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-form>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item label="数据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                <a-date-picker v-model="queryParam.dataTime" @change="handleChange"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item label="执行进度" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                <a-select placeholder="请选择" v-model="queryParam.planState" allowClear>
-                  <a-select-option value="2">已完成</a-select-option>
-                  <a-select-option value="1">未完成</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <span>
-                <a-button type="primary" icon="search" @click="handleLoadData">查询</a-button>
-                <a-button icon="reload" style="margin-left: 8px" @click="handleReload">重置</a-button>
-              </span>
-            </a-col>
-          </a-row>
-        </a-form>
-      </div>
-
-      <s-table
-        ref="table"
-        size="default"
-        rowKey="id"
-        :columns="columns"
-        :data="loadData"
-        :alert="options.alert"
-        :rowSelection="options.rowSelection"
-        showPagination="auto"
-        :scroll="{ x: 1900 }"
-      >
-        <span slot="action" slot-scope="text, record">
-          <template>
-            <a-popconfirm title="确定要删除?" @confirm="() => handleDelete(record.id)">
-              <a>【<a-icon type="rest" style="color: red"/>】</a>
-            </a-popconfirm>
-            <a class="table_blue" @click="handleSelect(record)">【<a-icon type="profile"/>】</a>
-          </template>
-        </span>
-        <!-- 自定义类设置 begin -->
-        <div slot="filterDropdown">
-          <a-card>
-            <a-checkbox-group @change="onColSettingsChange" v-model="settingColumns" :defaultValue="settingColumns">
-              <a-row>
-                <template v-for="(item, index) in defColumns">
-                  <template v-if="item.key != 'rowIndex' && item.dataIndex != 'action'">
-                    <a-col
-                      :span="30"
-                      :key="index"
-                    ><a-checkbox :value="item.dataIndex">{{ item.title }}</a-checkbox></a-col
-                    >
-                  </template>
-                </template>
-              </a-row>
-            </a-checkbox-group>
-          </a-card>
+  <div id="box">
+    <div id="left">
+      <a-card title="指标层级" :headStyle="indBack">
+        <div class="but">
+          <a-popconfirm title="确定要删除?" @confirm="() => handleDelete()">
+            <a-button>
+              <a-icon type="rest" style="color: red"/>
+              删除
+            </a-button>
+          </a-popconfirm>
+          <a-button>
+            <a-icon type="login" style="color: #0097f4"/>
+            导入
+          </a-button>
+          <a-button>
+            <a-icon type="logout"/>
+            导出
+          </a-button>
         </div>
-        <a-icon slot="filterIcon" type="setting" :style="{ fontSize: '16px', color: '#108ee9' }" />
-        <!-- 自定义类设置 end -->
-      </s-table>
-      <data-form ref="dataForm" @ok="handleOk" />
-    </a-card>
+        <div style="margin-top: -10px">
+          <a-button @click="treeunfold">
+            展开/收起
+          </a-button>
+          <a-input-search style="width:153px" placeholder="请输入指标名称" v-model="searchValue" @search="onSearch"/>
+          <a-tree
+            v-if="data.length"
+            :defaultExpandAll="up"
+            :replaceFields="{ children: 'children', title: 'title', key: 'key' }"
+            :blockNode="true"
+            :selectable="false"
+            :tree-data="data"
+            @select="tab"
+            show-icon
+            :icon="getIcon"
+          >
+          <!--  -->
+          </a-tree>
+        </div>
+      </a-card>
+    </div>
+    <div id="right" style="border-top: 1px solid #b5b9a9">
+      <div id="definition"><h3>指标定义</h3></div>
+      <div>
+        <a-button @click="handleAddParent">
+          <a-icon type="plus"/>
+          添加一级指标
+        </a-button>
+      </div>
+      <div>
+        <a-table
+          rowKey="indNo"
+          :columns="columns"
+          :data-source="dataSource"
+          size="default"
+          :scroll="{ x: 2500, y: 399 }"
+          :pagination="{ showTotal: total => `共有${total} 条数据`,
+                         defaultPageSize:10,
+                         showSizeChanger:true,
+                         pageSizeOptions: ['10', '30', '50'],
+                         onShowSizeChange:(current, pageSize)=>this.pageSize = pageSize
+          }"
+        >
+          <span slot="action" slot-scope="text, record">
+            <template>
+              <a class="table_blue" @click="$refs.dataForm.add(record)">【<a-icon type="file-add"/>】</a>
+              <a class="table_blue" @click="handleEdit(record.indNo)">【<a-icon type="tool"/>】</a>
+            </template>
+          </span>
+          <!-- 自定义类设置 begin -->
+          <div slot="filterDropdown">
+            <a-card>
+              <a-checkbox-group @change="onColSettingsChange" v-model="settingColumns" :defaultValue="settingColumns">
+                <a-row>
+                  <template v-for="(item,index) in defColumns">
+                    <template v-if="item.key!='rowIndex'&& item.dataIndex!='action'">
+                      <a-col :span="30" :key="index">
+                        <a-checkbox :value="item.dataIndex">{{ item.title }}</a-checkbox>
+                      </a-col>
+                    </template>
+                  </template>
+                </a-row>
+              </a-checkbox-group>
+            </a-card>
+          </div>
+          <a-icon slot="filterIcon" type="setting" :style="{ fontSize:'16px',color: '#108ee9' }"/>
+          <!-- 自定义类设置 end -->
+        </a-table>
+      </div>
+      <data-form ref="dataForm" @ok="handleOk"/>
+      <data-mend ref="mend" @ok="handleOk"/>
+    </div>
   </div>
 </template>
 
 <script>
-import { STable, Ellipsis } from '@/components'
-import { fetch, deletePlan } from '@/api/detect/index/index'
-import { fetchSys } from '@/api/crossvalidation/cvdict/index'
-import DataForm from './modules/DataForm'
-import { fetchBranchs } from '@/api/admin/branch/index'
-import Vue from 'vue'
-export default {
-  name: 'TableList',
-  components: {
-    STable,
-    Ellipsis,
-    DataForm
-  },
-  data () {
-    return {
-      // 法人
-      orgList: [],
-      form: this.$form.createForm(this),
-      data: [],
-      sysList: [],
-        labelCol: {
-        xs: { span: 24 },
-        sm: { span: 6 }
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 15 }
-      },
-      // 高级搜索 展开/关闭  默认关闭
-      advanced: false,
-      // 查询参数
-      queryParam: {},
-       // 表头
-      columns: [],
-      // 列设置
-      settingColumns: [],
-      // 列定义
-      defColumns: [
-      {
-          key: 'index',
-          title: '序号',
-          width: 100,
-          fixed: 'left',
-          dataIndex: 'index',
-          // customRender函数来渲染序号的数据
-          customRender: (text, record, index) => index + 1
-        },
-        {
-          key: 'id',
-          title: '计划编号',
-           width: 200,
-          // 超出宽度变成省略号
-          ellipsis: true,
-          dataIndex: 'id'
-        },
-        {
-          key: 'planName',
-          title: '计划名称',
-           width: 200,
-          // 超出宽度变成省略号
-          ellipsis: true,
-          dataIndex: 'planName'
-        },
-        {
-          key: 'createUser',
-          title: '创建人',
-          dataIndex: 'createUser',
-           width: 200,
-          // 超出宽度变成省略号
-          ellipsis: true
-        },
-        {
-          key: 'createTime',
-          title: '创建时间',
-           width: 200,
-          // 超出宽度变成省略号
-          ellipsis: true,
-          dataIndex: 'createTime'
-        },
-        {
-          key: 'dataTime',
-          title: '数据时间',
-           width: 200,
-          // 超出宽度变成省略号
-          ellipsis: true,
-          dataIndex: 'dataTime'
-        },
-        {
-          key: 'planType',
-          title: '任务执行时间',
-           width: 200,
-          // 超出宽度变成省略号
-          ellipsis: true,
-          dataIndex: 'planType',
-          customRender: (text, record, index) => {
-            if (text === '1') {
-              return '实时执行'
-            }
-            if (text === '2') {
-              return '定时执行'
-            }
-          }
-        },
-        {
-          key: 'planState',
-          title: '任务执行状态',
-           width: 200,
-          // 超出宽度变成省略号
-          ellipsis: true,
-          dataIndex: 'planState',
-          customRender: (text, record, index) => {
-            if (text === '1') {
-              return '未完成'
-            }
-            if (text === '2') {
-              return '已完成'
+  import Vue from 'vue'
+  import { treeNode, fetchByIndNo, fetchOne, removeById, treeSearch } from '@/api/crossvalidation/cvchkind/index'
+  import DataForm from './modules/DataForm'
+  import DataMend from './modules/DataMend'
+
+  export default {
+    name: 'Cvchkind',
+    components: {
+      DataForm,
+      DataMend
+    },
+    data () {
+      return {
+        searchValue: '',
+        // tree展开
+        up: false,
+        fetchOrRemove: false,
+        indNo: '',
+        showIcon: true,
+        data: [],
+        indBack: { background: '#0097f4' },
+        // 列设置
+        settingColumns: [],
+        // 表头
+        columns: [],
+        dataSource: [],
+        // 列定义
+        defColumns: [
+          // columns: [
+          {
+            title: '序号',
+            dataIndex: 'index',
+            align: 'center',
+            width: 100,
+            // customRender函数来渲染序号的数据
+            customRender: (text, record, index) => index + 1,
+            fixed: 'left'
+          },
+          {
+            key: '1',
+            title: '指标编号',
+            width: 200,
+            dataIndex: 'indNo',
+            // 超出宽度变成省略号
+            ellipsis: true
+          },
+          {
+            title: '指标名称',
+            dataIndex: 'indNm',
+            width: 200,
+            // 超出宽度变成省略号
+            ellipsis: true
+          },
+          {
+            title: '指标体系',
+            dataIndex: 'indSys',
+            // 超出宽度变成省略号
+            ellipsis: true,
+            width: 200
+          },
+          {
+            title: '指标层级',
+            width: 200,
+            dataIndex: 'indLevel',
+            ellipsis: true
+          },
+          {
+            title: '指标释义',
+            dataIndex: 'indExpr',
+            width: 200,
+            ellipsis: true
+          },
+          {
+            title: '参考指标',
+            dataIndex: 'busDirec',
+            width: 200,
+            // 超出宽度变成省略号
+            ellipsis: true
+          },
+          {
+            title: '触警级别',
+            dataIndex: 'alarmLevel',
+            width: 200,
+            ellipsis: true
+          },
+          {
+            title: '业务归口部门',
+            dataIndex: 'deptNo',
+            width: 200,
+            ellipsis: true
+          },
+          {
+            title: '币种',
+            dataIndex: 'currencyVal',
+            width: 200,
+            ellipsis: true
+          },
+          {
+            title: '频度',
+            dataIndex: 'dateVal',
+            width: 200,
+            ellipsis: true
+          },
+          {
+            title: '新增/编辑',
+            dataIndex: 'action',
+            width: 150,
+            fixed: 'right',
+            align: 'center',
+            scopedSlots: {
+              customRender: 'action',
+              filterDropdown: 'filterDropdown',
+              filterIcon: 'filterIcon'
             }
           }
+        ]
+      }
+    },
+    created () {
+      this.initColumns()
+      this.loadData()
+    },
+    mounted () {
+      this.hierarchytitle()
+    },
+    methods: {
+      // tree图标
+       getIcon (props) {
+            const { type } = props
+            if (type === null) {
+                return <svg t="1656646759612" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8913" width="32" height="32"><path d="M835.3 240.8H606.9c0-52.5-42.5-95-95-95H227c-52.4 0-95 42.5-95 95v455h760V297.4c0-31.3-25.4-56.6-56.7-56.6z" fill="#FFC41F" p-id="8914"></path><path d="M227 531.2V321.7c0-20.8 16.9-37.7 37.7-37.7h494.6c20.8 0 37.7 16.9 37.7 37.7v209.5c0 20.8-16.9 37.7-37.7 37.7H264.7c-20.9 0-37.7-16.9-37.7-37.7z" fill="#FFFFFF" p-id="8915"></path><path d="M891.9 755.9v-369c0-26.2-21.3-47.5-47.5-47.5H179.5c-26.2 0-47.5 21.3-47.5 47.5v368.8c0 32.3 26.2 58.6 58.6 58.6h642.8c32.3 0.2 58.5-26.1 58.5-58.4z" fill="#FFC41F" p-id="8916"></path><path d="M527.8 459.9l24.6 49.9c2.6 5.3 7.6 8.9 13.4 9.7l55 7.9c14.6 2.1 20.4 20 9.8 30.4l-39.9 38.7c-4.2 4.1-6.1 9.9-5.1 15.7L595 667c2.5 14.6-12.8 25.5-25.8 18.8L520 659.9c-5.2-2.7-11.4-2.7-16.6 0l-49.2 25.9c-13 6.9-28.2-4.2-25.8-18.8l9.4-54.8c0.9-5.8-0.9-11.6-5.1-15.7l-39.6-38.6c-10.5-10.3-4.7-28.2 9.8-30.4l55-7.9c5.8-0.9 10.8-4.5 13.4-9.7l24.6-49.9c6.6-13.4 25.4-13.4 31.9-0.1z" fill="#FFFFFF" p-id="8917"></path></svg>
+            }
         },
-        {
-          key: 'orgNm',
-          title: '机构/法人',
-           width: 200,
-          // 超出宽度变成省略号
-          ellipsis: true,
-          dataIndex: 'orgNm'
-        },
-        {
-          key: 'dateVal',
-          title: '频度',
-           width: 200,
-          // 超出宽度变成省略号
-          ellipsis: true,
-          dataIndex: 'dateVal'
-        },
-        {
-          key: 'sysVal',
-          title: '系统',
-           width: 200,
-          // 超出宽度变成省略号
-          ellipsis: true,
-          dataIndex: 'sysVal'
-        },
-        {
-          title: '删除/查看详情',
-          dataIndex: 'action',
-          width: 200,
-          fixed: 'right',
-          align: 'center',
-          scopedSlots: {
-            customRender: 'action',
-            filterDropdown: 'filterDropdown',
-            filterIcon: 'filterIcon'
-         }
+      // 指标树展开/收起
+      treeunfold () {
+        this.up = !this.up
+        this.loadData()
+      },
+      // 指标层级背景颜色
+      hierarchytitle () {
+        var elem = document.getElementById('definition')
+        var bgc = getComputedStyle(elem).backgroundColor
+        if (this.indBack.background !== bgc) {
+          this.indBack.background = bgc
         }
-      ],
-      // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {
-        return fetch(Object.assign(parameter, this.queryParam)).then(res => {
+      },
+      // 删除
+      handleDelete () {
+        this.fetchOrRemove = true
+        if (this.indNo === '') {
+          this.$message.error('请选择要删除的指标！')
+          this.fetchOrRemove = false
+          return
+        }
+        this.tab(this.indNo)
+        this.fetchOrRemove = false
+      },
+      // 添加一级
+      handleAddParent () {
+        this.$refs.dataForm.addOne()
+      },
+      // 修改
+      handleEdit (id) {
+        fetchOne(id).then((res) => {
           if (res.code === 0) {
-            return res.data
+            this.$refs.mend.edit(res.data)
           } else {
-            return {}
+            this.$message.error(res.message)
           }
         })
       },
-      selectedRowKeys: [],
-      selectedRows: [],
-      // custom table alert & rowSelection
-      options: {
-        alert: {
-          show: false,
-          clear: () => {
-            this.selectedRowKeys = []
-          }
-        },
-        rowSelection: null
+      // 列表请求
+      tab (indNo) {
+        if (indNo.length === 1) {
+          this.indNo = indNo
+        } else {
+          indNo = this.indNo
+          this.indNo = ''
+        }
+        if (!this.fetchOrRemove) {
+          fetchByIndNo(indNo).then((res) => {
+            if (res.code === 0) {
+              this.dataSource = res.data.records
+            } else {
+              this.$message.error(res.message)
+            }
+          })
+        } else {
+          removeById(indNo).then((res) => {
+            if (res.data) {
+              this.$message.success(res.message)
+              this.handleOk()
+            } else {
+              this.$message.error(res.message)
+            }
+          })
+        }
       },
-      optionAlertShow: false
-    }
-  },
-  created () {
-      this.initColumns()
-     this.loadSysList()
-     this.loadOrgList()
-  },
-  methods: {
-    // 根据条件查询
-    handleLoadData () {
-     const { form: { validateFields } } = this
-      validateFields((errors, values) => {
-        this.queryParam.sysVals = values.sysVals
-      })
-      this.$refs.table.refresh(true)
-    },
-    // 系统
-    loadSysList () {
-      this.dictType = 'IND_SYS'
-      fetchSys(this.dictType).then((res) => {
-        if (res.code === 0) {
-          this.sysList = res.data
-        } else {
-          this.$message.error(res.message)
+      // 搜索
+      onSearch () {
+        this.up = true
+        if (this.searchValue.replaceAll(' ', '').length === 0) {
+          this.loadData()
+          return
         }
-      }).finally(() => {
-        this.loading = false
-      })
-    },
-    // 法人
-    loadOrgList () {
-      fetchBranchs().then((res) => {
-        if (res.code === 0) {
-          this.orgList = res.data
+        this.data = []
+        treeSearch(this.searchValue).then((res) => {
+          if (res.code === 0) {
+            this.data = this.exchangeNodes(res.data)
+          } else {
+            this.$message.error(res.message)
+          }
+        })
+      },
+      // tree请求
+      loadData () {
+        this.data = []
+        treeNode().then((res) => {
+          if (res.code === 0) {
+            this.data = this.exchangeNodes(res.data)
+          } else {
+            this.$message.error(res.message)
+          }
+        })
+      },
+      exchangeNodes (nodes) {
+        if (nodes != null) {
+          if (nodes && nodes.length > 0) {
+            return nodes.map((item) => {
+              const node = { ...item, scopedSlots: { title: 'indNm' }, children: this.exchangeNodes(item.children) }
+              return node
+            })
+          }
         } else {
-          this.$message.error(res.message)
+          return null
         }
-      }).finally(() => {
-        this.loading = false
-      })
-    },
-    // 重置
-    handleReload () {
-      this.queryParam = {}
-      this.form = this.$form.createForm(this)
-      this.handleOk()
-    },
-    handleSelect (record) {
-      this.$refs.dataForm.select(record)
-    },
-    handleDelete (planId) {
-      deletePlan(planId).then(res => {
-        if (res.data) {
-          this.$message.success('删除成功！')
-          this.handleOk()
-        } else {
-          this.$message.error('删除指标计划失败！')
-        }
-      })
-    },
-    handleChange (date, dateString) {
-      this.queryParam.dataTime = dateString
-    },
-    handleOk () {
-      this.$refs.table.refresh()
-    },
-    onSelectChange (selectedRowKeys, selectedRows) {
-      this.selectedRowKeys = selectedRowKeys
-      this.selectedRows = selectedRows
-    },
-    toggleAdvanced () {
-      this.advanced = !this.advanced
-    },
-     // 自定义列设置 begin
-    onColSettingsChange (checkedValues) {
+      },
+      handleOk () {
+        this.indNo = ''
+        this.loadData()
+      },
+      // 自定义列设置 begin
+      onColSettingsChange (checkedValues) {
         var key = this.$route.name + ':colsettings'
         Vue.ls.set(key, checkedValues, 7 * 24 * 60 * 60 * 1000)
         this.settingColumns = checkedValues
@@ -393,7 +377,57 @@ export default {
           this.columns = cols
         }
       }
-   // 自定义列设置 end
+    }
   }
-}
 </script>
+
+<style scoped>
+.icon{
+  width:25px;
+  height: 24px;
+  margin-right: 5px;
+}
+  #box {
+    width: 100%;
+    height: 570px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #left {
+    width: calc(25% - 5px);
+    height: 100%;
+    float: left;
+    overflow: auto;
+  }
+
+  #resize {
+    position: relative;
+    width: 5px;
+    height: 100%;
+    cursor: w-resize;
+    float: left;
+  }
+
+  #right {
+    width: 75%;
+    height: 100%;
+    float: left;
+    overflow: hidden;
+    padding-right: 10px;
+  }
+
+  .but {
+    height: 40px;
+    margin-top: -23px;
+    display: flex;
+  }
+
+  #definition {
+    width: 100%;
+    height: 58px;
+    background-color: #1890ff;
+    line-height: 58px;
+    padding-left: 30px;
+  }
+</style>

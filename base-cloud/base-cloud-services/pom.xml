@@ -15,6 +15,7 @@
 		<module>base-cloud-gen-service</module>
 		<module>base-cloud-message-service</module>
         <module>base-cloud- crossvalidation-service</module>
+        <module>base-cloud-detect-service</module>
     </modules>
 
 	<dependencies>
