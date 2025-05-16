@@ -28,3 +28,6 @@ Redis版本：Redis-x64-5.0.14.1
 Node版本：node-v16.20.2-x64
 
 框架：Ant Design Vue Pro
+
+- 项目地址：https://pro.antdv.com/
+- 代码地址：https://github.com/vueComponent/ant-design-vue-pro

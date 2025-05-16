@@ -1,6 +1,8 @@
 import antd from 'ant-design-vue/es/locale-provider/zh_CN'
 import momentCN from 'moment/locale/zh-cn'
 
+import dashboard from './zh-CN/dashboard'
+
 const components = {
   antLocale: antd,
   momentName: 'zh-cn',
@@ -43,7 +45,12 @@ const locale = {
         self: '烟虫检测',
         index: '检测首页',
         image: '图像检测',
-        batch: '批量检测'
+        batch: '批量检测',
+        video: '视频检测',
+        camera: '摄像检测',
+        imageRecord: '图片识别记录',
+        videoRecord: '视频识别记录',
+        cameraRecord: '摄像识别记录'
       }
     },
     admin: {
@@ -282,5 +289,6 @@ const locale = {
 
 export default {
   ...components,
-  ...locale
+  ...locale,
+  ...dashboard
 }
