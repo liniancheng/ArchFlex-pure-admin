@@ -51,7 +51,7 @@ import {
   Empty,
   Transfer
 } from 'ant-design-vue'
-// import Viser from 'viser-vue'
+import Viser from 'viser-vue'
 
 // ext library
 import VueCropper from 'vue-cropper'
@@ -121,7 +121,7 @@ Vue.prototype.$notification = notification
 // Vue.prototype.$error = Modal.error
 // Vue.prototype.$warning = Modal.warning
 
-// Vue.use(Viser)
+Vue.use(Viser)
 Vue.use(Dialog) // this.$dialog func
 Vue.use(MultiTab)
 Vue.use(PageLoading)

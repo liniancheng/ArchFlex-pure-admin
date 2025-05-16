@@ -9,10 +9,10 @@
   dependencies:
     "@jridgewell/trace-mapping" "^0.3.0"
 
-"@ant-design-vue/pro-layout@^0.3.0":
-  "integrity" "sha512-X5+vspmJVQ5RYyMBjyiT6M+VvPx3DaMGvbbbCc80DWGNSlvzw6On44NzFe+RIgjW7cvLvkXuoycBWjVSEjaoOA=="
-  "resolved" "https://registry.npmjs.org/@ant-design-vue/pro-layout/-/pro-layout-0.3.13.tgz"
-  "version" "0.3.13"
+"@ant-design-vue/pro-layout@^1.0.12":
+  "integrity" "sha512-O0Kixs9C0noECnAVHxnhvkI0MKWqnAJaV9H8O6tr3ad3Bpr4IAPd+f7y9o3y57eDhfZCPaLR3quM4nxfHSgYWA=="
+  "resolved" "https://registry.npmjs.org/@ant-design-vue/pro-layout/-/pro-layout-1.0.13.tgz"
+  "version" "1.0.13"
   dependencies:
     "ant-design-vue" "^1.6.2"
     "classnames" "^2.2.6"
@@ -2501,10 +2501,10 @@
   dependencies:
     "color-convert" "^2.0.1"
 
-"ant-design-vue@^1.6.2", "ant-design-vue@1.6.5":
-  "integrity" "sha512-FzLrK+JuJUq+g4vd+UjFFi13ZdSsb11EZFapisFXilJxpc1LxqyunZu5AP4nr9vFLs3J4UX2A6q+Rp/Fi6JrLg=="
-  "resolved" "https://registry.npmjs.org/ant-design-vue/-/ant-design-vue-1.6.5.tgz"
-  "version" "1.6.5"
+"ant-design-vue@^1.6.2", "ant-design-vue@^1.7.8":
+  "integrity" "sha512-F1hmiS9vwbyfuFvlamdW5l9bHKqRlj9wHaGDIE41NZMWXyWy8qL0UFa/+I0Wl8gQWZCqODW5pN6Yfoyn85At3A=="
+  "resolved" "https://registry.npmjs.org/ant-design-vue/-/ant-design-vue-1.7.8.tgz"
+  "version" "1.7.8"
   dependencies:
     "@ant-design/icons" "^2.1.1"
     "@ant-design/icons-vue" "^2.0.0"
@@ -3895,7 +3895,7 @@
   dependencies:
     "delayed-stream" "~1.0.0"
 
-"commander@^2.18.0", "commander@^2.19.0", "commander@^2.20.0", "commander@2":
+"commander@*", "commander@^2.18.0", "commander@^2.19.0", "commander@^2.20.0", "commander@2":
   "integrity" "sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ=="
   "resolved" "https://registry.npmmirror.com/commander/-/commander-2.20.3.tgz"
   "version" "2.20.3"
@@ -8730,6 +8730,13 @@
     "hasown" "^2.0.0"
     "isarray" "^2.0.5"
 
+"mockjs2@1.0.8":
+  "integrity" "sha512-IXY9wzq3Pr2tybkJnT+dzrTz0GBRTtgXc7Cke/UUQyyWtbjDrck8uZ3NmMF4LaWgAD8vm8EMGcBk4Itc6nzpRg=="
+  "resolved" "https://registry.npmjs.org/mockjs2/-/mockjs2-1.0.8.tgz"
+  "version" "1.0.8"
+  dependencies:
+    "commander" "*"
+
 "moment@^2.21.0", "moment@^2.24.0":
   "integrity" "sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how=="
   "resolved" "https://registry.npmjs.org/moment/-/moment-2.30.1.tgz"
@@ -12564,7 +12571,7 @@
     "loader-utils" "1.1.0"
     "vue-svg-component-builder" "2.0.3"
 
-"vue-template-compiler@^2.0.0", "vue-template-compiler@^2.6.10", "vue-template-compiler@^2.x", "vue-template-compiler@>= 2.5.0", "vue-template-compiler@>=2.5.0", "vue-template-compiler@>=2.6.0":
+"vue-template-compiler@^2.0.0", "vue-template-compiler@^2.6.0", "vue-template-compiler@^2.6.10", "vue-template-compiler@^2.x", "vue-template-compiler@>= 2.5.0", "vue-template-compiler@>=2.5.0", "vue-template-compiler@>=2.6.0":
   "integrity" "sha512-ODQS1SyMbjKoO1JBJZojSw6FE4qnh9rIpUZn2EUT86FKizx9uH5z6uXiIrm4/Nb/gwxTi/o17ZDEGWAXHvtC7g=="
   "resolved" "https://registry.npmmirror.com/vue-template-compiler/-/vue-template-compiler-2.6.14.tgz"
   "version" "2.6.14"
@@ -12577,7 +12584,7 @@
   "resolved" "https://registry.npmmirror.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz"
   "version" "1.9.1"
 
-"vue@^2 || ^3.0.0-0", "vue@^2.0.0", "vue@^2.5.17", "vue@^2.5.3", "vue@^2.6.10", "vue@^2.x", "vue@>= 2.0", "vue@>= 2.5.0", "vue@>=2.5.0", "vue@>=2.6.0", "vue@2.x":
+"vue@^2 || ^3.0.0-0", "vue@^2.0.0", "vue@^2.5.17", "vue@^2.5.3", "vue@^2.6.0", "vue@^2.6.10", "vue@^2.x", "vue@>= 2.0", "vue@>= 2.5.0", "vue@>=2.5.0", "vue@>=2.6.0", "vue@2.x":
   "integrity" "sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ=="
   "resolved" "https://registry.npmmirror.com/vue/-/vue-2.6.14.tgz"
   "version" "2.6.14"

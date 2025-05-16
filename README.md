@@ -31,3 +31,12 @@ Node版本：node-v16.20.2-x64
 
 - 项目地址：https://pro.antdv.com/
 - 代码地址：https://github.com/vueComponent/ant-design-vue-pro
+
+## 3. 开发日志
+
+Charts图表组件不生效：在 `src/core/lazy_use.js` 中
+
+```
+import Viser from 'viser-vue'
+Vue.use(Viser)
+```
