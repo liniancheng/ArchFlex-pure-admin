@@ -1,5 +1,6 @@
 # 忽略所有子文件夹下的target文件夹
 **/target/
 
-# 忽略web代码中的node_modules目录
-web/node_modules/
+# 忽略所有文件夹中的node_modules 和 .idea目录
+**/node_modules/
+**/.idea/
