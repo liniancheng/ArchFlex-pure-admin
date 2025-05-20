@@ -2,6 +2,8 @@
 import Bar from '@/components/Charts/Bar'
 import ChartCard from '@/components/Charts/ChartCard'
 import Liquid from '@/components/Charts/Liquid'
+import SmoothArea from '@/components/Charts/SmoothArea'
+import Sector from '@/components/Charts/Sector.vue'
 import MiniArea from '@/components/Charts/MiniArea'
 import MiniSmoothArea from '@/components/Charts/MiniSmoothArea'
 import MiniBar from '@/components/Charts/MiniBar'
@@ -29,30 +31,32 @@ import Dialog from '@/components/Dialog'
 import JModal from '@/components/Modal/index'
 
 export {
-  AvatarList,
-  Bar,
-  ChartCard,
-  Liquid,
-  MiniArea,
-  MiniSmoothArea,
-  MiniBar,
-  MiniProgress,
-  Radar,
-  TagCloud,
-  RankList,
-  TransferBar,
-  Trend,
-  Ellipsis,
-  FooterToolbar,
-  NumberInfo,
-  Tree,
-  STable,
-  MultiTab,
-  IconSelector,
-  TagSelect,
-  StandardFormRow,
-  ArticleListContent,
+    AvatarList,
+    Bar,
+    ChartCard,
+    Liquid,
+    SmoothArea,
+    Sector,
+    MiniArea,
+    MiniSmoothArea,
+    MiniBar,
+    MiniProgress,
+    Radar,
+    TagCloud,
+    RankList,
+    TransferBar,
+    Trend,
+    Ellipsis,
+    FooterToolbar,
+    NumberInfo,
+    Tree,
+    STable,
+    MultiTab,
+    IconSelector,
+    TagSelect,
+    StandardFormRow,
+    ArticleListContent,
 
-  Dialog,
-  JModal
+    Dialog,
+    JModal
 }
