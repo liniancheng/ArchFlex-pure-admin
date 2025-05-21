@@ -1,5 +1,8 @@
 <template>
   <div>
+      <div class="header">
+          <div class="title-box">批量检测</div>
+      </div>
     <div class="table-page-search-wrapper">
       <a-form layout="inline">
         <a-row :gutter="48">
@@ -11,44 +14,20 @@
               </a-select>
             </a-form-item>
           </a-col>
-          <template v-if="advanced">
-            <a-col :md="8" :sm="24">
-              <a-form-item label="调用次数">
-                <a-input-number v-model="queryParam.callNo" style="width: 100%"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="更新日期">
-                <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请输入更新日期"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="使用状态">
-                <a-select v-model="queryParam.useStatus" placeholder="请选择" default-value="0">
-                  <a-select-option value="0">全部</a-select-option>
-                  <a-select-option value="1">关闭</a-select-option>
-                  <a-select-option value="2">运行中</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="使用状态">
-                <a-select placeholder="请选择" default-value="0">
-                  <a-select-option value="0">全部</a-select-option>
-                  <a-select-option value="1">关闭</a-select-option>
-                  <a-select-option value="2">运行中</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-          </template>
+          <a-col :md="8" :sm="24">
+            <a-form-item label="AI助手">
+              <a-select v-model="queryParam.status" placeholder="请选择AI助手" default-value="0">
+                <a-select-option value="0">DeepSeek</a-select-option>
+                <a-select-option value="1">Qwen</a-select-option>
+                <a-select-option value="2">不使用AI</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
           <a-col :md="!advanced && 8 || 24" :sm="24">
             <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
-              <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+              <a-button type="primary" @click="$refs.table.refresh(true)">开始预测</a-button>
+              <a-button type="primary" style="margin-left: 8px" @click="$refs.table.refresh(true)">PDF导出</a-button>
               <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
-              <a @click="toggleAdvanced" style="margin-left: 8px">
-                {{ advanced ? '收起' : '展开' }}
-                <a-icon :type="advanced ? 'up' : 'down'"/>
-              </a>
             </span>
           </a-col>
         </a-row>
@@ -56,8 +35,6 @@
     </div>
 
     <div class="table-operator">
-      <a-button type="primary" icon="plus" @click="handleEdit()">新建</a-button>
-      <a-button type="dashed" @click="tableOption">{{ optionAlertShow && '关闭' || '开启' }} alert</a-button>
       <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
@@ -69,42 +46,19 @@
         </a-button>
       </a-dropdown>
     </div>
-
-    <s-table
-      ref="table"
-      size="default"
-      rowKey="key"
-      :columns="columns"
-      :data="loadData"
-      :alert="options.alert"
-      :rowSelection="options.rowSelection"
-    >
-      <span slot="serial" slot-scope="text, record, index">
-        {{ index + 1 }}
-      </span>
-      <span slot="action" slot-scope="text, record">
-        <template>
-          <a @click="handleEdit(record)">编辑</a>
-          <a-divider type="vertical" />
-        </template>
-        <a-dropdown>
-          <a class="ant-dropdown-link">
-            更多 <a-icon type="down" />
-          </a>
-          <a-menu slot="overlay">
-            <a-menu-item>
-              <a href="javascript:;">详情</a>
-            </a-menu-item>
-            <a-menu-item v-if="$auth('table.disable')">
-              <a href="javascript:;">禁用</a>
-            </a-menu-item>
-            <a-menu-item v-if="$auth('table.delete')">
-              <a href="javascript:;">删除</a>
-            </a-menu-item>
-          </a-menu>
-        </a-dropdown>
-      </span>
-    </s-table>
+      <div class="upload-container">
+          <a-upload
+              name="file"
+              action="/upload.do"
+              :customRequest="customUpload"
+              :beforeUpload="beforeUpload"
+          >
+              <div class="upload-box">
+                  <a-icon type="upload" style="font-size: 48px; color: #888;" />
+                  <div style="margin-top: 8px;">点击上传</div>
+              </div>
+          </a-upload>
+      </div>
   </div>
 </template>
 
@@ -125,44 +79,6 @@ export default {
       advanced: false,
       // 查询参数
       queryParam: {},
-      // 表头
-      columns: [
-        {
-          title: '#',
-          scopedSlots: { customRender: 'serial' }
-        },
-        {
-          title: '规则编号',
-          dataIndex: 'no'
-        },
-        {
-          title: '描述',
-          dataIndex: 'description'
-        },
-        {
-          title: '服务调用次数',
-          dataIndex: 'callNo',
-          sorter: true,
-          needTotal: true,
-          customRender: (text) => text + ' 次'
-        },
-        {
-          title: '状态',
-          dataIndex: 'status',
-          needTotal: true
-        },
-        {
-          title: '更新时间',
-          dataIndex: 'updatedAt',
-          sorter: true
-        },
-        {
-          title: '操作',
-          dataIndex: 'action',
-          width: '150px',
-          scopedSlots: { customRender: 'action' }
-        }
-      ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         console.log('loadData.parameter', parameter)
@@ -232,3 +148,43 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.header {
+    border-bottom: 2px solid #1890ff; /* 蓝色边框 */
+    padding-bottom: 12px;
+    margin-bottom: 24px;
+    margin-top: 24px;
+    text-align: center;
+    font-size: 24px; /* 设置字体大小为24像素 */
+}
+
+.title-box {
+    display: inline-block;
+    padding: 8px 16px;
+    color: #fff; /* 白色文字 */
+    background-color: #1890ff; /* 蓝色背景 */
+    border-radius: 4px; /* 圆角边框 */
+    font-weight: bold;
+}
+.upload-container {
+    width: 100%;
+    height: 500px;
+    border: 1px dashed #d9d9d9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fafafa;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.upload-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #888;
+}
+</style>

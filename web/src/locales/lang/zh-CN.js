@@ -2,6 +2,7 @@ import antd from 'ant-design-vue/es/locale-provider/zh_CN'
 import momentCN from 'moment/locale/zh-cn'
 
 import dashboard from './zh-CN/dashboard'
+import detect from '@/locales/lang/zh-CN/detect'
 
 const components = {
   antLocale: antd,
@@ -290,5 +291,6 @@ const locale = {
 export default {
   ...components,
   ...locale,
-  ...dashboard
+  ...dashboard,
+    ...detect
 }

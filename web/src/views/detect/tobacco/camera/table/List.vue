@@ -1,7 +1,7 @@
 <template>
   <div>
       <div class="header">
-          <div class="title-box">烟虫检测</div>
+          <div class="title-box">摄像检测</div>
       </div>
     <div class="table-page-search-wrapper">
       <a-form layout="inline">
@@ -58,9 +58,6 @@
                   <div style="margin-top: 8px;">点击上传</div>
               </div>
           </a-upload>
-      </div>
-      <div class="ai-advice">
-          <div class="title-box">AI建议</div>
       </div>
   </div>
 </template>
@@ -153,7 +150,7 @@ export default {
 </script>
 
 <style scoped>
-.header, .ai-advice {
+.header {
     border-bottom: 2px solid #1890ff; /* 蓝色边框 */
     padding-bottom: 12px;
     margin-bottom: 24px;
