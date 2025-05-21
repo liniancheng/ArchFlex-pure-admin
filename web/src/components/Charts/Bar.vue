@@ -1,6 +1,11 @@
 <template>
-    <div :style="{ padding: '0 0 32px 32px' }">
-        <h4 :style="{ marginBottom: '20px' }">{{ title }}</h4>
+    <a-card
+        class="antd-pro-pages-dashboard-analysis-salesCard"
+        :loading="loading"
+        :bordered="false"
+        :title="title"
+        :style="{ height: '100%' }"
+    >
         <v-chart
             :height="height"
             :data="data"
@@ -10,7 +15,7 @@
             <v-axis/>
             <v-bar position="x*y"/>
         </v-chart>
-    </div>
+    </a-card>
 </template>
 
 <script>
@@ -56,6 +61,10 @@ export default {
         height: {
             type: Number,
             default: 300
+        },
+        loading: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -63,3 +72,6 @@ export default {
     }
 }
 </script>
+<style lang="less" scoped>
+
+</style>

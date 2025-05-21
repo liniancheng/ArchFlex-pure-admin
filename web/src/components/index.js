@@ -4,6 +4,7 @@ import ChartCard from '@/components/Charts/ChartCard'
 import Liquid from '@/components/Charts/Liquid'
 import SmoothArea from '@/components/Charts/SmoothArea'
 import Sector from '@/components/Charts/Sector.vue'
+import MiniSector from '@/components/Charts/MiniSector.vue'
 import MiniArea from '@/components/Charts/MiniArea'
 import MiniSmoothArea from '@/components/Charts/MiniSmoothArea'
 import MiniBar from '@/components/Charts/MiniBar'
@@ -37,6 +38,7 @@ export {
     Liquid,
     SmoothArea,
     Sector,
+    MiniSector,
     MiniArea,
     MiniSmoothArea,
     MiniBar,

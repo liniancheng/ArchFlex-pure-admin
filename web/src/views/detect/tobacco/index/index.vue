@@ -3,42 +3,18 @@
         <!--以下是从后端获取首页相关布局展示-->
         <layout-card v-if="visible" ref="layoutCard" :listItems="listItems"/>
         <!--以下是前端自定义显示内容-->
-        <a-row :gutter="24">
+
+        <a-row :gutter="12" class="tobacco-index__charts-row">
             <!--柱状图-->
             <a-col :span="16">
-                <bar :data="barData" :title="$t('detect.tobacco.class')"/>
+                <bar :data="barData" :title="$t('detect.tobacco.class')" :loading="loading"/>
             </a-col>
             <!--饼状图-->
             <a-col :span="8">
-                <a-card
-                    class="antd-pro-pages-dashboard-analysis-salesCard"
-                    :loading="loading"
-                    :bordered="false"
-                    :title="$t('detect.tobacco.user')"
-                    :style="{ height: '100%' }"
-                >
-                    <div slot="extra" style="height: inherit;">
-                        <span class="dashboard-analysis-iconGroup">
-                            <a-dropdown :trigger="['click']" placement="bottomLeft">
-                                <a-icon type="ellipsis" class="ant-dropdown-link"/>
-                                <a-menu slot="overlay">
-                                    <a-menu-item>
-                                        <a href="javascript:">{{ $t('dashboard.analysis.dropdown-option-one') }}</a>
-                                    </a-menu-item>
-                                    <a-menu-item>
-                                        <a href="javascript:">{{ $t('dashboard.analysis.dropdown-option-two') }}</a>
-                                    </a-menu-item>
-                                </a-menu>
-                            </a-dropdown>
-                        </span>
-                    </div>
-                    <div>
-                        <Sector :scale="pieScale" :data-source="pieData" :sectorStyle="pieStyle"></Sector>
-                    </div>
-                </a-card>
+                <sector :scale="pieScale" :data-source="pieData" :sectorStyle="pieStyle" :loading="loading"></sector>
             </a-col>
         </a-row>
-        <a-row :gutter="24" style="background: white">
+        <a-row :gutter="12" class="tobacco-index__charts-row">
             <!--TODO: 雷达图-->
             <a-col :span="8">
                 <a-card
@@ -81,7 +57,6 @@
                                 <v-coord type="theta" :radius="0.75" :innerRadius="0.6"/>
                             </v-chart>
                         </div>
-
                     </div>
                 </a-card>
             </a-col>
@@ -124,7 +99,7 @@
                 </a-card>
             </a-col>
         </a-row>
-        <a-row :gutter="24" style="background: white">
+        <a-row :gutter="12" class="tobacco-index__charts-row">
             <!--面积图-->
             <smooth-area :dataSource="searchUserData" :scale="searchUserScale" ></smooth-area>
         </a-row>
@@ -215,7 +190,7 @@ const searchUserScale = [
 ]
 
 export default {
-    name: 'Workplace',
+    name: 'Tobacco',
     components: {
         Sector,
         Trend,
@@ -335,7 +310,6 @@ export default {
 .antd-pro-pages-dashboard-analysis-twoColLayout {
   position: relative;
   display: flex;
-  display: block;
   flex-flow: row wrap;
 }
 
@@ -359,5 +333,9 @@ export default {
   position: absolute;
   right: 54px;
   bottom: 12px;
+}
+
+.tobacco-index__charts-row {
+    margin-bottom: 12px;
 }
 </style>
