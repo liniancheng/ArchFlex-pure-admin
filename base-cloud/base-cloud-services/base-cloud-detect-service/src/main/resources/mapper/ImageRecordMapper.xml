@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.adtec.rdc.base.detect.mapper.ImageRecordMapper">
+
+    <!-- 基本resultMap -->
+    <resultMap type="com.adtec.rdc.base.detect.model.po.CvChkInd" id="CvChkIndMap">
+        <id property="imgNo" column="IMG_NO"/>
+        <result property="originalImagePath" column="original_image_path"/>
+        <result property="predictedImagePath " column="predicted_image_path "/>
+        <result property="parentNo" column="PARENT_NO"/>
+        <result property="alarmLevel" column="ALARM_LEVEL"/>
+        <result property="indSys" column="IND_SYS"/>
+        <result property="busDirec" column="BUS_DIREC"/>
+        <result property="indExpr" column="IND_EXPR"/>
+        <result property="deptNo" column="DEPT_NO"/>
+        <result property="currencyVal" column="CURRENCY_VAL"/>
+        <result property="dateVal" column="DATE_VAL"/>
+        <result property="remark" column="REMARK"/>
+        <result property="state" column="STATE"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="createUser" column="CREATE_USER"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="updateUser" column="UPDATE_USER"/>
+        <result property="menuOrder" column="MENU_ORDER"/>
+    </resultMap>
+
+    <select id="pageByQuery" resultMap="CvChkIndMap">
+        select * from cv_chk_ind
+        <where>
+            <if test=" indNo != '' and  indNo != null">
+                and IND_NO = #{ indNo}
+            </if>
+            <if test=" indNm != '' and  indNm != null">
+                and IND_NM = #{ indNm}
+            </if>
+            <if test=" indLevel != '' and  indLevel != null">
+                and IND_LEVEL = #{ indLevel}
+            </if>
+            <if test=" parentNo != '' and  parentNo != null">
+                and PARENT_NO = #{ parentNo}
+            </if>
+            <if test=" alarmLevel != '' and  alarmLevel != null">
+                and ALARM_LEVEL = #{ alarmLevel}
+            </if>
+            <if test=" indSys != '' and  indSys != null">
+                and IND_SYS = #{ indSys}
+            </if>
+            <if test=" busDirec != '' and  busDirec != null">
+                and BUS_DIREC = #{ busDirec}
+            </if>
+            <if test=" indExpr != '' and  indExpr != null">
+                and IND_EXPR = #{ indExpr}
+            </if>
+            <if test=" deptNo != '' and  deptNo != null">
+                and DEPT_NO = #{ deptNo}
+            </if>
+            <if test=" currencyVal != '' and  currencyVal != null">
+                and CURRENCY_VAL = #{ currencyVal}
+            </if>
+            <if test=" dateVal != '' and  dateVal != null">
+                and DATE_VAL = #{ dateVal}
+            </if>
+            <if test=" remark != '' and  remark != null">
+                and REMARK = #{ remark}
+            </if>
+            <if test=" state != '' and  state != null">
+                and STATE = #{ state}
+            </if>
+            <if test=" createTime != '' and  createTime != null">
+                and CREATE_TIME = #{ createTime}
+            </if>
+            <if test=" createUser != '' and  createUser != null">
+                and CREATE_USER = #{ createUser}
+            </if>
+            <if test=" updateTime != '' and  updateTime != null">
+                and UPDATE_TIME = #{ updateTime}
+            </if>
+            <if test=" updateUser != '' and  updateUser != null">
+                and UPDATE_USER = #{ updateUser}
+            </if>
+            <if test=" menuOrder != '' and  menuOrder != null">
+                and MENU_ORDER = #{ menuOrder}
+            </if>
+        </where>
+    </select>
+</mapper>

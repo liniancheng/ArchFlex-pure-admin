@@ -115,7 +115,8 @@
 <script>
 import moment from 'moment'
 import { STable } from '@/components'
-import { getRoleList, getServiceList } from '@/api/manage'
+import { getRoleList } from '@/api/manage'
+import { fetch } from '@/api/detect/imageRecord/index'
 
 export default {
     name: 'TableList',
@@ -132,12 +133,8 @@ export default {
             // 表头
             columns: [
                 {
-                    title: '#',
-                    scopedSlots: { customRender: 'serial' }
-                },
-                {
                     title: '序号',
-                    dataIndex: 'no'
+                    scopedSlots: { customRender: 'serial' }
                 },
                 {
                     title: '原始图片',
@@ -186,7 +183,7 @@ export default {
             // 加载数据方法 必须为 Promise 对象
             loadData: parameter => {
                 console.log('loadData.parameter', parameter)
-                return getServiceList(Object.assign(parameter, this.queryParam))
+                return fetch(Object.assign(parameter, this.queryParam))
                     .then(res => {
                         return res.result
                     })
