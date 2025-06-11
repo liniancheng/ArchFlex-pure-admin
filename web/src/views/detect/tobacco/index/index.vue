@@ -101,7 +101,12 @@
         </a-row>
         <a-row :gutter="12" class="tobacco-index__charts-row">
             <!--面积图-->
-            <smooth-area :dataSource="searchUserData" :scale="searchUserScale" ></smooth-area>
+            <smooth-area
+                :dataSource="searchUserData"
+                :scale="searchUserScale"
+                :title="$t('detect.tobacco.ten')"
+                :loading="loading"
+            ></smooth-area>
         </a-row>
 
     </div>
