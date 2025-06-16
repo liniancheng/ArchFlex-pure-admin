@@ -6,15 +6,25 @@
         <div class="table-page-search-wrapper">
             <a-form layout="inline">
                 <a-row :gutter="48">
-                    <a-col :md="4" :sm="24">
+                    <a-col :md="3" :sm="24">
                         <a-form-item label="模型">
                             <a-select v-model="queryParam.model" placeholder="请选择模型" default-value="0">
-                                <a-select-option value="0">best.onnx</a-select-option>
-                                <a-select-option value="1">best.pt</a-select-option>
+                                <a-select-option value="0">yolo</a-select-option>
+                                <a-select-option value="1">rtdetr</a-select-option>
+                                <a-select-option value="2">deim</a-select-option>
                             </a-select>
                         </a-form-item>
                     </a-col>
-                    <a-col :md="4" :sm="24">
+                    <a-col :md="3" :sm="24">
+                        <a-form-item label="权重文件">
+                            <a-select v-model="queryParam.weights" placeholder="请选择权重" default-value="0">
+                                <a-select-option value="0">best.onnx</a-select-option>
+                                <a-select-option value="1">yolov8n.pt</a-select-option>
+                                <a-select-option value="2">yolov11n.pt</a-select-option>
+                            </a-select>
+                        </a-form-item>
+                    </a-col>
+                    <a-col :md="3" :sm="24">
                         <a-form-item label="AI助手">
                             <a-select v-model="queryParam.ai" placeholder="请选择AI助手" default-value="0">
                                 <a-select-option value="0">DeepSeek</a-select-option>
@@ -23,7 +33,7 @@
                             </a-select>
                         </a-form-item>
                     </a-col>
-                    <a-col :md="10" :sm="24">
+                    <a-col :md="8" :sm="24">
                         <a-form-item label="最小置信度阈值">
                             <slider v-model="queryParam.minConfidence" :max="1" :min="0" :step="0.1"></slider>
                         </a-form-item>
@@ -101,7 +111,7 @@ export default {
             queryParam: {
                 model: null,
                 ai: null,
-                minConfidence: 0
+                minConfidence: 0.5
             },
             // 加载数据方法 必须为 Promise 对象
             loadData: parameter => {
