@@ -14,7 +14,7 @@
                 <sector :scale="pieScale" :data-source="pieData" :sectorStyle="pieStyle" :loading="loading"></sector>
             </a-col>
         </a-row>
-        <a-row :gutter="12" class="tobacco-index__charts-row">
+        <a-row :gutter="12" type="flex" class="tobacco-index__charts-row">
             <!--TODO: 雷达图-->
             <a-col :span="8">
                 <a-card
