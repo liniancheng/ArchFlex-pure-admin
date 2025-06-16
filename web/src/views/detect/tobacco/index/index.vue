@@ -85,9 +85,10 @@
                         <a-table
                             row-key="index"
                             size="large"
+                            :rowClassName="()=>'tobacco-index__table-row'"
                             :columns="searchTableColumns"
                             :dataSource="searchData"
-                            :pagination="{ pageSize: 5 }"
+                            :pagination="{ pageSize: 6 }"
                         >
                             <span slot="range" slot-scope="text, record">
                               <trend :flag="record.status === 0 ? 'up' : 'down'">
@@ -342,5 +343,12 @@ export default {
 
 .tobacco-index__charts-row {
     margin-bottom: 12px;
+}
+
+::v-deep .tobacco-index__table-row{
+    td {
+        padding: 20px 10px !important; /* 增大行高 */
+        height: 60px; /* 直接设置高度 */
+    }
 }
 </style>
