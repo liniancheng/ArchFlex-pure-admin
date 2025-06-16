@@ -22,6 +22,9 @@ Redis版本：Redis-x64-5.0.14.1
 
     ![image-20250514144458912](assets/image-20250514144458912.png)
 
+后端启动顺序：Server --> ConfigServer --> Auth --> UserService --> Gateway  
+其他服务（如Gen是代码生成服务、Message是消息服务）如果不需要可先不管，但注意Gateway服务是在所有服务启动后再启动
+
 
 ## 2. 前端配置
 
@@ -32,7 +35,9 @@ Node版本：node-v16.20.2-x64
 - 项目地址：https://pro.antdv.com/
 - 代码地址：https://github.com/vueComponent/ant-design-vue-pro
 
-## 3. 开发日志
+参考：[《基于YOLO+DeepSeek的农作物病虫害检测系统》](https://www.bilibili.com/video/BV1AaLizwEp8)
+
+## 3. 开发日志  
 
 Charts图表组件不生效：在 `src/core/lazy_use.js` 中
 
