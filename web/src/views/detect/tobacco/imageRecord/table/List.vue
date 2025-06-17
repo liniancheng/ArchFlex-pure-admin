@@ -53,10 +53,10 @@
                 {{ index + 1 }}
             </span>
             <span slot="originalImage" slot-scope="text, record">
-                <img :src="`http://localhost:8898/uploads/${record.originalImage}`" style="max-width: 300px; max-height: 200px;"/>
+                <img :src="record.originalImage" style="max-width: 300px; max-height: 200px;"/>
             </span>
             <span slot="predictedImage" slot-scope="text, record">
-                <img :src="`http://localhost:8898/result/${record.predictedImage}`" alt="预测图片" style="max-width: 300px; max-height: 200px;"/>
+                <img :src="record.predictedImage" alt="预测图片" style="max-width: 300px; max-height: 200px;"/>
             </span>
             <span slot="operation" slot-scope="text, record">
               <template>
