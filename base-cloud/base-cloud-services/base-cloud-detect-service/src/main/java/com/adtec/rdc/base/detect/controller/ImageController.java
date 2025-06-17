@@ -3,9 +3,12 @@ package com.adtec.rdc.base.detect.controller;
 import com.adtec.rdc.base.common.annotation.SysLog;
 import com.adtec.rdc.base.common.constants.ServiceNameConstants;
 import com.adtec.rdc.base.common.util.ApiResult;
+import com.adtec.rdc.base.detect.model.po.DetectImageRecord;
+import com.adtec.rdc.base.detect.service.ImageRecordService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 
 /**
  * @author littlelee
@@ -26,6 +30,9 @@ public class ImageController {
     private static final String FUNC_NAME = "图片检测功能";
 
     private static final String UPLOAD_DIR = "D:\\work\\tobacco\\upload\\";  // 注意路径分隔符使用双反斜杠
+
+    @Autowired
+    private ImageRecordService imageRecordService;  // 注入 ImageRecordService
 
     @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_USER_SERVICE, moduleName = FUNC_NAME, actionName = "上传文件")
     @ApiOperation(value = "上传文件", notes = "上传文件到服务器", httpMethod = "POST")
@@ -136,6 +143,23 @@ public class ImageController {
             }
             // 推理成功后构造返回结果
             String resultFileName = "result_" + fileName;
+
+            // 创建 ImageRecord 实例并保存
+            DetectImageRecord imageRecord = new DetectImageRecord();
+            imageRecord.setOriginalImage(inputImagePath);
+            imageRecord.setPredictedImage(outputDir + resultFileName);
+            imageRecord.setRecognitionWeight(weightsName);
+            imageRecord.setMinThreshold(0.5); // 示例值，根据实际情况设置
+            imageRecord.setAiAssistant("使用AI"); // 示例值，根据实际情况设置
+            imageRecord.setAiSuggestion("建议使用更高权重"); // 示例值，根据实际情况设置
+            imageRecord.setRecognitionTime(new Date());
+            imageRecord.setRecognitionUser("admin"); // 示例值，根据实际情况设置
+            imageRecord.setOperation("删除");
+
+            boolean saveResult = imageRecordService.saveImageRecord(imageRecord);
+            if (!saveResult) {
+                return ApiResult.failed("保存识别记录失败");
+            }
 
             ApiResult<String> result = ApiResult.success("检测成功");
             result.setData(resultFileName);  // 前端可根据 fileName 拼出 result 图路径

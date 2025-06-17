@@ -4,83 +4,42 @@
 <mapper namespace="com.adtec.rdc.base.detect.mapper.ImageRecordMapper">
 
     <!-- 基本resultMap -->
-    <resultMap type="com.adtec.rdc.base.detect.model.po.CvChkInd" id="CvChkIndMap">
-        <id property="imgNo" column="IMG_NO"/>
-        <result property="originalImagePath" column="original_image_path"/>
-        <result property="predictedImagePath " column="predicted_image_path "/>
-        <result property="parentNo" column="PARENT_NO"/>
-        <result property="alarmLevel" column="ALARM_LEVEL"/>
-        <result property="indSys" column="IND_SYS"/>
-        <result property="busDirec" column="BUS_DIREC"/>
-        <result property="indExpr" column="IND_EXPR"/>
-        <result property="deptNo" column="DEPT_NO"/>
-        <result property="currencyVal" column="CURRENCY_VAL"/>
-        <result property="dateVal" column="DATE_VAL"/>
-        <result property="remark" column="REMARK"/>
-        <result property="state" column="STATE"/>
-        <result property="createTime" column="CREATE_TIME"/>
-        <result property="createUser" column="CREATE_USER"/>
-        <result property="updateTime" column="UPDATE_TIME"/>
-        <result property="updateUser" column="UPDATE_USER"/>
-        <result property="menuOrder" column="MENU_ORDER"/>
+    <resultMap type="com.adtec.rdc.base.detect.model.po.DetectImageRecord" id="ImageRecordMap">
+        <id property="id" column="id"/>
+        <result property="originalImage" column="original_image"/>
+        <result property="predictedImage" column="predicted_image"/>
+        <result property="recognitionWeight" column="recognition_weight"/>
+        <result property="minThreshold" column="min_threshold"/>
+        <result property="aiAssistant" column="ai_assistant"/>
+        <result property="aiSuggestion" column="ai_suggestion"/>
+        <result property="recognitionTime" column="recognition_time"/>
+        <result property="recognitionUser" column="recognition_user"/>
+        <result property="operation" column="operation"/>
     </resultMap>
 
-    <select id="pageByQuery" resultMap="CvChkIndMap">
-        select * from cv_chk_ind
+    <select id="pageByQuery" resultMap="ImageRecordMap">
+        select * from detect_image_record
         <where>
-            <if test=" indNo != '' and  indNo != null">
-                and IND_NO = #{ indNo}
+            <if test="originalImage != null and originalImage != ''">
+                and original_image = #{originalImage}
             </if>
-            <if test=" indNm != '' and  indNm != null">
-                and IND_NM = #{ indNm}
+            <if test="predictedImage != null and predictedImage != ''">
+                and predicted_image = #{predictedImage}
             </if>
-            <if test=" indLevel != '' and  indLevel != null">
-                and IND_LEVEL = #{ indLevel}
+            <if test="recognitionWeight != null and recognitionWeight != ''">
+                and recognition_weight = #{recognitionWeight}
             </if>
-            <if test=" parentNo != '' and  parentNo != null">
-                and PARENT_NO = #{ parentNo}
+            <if test="minThreshold != null">
+                and min_threshold = #{minThreshold}
             </if>
-            <if test=" alarmLevel != '' and  alarmLevel != null">
-                and ALARM_LEVEL = #{ alarmLevel}
+            <if test="aiAssistant != null and aiAssistant != ''">
+                and ai_assistant = #{aiAssistant}
             </if>
-            <if test=" indSys != '' and  indSys != null">
-                and IND_SYS = #{ indSys}
+            <if test="recognitionTime != null and recognitionTime != ''">
+                and recognition_time = #{recognitionTime}
             </if>
-            <if test=" busDirec != '' and  busDirec != null">
-                and BUS_DIREC = #{ busDirec}
-            </if>
-            <if test=" indExpr != '' and  indExpr != null">
-                and IND_EXPR = #{ indExpr}
-            </if>
-            <if test=" deptNo != '' and  deptNo != null">
-                and DEPT_NO = #{ deptNo}
-            </if>
-            <if test=" currencyVal != '' and  currencyVal != null">
-                and CURRENCY_VAL = #{ currencyVal}
-            </if>
-            <if test=" dateVal != '' and  dateVal != null">
-                and DATE_VAL = #{ dateVal}
-            </if>
-            <if test=" remark != '' and  remark != null">
-                and REMARK = #{ remark}
-            </if>
-            <if test=" state != '' and  state != null">
-                and STATE = #{ state}
-            </if>
-            <if test=" createTime != '' and  createTime != null">
-                and CREATE_TIME = #{ createTime}
-            </if>
-            <if test=" createUser != '' and  createUser != null">
-                and CREATE_USER = #{ createUser}
-            </if>
-            <if test=" updateTime != '' and  updateTime != null">
-                and UPDATE_TIME = #{ updateTime}
-            </if>
-            <if test=" updateUser != '' and  updateUser != null">
-                and UPDATE_USER = #{ updateUser}
-            </if>
-            <if test=" menuOrder != '' and  menuOrder != null">
-                and MENU_ORDER = #{ menuOrder}
+            <if test="recognitionUser != null and recognitionUser != ''">
+                and recognition_user = #{recognitionUser}
             </if>
         </where>
     </select>

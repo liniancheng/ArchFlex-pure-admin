@@ -38,15 +38,7 @@
                                 </a-menu>
                             </a-dropdown>
                         </span>
-                        <div class="analysis-salesTypeRadio">
-                            <a-radio-group defaultValue="a">
-                                <a-radio-button value="a">{{ $t('dashboard.analysis.channel.all') }}</a-radio-button>
-                                <a-radio-button value="b">{{ $t('dashboard.analysis.channel.online') }}</a-radio-button>
-                                <a-radio-button value="c">{{ $t('dashboard.analysis.channel.stores') }}</a-radio-button>
-                            </a-radio-group>
-                        </div>
                     </div>
-                    <h4>{{ $t('dashboard.analysis.sales') }}</h4>
                     <div>
                         <div>
                             <v-chart :force-fit="true" :height="405" :data="pieData" :scale="pieScale">
@@ -137,6 +129,8 @@ const sourceData = [
     { item: '用户3', count: 17 },
     { item: '用户4', count: 13 },
     { item: '用户5', count: 9 },
+    { item: 'admin', count: 7.8 },
+    { item: 'admin', count: 7.8 },
     { item: 'admin', count: 7.8 }
 ]
 

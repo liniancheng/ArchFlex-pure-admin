@@ -17,44 +17,10 @@
                             </a-select>
                         </a-form-item>
                     </a-col>
-                    <template v-if="advanced">
-                        <a-col :md="8" :sm="24">
-                            <a-form-item label="调用次数">
-                                <a-input-number v-model="queryParam.callNo" style="width: 100%"/>
-                            </a-form-item>
-                        </a-col>
-                        <a-col :md="8" :sm="24">
-                            <a-form-item label="更新日期">
-                                <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请输入更新日期"/>
-                            </a-form-item>
-                        </a-col>
-                        <a-col :md="8" :sm="24">
-                            <a-form-item label="使用状态">
-                                <a-select v-model="queryParam.useStatus" placeholder="请选择" default-value="0">
-                                    <a-select-option value="0">全部</a-select-option>
-                                    <a-select-option value="1">关闭</a-select-option>
-                                    <a-select-option value="2">运行中</a-select-option>
-                                </a-select>
-                            </a-form-item>
-                        </a-col>
-                        <a-col :md="8" :sm="24">
-                            <a-form-item label="使用状态">
-                                <a-select placeholder="请选择" default-value="0">
-                                    <a-select-option value="0">全部</a-select-option>
-                                    <a-select-option value="1">关闭</a-select-option>
-                                    <a-select-option value="2">运行中</a-select-option>
-                                </a-select>
-                            </a-form-item>
-                        </a-col>
-                    </template>
                     <a-col :md="!advanced && 8 || 24" :sm="24">
             <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
               <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
               <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
-              <a @click="toggleAdvanced" style="margin-left: 8px">
-                {{ advanced ? '收起' : '展开' }}
-                <a-icon :type="advanced ? 'up' : 'down'"/>
-              </a>
             </span>
                     </a-col>
                 </a-row>
@@ -83,31 +49,22 @@
             :alert="options.alert"
             :rowSelection="options.rowSelection"
         >
-      <span slot="serial" slot-scope="text, record, index">
-        {{ index + 1 }}
-      </span>
-            <span slot="action" slot-scope="text, record">
-        <template>
-          <a @click="handleEdit(record)">编辑</a>
-          <a-divider type="vertical" />
-        </template>
-        <a-dropdown>
-          <a class="ant-dropdown-link">
-            更多 <a-icon type="down" />
-          </a>
-          <a-menu slot="overlay">
-            <a-menu-item>
-              <a href="javascript:;">详情</a>
-            </a-menu-item>
-            <a-menu-item v-if="$auth('table.disable')">
-              <a href="javascript:;">禁用</a>
-            </a-menu-item>
-            <a-menu-item v-if="$auth('table.delete')">
-              <a href="javascript:;">删除</a>
-            </a-menu-item>
-          </a-menu>
-        </a-dropdown>
-      </span>
+            <span slot="serial" slot-scope="text, record, index">
+                {{ index + 1 }}
+            </span>
+            <span slot="originalImage" slot-scope="text, record">
+                <img :src="`http://localhost:8898/uploads/${record.originalImage}`" style="max-width: 300px; max-height: 200px;"/>
+            </span>
+            <span slot="predictedImage" slot-scope="text, record">
+                <img :src="`http://localhost:8898/result/${record.predictedImage}`" alt="预测图片" style="max-width: 300px; max-height: 200px;"/>
+            </span>
+            <span slot="operation" slot-scope="text, record">
+              <template>
+                <a @click="handleEdit(record)">编辑</a>
+                <a-divider type="vertical" />
+                <a @click="handleSub(record)">删除</a>
+              </template>
+            </span>
         </s-table>
     </div>
 </template>
@@ -138,46 +95,51 @@ export default {
                 },
                 {
                     title: '原始图片',
-                    dataIndex: 'description'
+                    dataIndex: 'originalImage',
+                    scopedSlots: { customRender: 'originalImage' }
                 },
                 {
                     title: '预测图片',
-                    dataIndex: 'callNo',
-                    sorter: true,
-                    needTotal: true,
-                    customRender: (text) => text + ' 次'
+                    dataIndex: 'predictedImage',
+                    scopedSlots: { customRender: 'predictedImage' }
                 },
                 {
                     title: '识别权重',
-                    dataIndex: 'status',
+                    dataIndex: 'recognitionWeight',
                     needTotal: true
                 },
                 {
                     title: '最小阈值',
-                    dataIndex: 'updatedAt',
+                    dataIndex: 'minThreshold',
                     sorter: true
                 },
                 {
                     title: 'AI助手',
-                    dataIndex: 'action',
-                    width: '150px',
-                    scopedSlots: { customRender: 'action' }
+                    dataIndex: 'aiAssistant',
+                    width: '150px'
                 },
                 {
                     title: 'AI建议',
-                    dataIndex: 'AISuggest'
+                    dataIndex: 'aiSuggestion'
                 },
                 {
                     title: '识别时间',
-                    dataIndex: 'time'
+                    dataIndex: 'recognitionTime',
+                    customRender: (text, record) => {
+                        if (text) {
+                            return moment(text).format('YYYY-MM-DD HH:mm:ss')
+                        }
+                        return '-'
+                    }
                 },
                 {
                     title: '识别用户',
-                    dataIndex: 'user'
+                    dataIndex: 'recognitionUser'
                 },
                 {
                     title: '操作',
-                    dataIndex: 'operation'
+                    dataIndex: 'operation',
+                    scopedSlots: { customRender: 'operation' }
                 }
             ],
             // 加载数据方法 必须为 Promise 对象
@@ -185,7 +147,11 @@ export default {
                 console.log('loadData.parameter', parameter)
                 return fetch(Object.assign(parameter, this.queryParam))
                     .then(res => {
-                        return res.result
+                        if (res.code === 0) {
+                            return res.data
+                        } else {
+                            return {}
+                        }
                     })
             },
             selectedRowKeys: [],
