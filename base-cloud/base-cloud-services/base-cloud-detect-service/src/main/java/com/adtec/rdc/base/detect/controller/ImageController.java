@@ -62,7 +62,7 @@ public class ImageController {
             file.transferTo(new File(uploadDir + fileName));
             // 构造成功响应对象并设置文件名作为 data
             ApiResult<String> result = ApiResult.success("文件上传成功");
-            result.setData(fileName);  // 只返回文件名
+            result.setData("http://localhost:8898/uploads/" + fileName);  // 只返回文件名
             return result;
         } catch (IOException e) {
             e.printStackTrace();
