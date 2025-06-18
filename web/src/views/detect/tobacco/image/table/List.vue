@@ -73,9 +73,10 @@
         </div>
         <div class="upload-container">
             <a-upload
+                v-if="!imageUrl"
                 name="file"
-                action="/upload.do"
-                :customRequest="customUpload"
+                :maxCount="1"
+                :showUploadList="false"
                 :beforeUpload="beforeUpload"
             >
                 <div class="upload-box">
@@ -83,6 +84,12 @@
                     <div style="margin-top: 8px;">点击上传</div>
                 </div>
             </a-upload>
+            <img
+                v-else
+                :src="imageUrl"
+                :alt="imageFile.name"
+                class="tobacco__update-image"
+            />
         </div>
         <div class="ai-advice">
             <div class="title-box">AI建议</div>
@@ -91,10 +98,11 @@
 </template>
 
 <script>
-import moment from 'moment'
-import { STable } from '@/components'
 import { getRoleList, getServiceList } from '@/api/manage'
+import { upload } from '@/api/detect/image'
 import { Slider } from 'ant-design-vue'
+import { STable } from '@/components'
+import moment from 'moment'
 
 export default {
     name: 'TableList',
@@ -123,6 +131,8 @@ export default {
             },
             selectedRowKeys: [],
             selectedRows: [],
+            imageFile: null,
+            imageUrl: null,
 
             // custom table alert & rowSelection
             options: {
@@ -174,6 +184,24 @@ export default {
         },
         handleOk() {
 
+        },
+
+        beforeUpload(file) {
+            // 上传图片前处理方法
+            this.handleFileSelect(file)
+
+            return false
+        },
+        handleFileSelect(file) {
+            this.imageFile = file
+            this.customUpload()
+        },
+        customUpload() {
+            // 自定义上传方法
+            const me = this
+            upload(me.imageFile).then(res => {
+                me.imageUrl = res.data
+            })
         },
 
         onSelectChange(selectedRowKeys, selectedRows) {
@@ -231,5 +259,9 @@ export default {
     justify-content: center;
     text-align: center;
     color: #888;
+}
+
+.tobacco__update-image {
+    height: 100%;
 }
 </style>
