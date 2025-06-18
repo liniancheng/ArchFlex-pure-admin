@@ -8,8 +8,8 @@ import com.adtec.rdc.base.common.enums.ResponseCodeEnum;
 import com.adtec.rdc.base.common.exception.ServiceException;
 
 /**
- * @author: JTao
- * @date: 2018/10/12 10:39
+ * @author: littlelee
+ * @date: 2025/06/18 10:39
  * @description: 统一响应信息主体
  */
 @Data

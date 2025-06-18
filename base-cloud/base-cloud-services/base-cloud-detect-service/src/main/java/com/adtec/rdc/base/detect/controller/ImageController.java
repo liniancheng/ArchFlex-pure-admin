@@ -2,9 +2,11 @@ package com.adtec.rdc.base.detect.controller;
 
 import com.adtec.rdc.base.common.annotation.SysLog;
 import com.adtec.rdc.base.common.constants.ServiceNameConstants;
+import com.adtec.rdc.base.common.enums.ResponseCodeEnum;
 import com.adtec.rdc.base.common.util.ApiResult;
 import com.adtec.rdc.base.detect.model.po.DetectImageRecord;
 import com.adtec.rdc.base.detect.service.ImageRecordService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -17,6 +19,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author littlelee
@@ -73,7 +79,7 @@ public class ImageController {
     @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_USER_SERVICE, moduleName = FUNC_NAME, actionName = "图像检测")
     @ApiOperation(value = "图像检测", notes = "使用指定模型和权重文件检测上传的图像", httpMethod = "POST")
     @PostMapping("/detect")
-    public ApiResult<String> detectImage(@RequestParam("file") String fileName,
+    public ApiResult<Map<String, Object>> detectImage(@RequestParam("file") String fileName,
                                          @RequestParam("model") String modelName,
                                          @RequestParam("weights") String weightsName) {
         // 检查参数合法性
@@ -129,11 +135,12 @@ public class ImageController {
         try {
             Process process = pb.start();
 
-            // 可选：打印 Python 输出
+            // 读取 Python 输出
+            StringBuilder output = new StringBuilder();
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    System.out.println("[Python] " + line);
+                    output.append(line);
                 }
             }
 
@@ -141,29 +148,46 @@ public class ImageController {
             if (exitCode != 0) {
                 return ApiResult.failed("模型推理失败，退出码：" + exitCode);
             }
-            // 推理成功后构造返回结果
-            String resultFileName = "result_" + fileName;
+            // 提取 JSON 数据
+            String outputStr = output.toString();
+            String jsonPattern = "\\{.*\\}";
+            Pattern pattern = Pattern.compile(jsonPattern);
+            Matcher matcher = pattern.matcher(outputStr);
 
-            // 创建 ImageRecord 实例并保存
-            DetectImageRecord imageRecord = new DetectImageRecord();
-            imageRecord.setOriginalImage(inputImagePath);
-            imageRecord.setPredictedImage(outputDir + resultFileName);
-            imageRecord.setRecognitionWeight(weightsName);
-            imageRecord.setMinThreshold(0.5); // 示例值，根据实际情况设置
-            imageRecord.setAiAssistant("使用AI"); // 示例值，根据实际情况设置
-            imageRecord.setAiSuggestion("建议使用更高权重"); // 示例值，根据实际情况设置
-            imageRecord.setRecognitionTime(new Date());
-            imageRecord.setRecognitionUser("admin"); // 示例值，根据实际情况设置
-            imageRecord.setOperation("删除");
+            if (matcher.find()) {
+                String jsonResult = matcher.group();
+                ObjectMapper objectMapper = new ObjectMapper();
+                Map<String, Integer> detectionResults = objectMapper.readValue(jsonResult, Map.class);
 
-            boolean saveResult = imageRecordService.saveImageRecord(imageRecord);
-            if (!saveResult) {
-                return ApiResult.failed("保存识别记录失败");
+                // 推理成功后构造返回结果
+                String resultFileName = "result_" + fileName;
+
+                // 创建 ImageRecord 实例并保存
+                DetectImageRecord imageRecord = new DetectImageRecord();
+                imageRecord.setOriginalImage("http://localhost:8898/uploads/" + fileName);
+                imageRecord.setPredictedImage("http://localhost:8898/result/" + resultFileName);
+                imageRecord.setRecognitionWeight(weightsName);
+                imageRecord.setMinThreshold(0.5); // 示例值，根据实际情况设置
+                imageRecord.setAiAssistant("使用AI"); // 示例值，根据实际情况设置
+                imageRecord.setAiSuggestion("建议使用更高权重"); // 示例值，根据实际情况设置
+                imageRecord.setRecognitionTime(new Date());
+                imageRecord.setRecognitionUser("admin"); // 示例值，根据实际情况设置
+                imageRecord.setOperation("删除");
+
+                boolean saveResult = imageRecordService.saveImageRecord(imageRecord);
+                if (!saveResult) {
+                    return ApiResult.failed("保存识别记录失败");
+                }
+
+                // 构造返回结果
+                Map<String, Object> resultData = new HashMap<>();
+                resultData.put("resultFileName", "http://localhost:8898/result/" + resultFileName);
+                resultData.put("detectionResults", detectionResults);
+
+                return new ApiResult<>(resultData, ResponseCodeEnum.SUCCESS);
+            } else {
+                return ApiResult.failed("无法解析检测结果");
             }
-
-            ApiResult<String> result = ApiResult.success("检测成功");
-            result.setData(resultFileName);  // 前端可根据 fileName 拼出 result 图路径
-            return result;
         } catch (IOException | InterruptedException e) {
             return ApiResult.failed("检测过程出错：" + e.getMessage());
         }
