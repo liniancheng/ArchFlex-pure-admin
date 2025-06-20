@@ -1,55 +1,58 @@
 <template>
-  <a-config-provider :locale="locale">
-    <div id="app">
-      <router-view />
-    </div>
-  </a-config-provider>
+  <el-config-provider :locale="currentLocale">
+    <router-view />
+    <ReDialog />
+    <ReDrawer />
+  </el-config-provider>
 </template>
 
-<script>
-import { domTitle, setDocumentTitle } from '@/utils/domUtil'
-import { updateTheme } from '@/components/SettingDrawer/settingConfig'
+<script lang="ts">
+import { defineComponent } from "vue";
+import { checkVersion } from "version-rocket";
+import { ElConfigProvider } from "element-plus";
+import { ReDialog } from "@/components/ReDialog";
+import { ReDrawer } from "@/components/ReDrawer";
+import en from "element-plus/es/locale/lang/en";
+import zhCn from "element-plus/es/locale/lang/zh-cn";
+import plusEn from "plus-pro-components/es/locale/lang/en";
+import plusZhCn from "plus-pro-components/es/locale/lang/zh-cn";
 
-export default {
-  data () {
-    return {
-      theme: localStorage.getItem('theme')
-    }
-  },
-  watch: {
-    theme: function (newVal) {
-      this.theme = this.$root.theme
-    }
-  },
-  mounted () {
-    if (localStorage.getItem('theme') === null) {
-      this.theme = 'blue'
-      this.$root.theme = this.theme
-    } else {
-      this.theme = this.$root.theme = localStorage.getItem('theme')
-    }
-    var color = ''
-    if (this.theme === 'green') {
-      color = '#35af54'
-    } else if (this.theme === 'blue') {
-      color = '#0097f4'
-    } else if (this.theme === 'yellow') {
-      color = '#ef9e1d'
-    } else if (this.theme === 'purple') {
-      color = '#a47af4'
-    }
-    updateTheme(color)
+export default defineComponent({
+  name: "app",
+  components: {
+    [ElConfigProvider.name]: ElConfigProvider,
+    ReDialog,
+    ReDrawer
   },
   computed: {
-    codeMap () {
-      return this.$store.getters.config
-    },
-    locale () {
-      // 只是为了切换语言时，更新标题
-      const title = this.codeMap['system.title'] || domTitle
-      setDocumentTitle(`${title}`)
-      return this.$i18n.getLocaleMessage(this.$store.getters.lang).antLocale
+    currentLocale() {
+      return this.$storage.locale?.locale === "zh"
+        ? { ...zhCn, ...plusZhCn }
+        : { ...en, ...plusEn };
+    }
+  },
+  beforeCreate() {
+    const { version, name: title } = __APP_INFO__.pkg;
+    const { VITE_PUBLIC_PATH, MODE } = import.meta.env;
+    // https://github.com/guMcrey/version-rocket/blob/main/README.zh-CN.md#api
+    if (MODE === "production") {
+      // 版本实时更新检测，只作用于线上环境
+      checkVersion(
+        // config
+        {
+          // 5分钟检测一次版本
+          pollingTime: 300000,
+          localPackageVersion: version,
+          originVersionFileUrl: `${location.origin}${VITE_PUBLIC_PATH}version.json`
+        },
+        // options
+        {
+          title,
+          description: "检测到新版本",
+          buttonText: "立即更新"
+        }
+      );
     }
   }
-}
+});
 </script>
