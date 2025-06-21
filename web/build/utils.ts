@@ -51,12 +51,14 @@ const __APP_INFO__ = {
 const wrapperEnv = (envConf: Recordable): ViteEnv => {
   // 默认值
   const ret: ViteEnv = {
-    VITE_PORT: 8848,
+    VITE_PORT: 8000,
     VITE_PUBLIC_PATH: "",
     VITE_ROUTER_HISTORY: "",
     VITE_CDN: false,
     VITE_HIDE_HOME: "false",
-    VITE_COMPRESSION: "none"
+    VITE_COMPRESSION: "none",
+    VITE_API_BASE_URL: "/api",
+    VITE_API_TIMEOUT: 60000,
   };
 
   for (const envName of Object.keys(envConf)) {
