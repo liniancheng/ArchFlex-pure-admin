@@ -14,6 +14,7 @@ import removeConsole from "vite-plugin-remove-console";
 import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
 import { codeInspectorPlugin } from "code-inspector-plugin";
 import { vitePluginFakeServer } from "vite-plugin-fake-server";
+import * as process from "node:process"
 
 export function getPluginsList(
   VITE_CDN: boolean,
@@ -56,7 +57,8 @@ export function getPluginsList(
       logger: false,
       include: "mock",
       infixName: false,
-      enableProd: true
+      enableProd: false,
+      enableDev: process.env.WITH_MOCK === "true",
     }),
     // svg组件化支持
     svgLoader(),
