@@ -1,4 +1,6 @@
-# 基础框架
+# ArchFlex
+
+Arch 代表架构（Architecture），Flex 代表灵活性（Flexibility）。这个框架具有高度的灵活性和可扩展性，能够适应各种不同的应用场景。
 
 ## 1. 后端配置
 
