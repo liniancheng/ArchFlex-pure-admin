@@ -75,12 +75,6 @@ public class DetectImageRecord implements Serializable {
     private String recognitionUser;
 
     /**
-     * 操作
-     */
-    @TableField(value = "operation", strategy = FieldStrategy.IGNORED)
-    private String operation;
-
-    /**
      * 额外字段，不在数据库中存储
      */
     @TableField(exist = false)

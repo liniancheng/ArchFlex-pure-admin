@@ -4,8 +4,9 @@ import com.adtec.rdc.base.common.annotation.SysLog;
 import com.adtec.rdc.base.common.constants.ServiceNameConstants;
 import com.adtec.rdc.base.common.enums.ResponseCodeEnum;
 import com.adtec.rdc.base.common.util.ApiResult;
+import com.adtec.rdc.base.detect.model.bo.DetectImage;
 import com.adtec.rdc.base.detect.model.po.DetectImageRecord;
-import com.adtec.rdc.base.detect.service.ImageRecordService;
+import com.adtec.rdc.base.detect.service.ImageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -14,10 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedReader;
+
+import java.util.List;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +40,7 @@ public class ImageController {
     private static final String UPLOAD_DIR = "D:\\work\\tobacco\\upload\\";  // 注意路径分隔符使用双反斜杠
 
     @Autowired
-    private ImageRecordService imageRecordService;  // 注入 ImageRecordService
+    private ImageService imageService;  // 注入 ImageService
 
     @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_USER_SERVICE, moduleName = FUNC_NAME, actionName = "上传文件")
     @ApiOperation(value = "上传文件", notes = "上传文件到服务器", httpMethod = "POST")
@@ -79,117 +81,12 @@ public class ImageController {
     @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_USER_SERVICE, moduleName = FUNC_NAME, actionName = "图像检测")
     @ApiOperation(value = "图像检测", notes = "使用指定模型和权重文件检测上传的图像", httpMethod = "POST")
     @PostMapping("/detect")
-    public ApiResult<Map<String, Object>> detectImage(@RequestParam("file") String fileName,
-                                         @RequestParam("model") String modelName,
-                                         @RequestParam("weights") String weightsName) {
-        // 检查参数合法性
-        if (fileName == null || fileName.trim().isEmpty()) {
-            return ApiResult.failed("文件名为空，请提供已上传的文件名");
-        }
-
-        // 上传目录
-        String uploadDir = UPLOAD_DIR;
-        String inputImagePath = uploadDir + fileName;
-        File inputFile = new File(inputImagePath);
-        if (!inputFile.exists()) {
-            return ApiResult.failed("指定的图像文件不存在：" + inputImagePath);
-        }
-
-        // 根据 modelName 决定使用哪个 conda 环境的 python 路径
-        String pythonPath;
-        switch (modelName.toLowerCase()) {
-            case "yolo":
-                pythonPath = "D:/work/miniconda3/envs/yolov11/python.exe";
-                break;
-            case "rtdetr":
-                pythonPath = "D:\\miniconda3\\envs\\rtdetr\\python.exe";
-                break;
-            default:
-                return ApiResult.failed("不支持的模型类型：" + modelName);
-        }
-
-        // 权重文件路径（假设你统一放在一个文件夹下）
-        String weightsPath = "D:\\work\\tobacco\\weights\\" + weightsName;
-        File weightFile = new File(weightsPath);
-        if (!weightFile.exists()) {
-            return ApiResult.failed("指定权重文件不存在：" + weightsName);
-        }
-
-        // 输出图像路径
-        String outputDir = "D:\\work\\tobacco\\result\\";
-        File outputPath = new File(outputDir);
-        if (!outputPath.exists()) {
-            outputPath.mkdirs();
-        }
-
-        // 调用 Python 脚本
-        ProcessBuilder pb = new ProcessBuilder(
-                pythonPath,
-                "D:\\PycharmProjects\\ultralytics-main\\ultralytics\\predict.py",
-                "--weights", weightsPath,
-                "--image", inputImagePath,
-                "--output", outputDir
-        );
-        pb.redirectErrorStream(true); // 合并标准输出和错误输出
-
-        try {
-            Process process = pb.start();
-
-            // 读取 Python 输出
-            StringBuilder output = new StringBuilder();
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    output.append(line);
-                }
-            }
-
-            int exitCode = process.waitFor();
-            if (exitCode != 0) {
-                return ApiResult.failed("模型推理失败，退出码：" + exitCode);
-            }
-            // 提取 JSON 数据
-            String outputStr = output.toString();
-            String jsonPattern = "\\{.*\\}";
-            Pattern pattern = Pattern.compile(jsonPattern);
-            Matcher matcher = pattern.matcher(outputStr);
-
-            if (matcher.find()) {
-                String jsonResult = matcher.group();
-                ObjectMapper objectMapper = new ObjectMapper();
-                Map<String, Integer> detectionResults = objectMapper.readValue(jsonResult, Map.class);
-
-                // 推理成功后构造返回结果
-                String resultFileName = "result_" + fileName;
-
-                // 创建 ImageRecord 实例并保存
-                DetectImageRecord imageRecord = new DetectImageRecord();
-                imageRecord.setOriginalImage("http://localhost:8898/uploads/" + fileName);
-                imageRecord.setPredictedImage("http://localhost:8898/result/" + resultFileName);
-                imageRecord.setRecognitionWeight(weightsName);
-                imageRecord.setMinThreshold(0.5); // 示例值，根据实际情况设置
-                imageRecord.setAiAssistant("使用AI"); // 示例值，根据实际情况设置
-                imageRecord.setAiSuggestion("建议使用更高权重"); // 示例值，根据实际情况设置
-                imageRecord.setRecognitionTime(new Date());
-                imageRecord.setRecognitionUser("admin"); // 示例值，根据实际情况设置
-                imageRecord.setOperation("删除");
-
-                boolean saveResult = imageRecordService.saveImageRecord(imageRecord);
-                if (!saveResult) {
-                    return ApiResult.failed("保存识别记录失败");
-                }
-
-                // 构造返回结果
-                Map<String, Object> resultData = new HashMap<>();
-                resultData.put("resultFileName", "http://localhost:8898/result/" + resultFileName);
-                resultData.put("detectionResults", detectionResults);
-
-                return new ApiResult<>(resultData, ResponseCodeEnum.SUCCESS);
-            } else {
-                return ApiResult.failed("无法解析检测结果");
-            }
-        } catch (IOException | InterruptedException e) {
-            return ApiResult.failed("检测过程出错：" + e.getMessage());
+    public ApiResult<Map<String, Object>> detectImage(@RequestBody DetectImage detectImage) {
+        Map<String, Object> resultData = imageService.detectImage(detectImage);
+        if (resultData != null) {
+            return new ApiResult<>(resultData, ResponseCodeEnum.SUCCESS);
+        } else {
+            return ApiResult.failed("图像检测失败");
         }
     }
 
