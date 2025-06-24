@@ -208,4 +208,12 @@ declare global {
       touched?: boolean;
     };
   }
+
+  interface AnyObject {
+    [key: string]: any;
+  }
+
+  interface AnyArray extends Array<any> {
+    [key: number]: any;
+  }
 }

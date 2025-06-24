@@ -2,10 +2,12 @@
 import { useI18n } from "vue-i18n";
 import Motion from "./utils/motion";
 import { useRouter } from "vue-router";
+import CryptoJS from "@/utils/CryptoJS";
 import { message } from "@/utils/message";
 import { loginRules } from "./utils/rule";
 import TypeIt from "@/components/ReTypeit";
 import { debounce } from "@pureadmin/utils";
+import { updateLoginTime } from "@/api/user";
 import { useNav } from "@/layout/hooks/useNav";
 import { useEventListener } from "@vueuse/core";
 import type { FormInstance } from "element-plus";
@@ -59,7 +61,7 @@ const { locale, translationCh, translationEn } = useTranslationLang();
 
 const ruleForm = reactive({
   username: "admin",
-  password: "admin123",
+  password: "admin123.",
   verifyCode: ""
 });
 
@@ -71,28 +73,35 @@ const onLogin = async (formEl: FormInstance | undefined) => {
       useUserStoreHook()
         .loginByUsername({
           username: ruleForm.username,
-          password: ruleForm.password
+          password: CryptoJS.encrypt(ruleForm.password),
+          client_id: "cloud",
+          client_secret: "cloud",
+          grant_type: "password"
         })
-        .then(res => {
-          if (res.success) {
-            // 获取后端路由
-            return initRouter().then(() => {
-              disabled.value = true;
-              router
-                .push(getTopMenu(true).path)
-                .then(() => {
-                  message(t("login.pureLoginSuccess"), { type: "success" });
-                })
-                .finally(() => (disabled.value = false));
-            });
-          } else {
-            message(t("login.pureLoginFail"), { type: "error" });
-          }
-        })
+        .then(res => loginSuccess(res))
         .finally(() => (loading.value = false));
     }
   });
 };
+
+const loginSuccess = async (res: AnyObject) => {
+  // 更新登录时间
+  updateLoginTime().then(r => {});
+  if (res) {
+    // 获取后端路由
+    return initRouter().then(() => {
+      disabled.value = true;
+      router
+        .push(getTopMenu(true).path)
+        .then(() => {
+          message(t("login.pureLoginSuccess"), { type: "success" });
+        })
+        .finally(() => (disabled.value = false));
+    });
+  } else {
+    message(t("login.pureLoginFail"), { type: "error" });
+  }
+}
 
 const immediateDebounce: any = debounce(
   formRef => onLogin(formRef),
