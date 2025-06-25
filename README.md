@@ -1,9 +1,15 @@
-# ArchFlex
+
+![image-20250514144458912](assets/ArchFlex.png)
+<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">ArchFlex v0.0.1</h1>
+## 框架简介
 
 Arch 代表架构（Architecture），Flex 代表灵活性（Flexibility）。这个框架具有高度的灵活性和可扩展性，能够适应各种不同的应用场景。
 
-## 1. 后端配置
+## 📄 1. 后端介绍
+### 1.1 auth模块技术栈
+Spring Security OAuth2
 
+### 1.2 后端配置
 JAVA版本：jdk1.8.0_321
 
 Maven版本：apache-maven-3.9.9
@@ -28,7 +34,7 @@ Redis版本：Redis-x64-5.0.14.1
 其他服务（如Gen是代码生成服务、Message是消息服务）如果不需要可先不管，但注意Gateway服务是在所有服务启动后再启动
 
 
-## 2. 前端配置
+## 2. 前端介绍
 
 Node版本：node-v16.20.2-x64
 
