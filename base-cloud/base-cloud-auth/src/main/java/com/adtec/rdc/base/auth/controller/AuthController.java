@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 /**
- * @author: JTao
- * @date 2018年10月31日13:23:22
+ * @author: LittleLee
+ * @date 2025年06月31日13:23:22
  */
 @RestController
 public class AuthController {

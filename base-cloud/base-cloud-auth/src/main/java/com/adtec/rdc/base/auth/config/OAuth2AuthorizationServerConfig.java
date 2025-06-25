@@ -41,8 +41,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author: JTao
- * @date: 2018/10/8 17:27
+ * @author: LittleLee
+ * @date: 2025/06/8 17:27
  * @description: oauth2认证服务器配置类
  */
 @Slf4j

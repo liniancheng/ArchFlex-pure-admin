@@ -1,19 +1,19 @@
 package com.adtec.rdc.base.common.constants;
 
 /**
- * @author: JTao
- * @date: 2018/10/17 09:24
+ * @author: LittleLee
+ * @date: 2025/06/17 09:24
  * @description:
  */
 public class UserConstants {
     /**
      * jwt中 用户id的key
      */
-    public static final String USER_ID = "userId";
+    public static final String USER_ID = "user_id";
     /**
      * jwt中 用户userName的key
      */
-    public static final String LOGIN_NAME = "loginName";
+    public static final String LOGIN_NAME = "login_name";
     /**
      * jwt中 角色集合的key
      */

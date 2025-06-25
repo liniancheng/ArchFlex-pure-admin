@@ -29,10 +29,10 @@ import java.io.IOException;
  * <p>
  * ***************************************************</br>
  *
- * @author 何伟/hewei@adtec.com.cn
+ * @author littlelee
  * @version V1.0
- * @copyright ADTEC
- * @since 2019/11/20
+ * @copyright littlelee
+ * @since 2025/06/20
  */
 public class CaptchaFilter extends OncePerRequestFilter {
 
