@@ -5,7 +5,9 @@ import com.adtec.rdc.base.common.constants.ServiceNameConstants;
 import com.adtec.rdc.base.common.enums.ResponseCodeEnum;
 import com.adtec.rdc.base.common.util.ApiResult;
 import com.adtec.rdc.base.detect.model.bo.DetectImage;
+import com.adtec.rdc.base.detect.model.bo.DetectVideo;
 import com.adtec.rdc.base.detect.service.ImageService;
+import com.adtec.rdc.base.detect.service.VideoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -32,6 +34,8 @@ public class VideoController {
 
     @Autowired
     private ImageService imageService;  // 注入 ImageService
+    @Autowired
+    private VideoService videoService;
 
     @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_USER_SERVICE, moduleName = FUNC_NAME, actionName = "上传文件")
     @ApiOperation(value = "上传文件", notes = "上传文件到服务器", httpMethod = "POST")
@@ -69,15 +73,15 @@ public class VideoController {
         }
     }
 
-    @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_USER_SERVICE, moduleName = FUNC_NAME, actionName = "图像检测")
-    @ApiOperation(value = "图像检测", notes = "使用指定模型和权重文件检测上传的图像", httpMethod = "POST")
+    @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_USER_SERVICE, moduleName = FUNC_NAME, actionName = "视频检测")
+    @ApiOperation(value = "视频检测", notes = "使用指定模型和权重文件检测上传的视频", httpMethod = "POST")
     @PostMapping("/detect")
-    public ApiResult<Map<String, Object>> detectImage(@RequestBody DetectImage detectImage) {
-        Map<String, Object> resultData = imageService.detectImage(detectImage);
+    public ApiResult<Map<String, Object>> detectVideo(@RequestBody DetectVideo detectVideo) {
+        Map<String, Object> resultData = videoService.detectVideo(detectVideo);
         if (resultData != null) {
             return new ApiResult<>(resultData, ResponseCodeEnum.SUCCESS);
         } else {
-            return ApiResult.failed("图像检测失败");
+            return ApiResult.failed("视频检测失败");
         }
     }
 

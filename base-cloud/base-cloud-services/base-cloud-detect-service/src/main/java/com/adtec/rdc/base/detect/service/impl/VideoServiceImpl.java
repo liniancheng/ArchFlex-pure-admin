@@ -1,13 +1,13 @@
 package com.adtec.rdc.base.detect.service.impl;
 
 import com.adtec.rdc.base.common.base.service.impl.BaseServiceImpl;
-import com.adtec.rdc.base.detect.mapper.ImageMapper;
 import com.adtec.rdc.base.detect.mapper.ImageRecordMapper;
+import com.adtec.rdc.base.detect.mapper.VideoMapper;
 import com.adtec.rdc.base.detect.model.bo.DetectImage;
+import com.adtec.rdc.base.detect.model.bo.DetectVideo;
 import com.adtec.rdc.base.detect.model.po.DetectImageRecord;
 import com.adtec.rdc.base.detect.model.query.ImageRecordQuery;
 import com.adtec.rdc.base.detect.service.ImageRecordService;
-import com.adtec.rdc.base.detect.service.ImageService;
 import com.adtec.rdc.base.detect.service.VideoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections4.CollectionUtils;
@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
  * 视频检测服务实现类
  */
 @Service
-public class VideoServiceImpl extends BaseServiceImpl<ImageMapper, DetectImage> implements VideoService {
+public class VideoServiceImpl extends BaseServiceImpl<VideoMapper, DetectVideo> implements VideoService {
 
     @Autowired
     private ImageRecordMapper mapper;
@@ -54,9 +54,9 @@ public class VideoServiceImpl extends BaseServiceImpl<ImageMapper, DetectImage> 
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean saveImage(DetectImage image) {
+    public Boolean saveImage(DetectVideo video) {
         // 保存图像识别记录
-        return this.save(image);
+        return this.save(video);
     }
 
     @Override
@@ -66,23 +66,23 @@ public class VideoServiceImpl extends BaseServiceImpl<ImageMapper, DetectImage> 
     }
 
     @Override
-    public DetectImage getImageById(String id) {
+    public DetectVideo getImageById(String id) {
         // 根据ID获取图像识别记录
         return this.getById(id);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean updateImageRecord(DetectImage detectImage) {
+    public Boolean updateImageRecord(DetectVideo detectVideo) {
         // 更新图像识别记录
-        return this.updateById(detectImage);
+        return this.updateById(detectVideo);
     }
 
     @Override
-    public Map<String, Object> detectImage(DetectImage detectImage) {
-        String modelName = detectImage.getModel();
-        String weightsName = detectImage.getRecognitionWeight();
-        String fileName = detectImage.getOriginalImage();
+    public Map<String, Object> detectVideo(DetectVideo detectVideo) {
+        String modelName = detectVideo.getModel();
+        String weightsName = detectVideo.getRecognitionWeight();
+        String fileName = detectVideo.getOriginalVideo();
 
         // 检查参数合法性
         if (fileName == null || fileName.trim().isEmpty()) {
@@ -91,7 +91,7 @@ public class VideoServiceImpl extends BaseServiceImpl<ImageMapper, DetectImage> 
 
         // 上传目录
         String uploadDir = UPLOAD_DIR;
-        String inputImagePath = uploadDir + detectImage.getOriginalImage();
+        String inputImagePath = uploadDir + detectVideo.getOriginalVideo();
         File inputFile = new File(inputImagePath);
         if (!inputFile.exists()) {
             return null;
@@ -129,7 +129,7 @@ public class VideoServiceImpl extends BaseServiceImpl<ImageMapper, DetectImage> 
                 pythonPath,
                 "D:\\PycharmProjects\\ultralytics-main\\ultralytics\\predict.py",
                 "--weights", weightsPath,
-                "--image", inputImagePath,
+                "--input", inputImagePath,
                 "--output", outputDir
         );
         pb.redirectErrorStream(true); // 合并标准输出和错误输出
@@ -142,7 +142,7 @@ public class VideoServiceImpl extends BaseServiceImpl<ImageMapper, DetectImage> 
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    output.append(line);
+                    System.out.println(line);
                 }
             }
 
@@ -151,48 +151,20 @@ public class VideoServiceImpl extends BaseServiceImpl<ImageMapper, DetectImage> 
                 return null;
             }
 
-            // 提取 JSON 数据
-            String outputStr = output.toString();
-            String jsonPattern = "\\{.*\\}";
-            Pattern pattern = Pattern.compile(jsonPattern);
-            Matcher matcher = pattern.matcher(outputStr);
+            // 推理成功后构造返回结果
+            String resultFileName = "result_" + fileName;
 
-            if (matcher.find()) {
-                String jsonResult = matcher.group();
-                ObjectMapper objectMapper = new ObjectMapper();
-                Map<String, Integer> detectionResults = objectMapper.readValue(jsonResult, Map.class);
+            // 构造返回结果
+            Map<String, Object> resultData = new HashMap<>();
+            resultData.put("resultFileName", "http://localhost:8898/result/" + resultFileName);
 
-                // 推理成功后构造返回结果
-                String resultFileName = "result_" + fileName;
+            return resultData;
 
-                // 创建 ImageRecord 实例并保存
-                DetectImageRecord imageRecord = new DetectImageRecord();
-                imageRecord.setOriginalImage("http://localhost:8898/uploads/" + fileName);
-                imageRecord.setPredictedImage("http://localhost:8898/result/" + resultFileName);
-                imageRecord.setRecognitionWeight(weightsName);
-                imageRecord.setMinThreshold(detectImage.getMinThreshold()); // 示例值，根据实际情况设置
-                imageRecord.setAiAssistant(detectImage.getAiAssistant()); // 示例值，根据实际情况设置
-                imageRecord.setAiSuggestion("建议使用更高权重"); // 示例值，根据实际情况设置
-                imageRecord.setRecognitionTime(new Date());
-                imageRecord.setRecognitionUser("admin"); // 示例值，根据实际情况设置
-
-                boolean saveResult = imageRecordService.saveImageRecord(imageRecord);
-                if (!saveResult) {
-                    return null;
-                }
-
-                // 构造返回结果
-                Map<String, Object> resultData = new HashMap<>();
-                resultData.put("resultFileName", "http://localhost:8898/result/" + resultFileName);
-                resultData.put("detectionResults", detectionResults);
-
-                return resultData;
-            } else {
-                return null;
-            }
         } catch (IOException | InterruptedException e) {
             return null;
         }
     }
+
+
 
 }
