@@ -16,8 +16,8 @@ export type UserResult = {
   accessToken: string;
   /** 用于调用刷新`accessToken`的接口时所需的`token` */
   refreshToken: string;
-  /** `accessToken`的过期时间（格式'xxxx/xx/xx xx:xx:xx'） */
-  expires: Date;
+  /** `accessToken`的过期时间（剩余秒数） */
+  expires: number;
 };
 
 export type RefreshTokenResult = {
@@ -27,8 +27,8 @@ export type RefreshTokenResult = {
     accessToken: string;
     /** 用于调用刷新`accessToken`的接口时所需的`token` */
     refreshToken: string;
-    /** `accessToken`的过期时间（格式'xxxx/xx/xx xx:xx:xx'） */
-    expires: Date;
+    /** `accessToken`的过期时间（剩余秒数） */
+    expires: number;
   };
 };
 
@@ -66,16 +66,36 @@ type ResultTable = {
   };
 };
 
+/** 处理后端登录接口返回信息 */
+const formatLoginData = (data: string) => {
+  if (!data) return data;
+  const parseData = JSON.parse(data);
+  const { access_token, refresh_token, expires_in, login_name, ...rest } =
+    parseData;
+  return {
+    ...rest,
+    accessToken: access_token,
+    refreshToken: refresh_token,
+    expires: expires_in,
+    username: login_name
+  };
+};
+
 /** 登录 */
 export const getLogin = (data?: object) => {
   return http.request<UserResult>("post", "/auth/oauth/token", {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     data: qs.stringify(data),
+    transformResponse: [
+      responseData => {
+        return formatLoginData(responseData);
+      }
+    ]
   });
 };
 
 /** 更新登录时间 */
-export const updateLoginTime = (data?: object) => {
+export const updateLoginTime = () => {
   return http.post("/admin/user/updateLoginTime");
 };
 
