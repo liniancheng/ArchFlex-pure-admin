@@ -17,7 +17,7 @@
                     </el-col>
                     <el-col :span="4" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
                         <el-form-item label="权重文件">
-                            <el-select v-model="detectionParam.weights" placeholder="请选择权重" default-value="0">
+                            <el-select v-model="detectionParam.recognitionWeight" placeholder="请选择权重" default-value="0">
                                 <el-option value="0">best.onnx</el-option>
                                 <el-option value="1">yolov8n.pt</el-option>
                                 <el-option value="2">yolov11n.pt</el-option>
@@ -26,7 +26,7 @@
                     </el-col>
                     <el-col :span="4" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
                         <el-form-item label="AI助手">
-                            <el-select v-model="detectionParam.ai" placeholder="请选择AI助手" default-value="0">
+                            <el-select v-model="detectionParam.aiAssistant" placeholder="请选择AI助手" default-value="0">
                                 <el-option value="0">DeepSeek</el-option>
                                 <el-option value="1">Qwen</el-option>
                                 <el-option value="2">不使用AI</el-option>
@@ -35,7 +35,7 @@
                     </el-col>
                     <el-col :span="7" :xs="24" :sm="24" :md="14" :lg="12" :xl="7">
                         <el-form-item label="最小置信度阈值">
-                            <el-slider v-model="detectionParam.minConfidence" :max="1" :min="0" :step="0.1"></el-slider>
+                            <el-slider v-model="detectionParam.minThreshold" :max="1" :min="0" :step="0.1"></el-slider>
                         </el-form-item>
                     </el-col>
                     <el-col :span="5" :xs="24" :sm="24" :md="10" :lg="24" :xl="5">
@@ -51,12 +51,12 @@
         <div
             class="detect-tobacco-image-index_upload-wrapper"
             :class="{
-                'detect-tobacco-image-index_upload-wrapper--selectedImage': imageUrl
+                'detect-tobacco-image-index_upload-wrapper--selectedImage': selectedImage
             }"
         >
             <el-upload
                 class="detect-tobacco-image-index_upload-container"
-                v-if="!imageUrl"
+                v-if="!selectedImage"
                 drag
                 name="file"
                 :maxCount="1"
@@ -72,7 +72,7 @@
             </el-upload>
             <img
                 v-else
-                :src="imageUrl"
+                :src="detectionParam?.originalImage"
                 :alt="imageFile.name"
                 class="detect-tobacco-image-index_upload-tobacco-image"
             />
@@ -84,20 +84,25 @@
 </template>
 
 <script lang="ts" setup>
-import { upload } from "@/api/detect/image";
-import { ref } from "vue";
+import { computed, ref } from "vue";
+import { message } from "@/utils/message";
+import { DetectImage, detect, upload } from "@/api/detect/image";
 import UploadIcon from "~icons/ri/upload-2-line?width=26&height=26";
 
 
-const imageUrl = ref(""); // 图片地址
 const imageFile = ref(); // 图片文件
 // 检测参数
-const detectionParam = ref({
+const detectionParam = ref<DetectImage>({
+    originalImage: null,
     model: null,
-    weights: null,
-    ai: null,
-    minConfidence: 0.5
+    recognitionWeight: null,
+    aiAssistant: null,
+    minThreshold: 0.5
 });
+
+const selectedImage = computed(()=>{
+    return !!detectionParam.value?.originalImage;
+})
 
 
 function beforeUpload(file) {
@@ -114,12 +119,18 @@ function handleFileSelect(file: File) {
 function customUpload() {
     // 自定义上传方法
     upload(imageFile.value).then(res => {
-        imageUrl.value = res.data;
+        detectionParam.value.originalImage = res.data;
     });
 }
 
 function handleDetection() {
-    // TODO
+    // 检测图片方法
+    detect(detectionParam.value).then((res)=>{
+        // TODO
+        message(JSON.stringify(res), { type: "success" });
+    }).catch((err)=>{
+        message(err?.message, { type: "error" });
+    })
 }
 
 function handleExport() {
@@ -127,14 +138,14 @@ function handleExport() {
 }
 
 function handleReset() {
-    // TODO
+    // 重置参数
     detectionParam.value = {
+        originalImage: null,
         model: null,
-        weights: null,
-        ai: null,
-        minConfidence: 0.5
+        recognitionWeight: null,
+        aiAssistant: null,
+        minThreshold: 0.5
     };
-    imageUrl.value = "";
     imageFile.value = null;
 }
 

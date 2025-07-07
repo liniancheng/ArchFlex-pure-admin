@@ -9,32 +9,33 @@
  */
 import { http } from "@/utils/http";
 
-// 查询执行计划
-export function fetch(params) {
-    return http.post("/crossvalidation/cvchkplan/page", params);
+export interface DetectImage {
+    originalImage: string,  // 原始图片路径
+    model: string,  // 模型
+    recognitionWeight: string,  // 识别权重
+    minThreshold: number, // 最小阈值
+    aiAssistant: string, // AI助手使用情况
 }
 
-// 删除执行计划
-export function deletePlan(planId) {
-    return http.delete(`/crossvalidation/cvchkplan/${planId}`);
-}
-
-// 新增
-export function save(params) {
-    return http.post("/crossvalidation/cvchkplan", params);
-}
-
-// 上传
+/* 图片上传 */
 export function upload(file: File) {
     const formData = new FormData();
     formData.append("file", file);
     return http.post<AnyObject, FormData>(
         "/detect/image/upload",
-         formData,
+        formData,
         {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
         }
+    );
+}
+
+/* 图片检测 */
+export function detect(data: DetectImage) {
+    return http.post<AnyObject, DetectImage>(
+        "/detect/image/detect",
+        data,
     );
 }

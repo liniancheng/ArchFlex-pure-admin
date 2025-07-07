@@ -166,7 +166,9 @@ class PureHttp {
             PureHttp.axiosInstance
                 .request(config)
                 .then((response: undefined) => {
-                    resolve(response);
+                    // 若返回结果编码小于0，则执行请求失败
+                    if (response && (response['code'] < 0)) reject(response);
+                    else resolve(response);
                 })
                 .catch(error => {
                     reject(error);
