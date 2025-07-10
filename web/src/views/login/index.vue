@@ -46,6 +46,7 @@ const router = useRouter();
 const loading = ref(false);
 const checked = ref(false);
 const disabled = ref(false);
+const passwordError = ref("");
 const ruleFormRef = ref<FormInstance>();
 const currentPage = computed(() => {
   return useUserStoreHook().currentPage;
@@ -79,6 +80,7 @@ const onLogin = async (formEl: FormInstance | undefined) => {
           grant_type: "password"
         })
         .then(res => loginSuccess(res))
+        .catch(err => loginFail(err))
         .finally(() => (loading.value = false));
     }
   });
@@ -101,6 +103,16 @@ const loginSuccess = async (res: AnyObject) => {
   } else {
     message(t("login.pureLoginFail"), { type: "error" });
   }
+}
+
+const loginFail = (err: AnyObject) => {
+  passwordError.value = err.response.data.message;
+  message(t("login.pureLoginFail"), { type: "error" });
+}
+
+const handlePasswordChange = () => {
+  // 密码变动时清空错误提示
+  passwordError.value = "";
 }
 
 const immediateDebounce: any = debounce(
@@ -217,13 +229,14 @@ watch(loginDay, value => {
             </Motion>
 
             <Motion :delay="150">
-              <el-form-item prop="password">
+              <el-form-item prop="password" :error="passwordError">
                 <el-input
                   v-model="ruleForm.password"
                   clearable
                   show-password
                   :placeholder="t('login.purePassword')"
                   :prefix-icon="useRenderIcon(Lock)"
+                  @change="handlePasswordChange"
                 />
               </el-form-item>
             </Motion>
