@@ -4,32 +4,29 @@
             <div class="detect-tobacco-image-index_header_title-box">烟虫检测</div>
         </div>
         <div class="detect-tobacco-image-index_form-wrapper">
-            <el-form layout="inline">
+            <el-form
+                ref="detectionFormRef"
+                :model="detectionParam"
+            >
                 <el-row :gutter="48">
-                    <el-col :span="4" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
-                        <el-form-item label="模型">
-                            <el-select v-model="detectionParam.model" placeholder="请选择模型" default-value="0">
-                                <el-option value="0">yolo</el-option>
-                                <el-option value="1">rtdetr</el-option>
-                                <el-option value="2">deim</el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="4" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
-                        <el-form-item label="权重文件">
-                            <el-select v-model="detectionParam.recognitionWeight" placeholder="请选择权重" default-value="0">
-                                <el-option value="0">best.onnx</el-option>
-                                <el-option value="1">yolov8n.pt</el-option>
-                                <el-option value="2">yolov11n.pt</el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="4" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
-                        <el-form-item label="AI助手">
-                            <el-select v-model="detectionParam.aiAssistant" placeholder="请选择AI助手" default-value="0">
-                                <el-option value="0">DeepSeek</el-option>
-                                <el-option value="1">Qwen</el-option>
-                                <el-option value="2">不使用AI</el-option>
+                    <el-col
+                        v-for="select in selectList"
+                        :key="select.name"
+                        :span="4" :xs="24" :sm="8" :md="8" :lg="4" :xl="4"
+                    >
+                        <el-form-item :label="select.label" :prop="select.name" required>
+                            <el-select
+                                v-model="detectionParam[select.name]"
+                                :placeholder="select.placeholder"
+                                @change="handleSelectChange(select.name)"
+                            >
+                                <el-option
+                                    v-for="item in select.data"
+                                    :key="item.value"
+                                    :value="item.value"
+                                >
+                                    {{ item.label }}
+                                </el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -88,8 +85,10 @@ import { computed, ref } from "vue";
 import { message } from "@/utils/message";
 import { DetectImage, detect, upload } from "@/api/detect/image";
 import UploadIcon from "~icons/ri/upload-2-line?width=26&height=26";
+import type { FormInstance } from "element-plus";
 
 
+const detectionFormRef = ref<FormInstance>(); // 表单ref
 const imageFile = ref(); // 图片文件
 // 检测参数
 const detectionParam = ref<DetectImage>({
@@ -99,6 +98,39 @@ const detectionParam = ref<DetectImage>({
     aiAssistant: null,
     minThreshold: 0.5
 });
+
+const selectList = ref({
+    model: {
+        label: "模型",
+        name: "model",
+        placeholder: "请选择模型",
+        data: [
+            { label: "yolo", value: "yolo" },
+            { label: "rtdetr", value: "rtdetr" },
+            { label: "deim", value: "deim" }
+        ]
+    },
+    recognitionWeight: {
+        label: "权重文件",
+        name: "recognitionWeight",
+        placeholder: "请选择权重文件",
+        data: [
+            { label: "best.onnx", value: "best.onnx" },
+            { label: "yolov8n.pt", value: "yolov8n.pt" },
+            { label: "yolov11n.pt", value: "yolov11n.pt" }
+        ]
+    },
+    aiAssistant: {
+        label: "AI助手",
+        name: "aiAssistant",
+        placeholder: "请选择AI助手",
+        data: [
+            { label: "DeepSeek", value: "DeepSeek" },
+            { label: "Qwen", value: "Qwen" },
+            { label: "不使用AI", value: "不使用AI" }
+        ]
+    }
+})
 
 const selectedImage = computed(()=>{
     return !!detectionParam.value?.originalImage;
@@ -123,13 +155,20 @@ function customUpload() {
     });
 }
 
+function handleSelectChange (name: string) {
+    detectionFormRef.value.clearValidate([name]);
+}
+
 function handleDetection() {
-    // 检测图片方法
-    detect(detectionParam.value).then((res)=>{
-        // TODO
-        message(JSON.stringify(res), { type: "success" });
-    }).catch((err)=>{
-        message(err?.message, { type: "error" });
+    detectionFormRef.value.validate(valid => {
+        if (!valid) return;
+        // 检测图片方法
+        detect(detectionParam.value).then((res)=>{
+            // TODO
+            message(JSON.stringify(res), { type: "success" });
+        }).catch((err)=>{
+            message(err?.message, { type: "error" });
+        })
     })
 }
 
