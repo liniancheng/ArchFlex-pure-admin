@@ -1,6 +1,7 @@
 package com.adtec.rdc.base.detect.service.impl;
 
 import com.adtec.rdc.base.common.base.service.impl.BaseServiceImpl;
+import com.adtec.rdc.base.detect.config.DetectConfig;
 import com.adtec.rdc.base.detect.mapper.ImageMapper;
 import com.adtec.rdc.base.detect.mapper.ImageRecordMapper;
 import com.adtec.rdc.base.detect.model.bo.DetectImage;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URI;
 import java.util.List;
 import java.io.File;
 import java.io.BufferedReader;
@@ -33,7 +35,6 @@ public class ImageServiceImpl extends BaseServiceImpl<ImageMapper, DetectImage> 
 
     @Autowired
     private ImageRecordMapper mapper;
-    private static final String UPLOAD_DIR = "D:\\work\\tobacco\\upload\\";  // 注意路径分隔符使用双反斜杠
     @Autowired
     private ImageRecordService imageRecordService;  // 注入 ImageRecordService
 
@@ -80,16 +81,14 @@ public class ImageServiceImpl extends BaseServiceImpl<ImageMapper, DetectImage> 
     public Map<String, Object> detectImage(DetectImage detectImage) {
         String modelName = detectImage.getModel();
         String weightsName = detectImage.getRecognitionWeight();
-        String fileName = detectImage.getOriginalImage();
+        String fileUrl = detectImage.getOriginalImage();  // http://127.0.0.1:8898/uploads/2025/07/11/1752218067794.jpg
+        URI uri = URI.create(fileUrl);
+        // 获取 /2025/07/11/1752218067794.jpg
+        String path = uri.getPath().substring("/uploads".length());
+        String fileName = path.substring(path.lastIndexOf('/') + 1);
 
-        // 检查参数合法性
-        if (fileName == null || fileName.trim().isEmpty()) {
-            return null;
-        }
-
-        // 上传目录
-        String uploadDir = UPLOAD_DIR;
-        String inputImagePath = uploadDir + detectImage.getOriginalImage();
+        // 原始图片路径
+        String inputImagePath = DetectConfig.getProfile() + path;
         File inputFile = new File(inputImagePath);
         if (!inputFile.exists()) {
             return null;
@@ -109,14 +108,14 @@ public class ImageServiceImpl extends BaseServiceImpl<ImageMapper, DetectImage> 
         }
 
         // 权重文件路径（假设你统一放在一个文件夹下）
-        String weightsPath = "D:\\work\\tobacco\\weights\\" + weightsName;
+        String weightsPath = DetectConfig.getWeightsPath() + "/" + weightsName;
         File weightFile = new File(weightsPath);
         if (!weightFile.exists()) {
             return null;
         }
 
         // 输出图像路径
-        String outputDir = "D:\\work\\tobacco\\result\\";
+        String outputDir = DetectConfig.getOutputDir();
         File outputPath = new File(outputDir);
         if (!outputPath.exists()) {
             outputPath.mkdirs();
@@ -125,9 +124,9 @@ public class ImageServiceImpl extends BaseServiceImpl<ImageMapper, DetectImage> 
         // 调用 Python 脚本
         ProcessBuilder pb = new ProcessBuilder(
                 pythonPath,
-                "D:\\PycharmProjects\\ultralytics-main\\ultralytics\\predict.py",
+                DetectConfig.getScriptPath(),
                 "--weights", weightsPath,
-                "--image", inputImagePath,
+                "--input", inputImagePath,
                 "--output", outputDir
         );
         pb.redirectErrorStream(true); // 合并标准输出和错误输出

@@ -4,6 +4,7 @@ import com.adtec.rdc.base.common.annotation.SysLog;
 import com.adtec.rdc.base.common.constants.ServiceNameConstants;
 import com.adtec.rdc.base.common.enums.ResponseCodeEnum;
 import com.adtec.rdc.base.common.util.ApiResult;
+import com.adtec.rdc.base.detect.config.DetectConfig;
 import com.adtec.rdc.base.detect.model.bo.DetectImage;
 import com.adtec.rdc.base.detect.model.po.DetectImageRecord;
 import com.adtec.rdc.base.detect.service.ImageService;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
+import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.io.File;
 import java.io.BufferedReader;
@@ -37,7 +40,7 @@ public class ImageController {
 
     private static final String FUNC_NAME = "图片检测功能";
 
-    private static final String UPLOAD_DIR = "D:\\work\\tobacco\\upload\\";  // 注意路径分隔符使用双反斜杠
+    private SimpleDateFormat sdf = new SimpleDateFormat("/yyyy/MM/dd/");
 
     @Autowired
     private ImageService imageService;  // 注入 ImageService
@@ -46,7 +49,7 @@ public class ImageController {
     @ApiOperation(value = "上传文件", notes = "上传文件到服务器", httpMethod = "POST")
     @ApiImplicitParam(name = "file", value = "上传的文件", required = true, dataType = "MultipartFile")
     @PostMapping("/upload")
-    public ApiResult<String> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ApiResult<String> uploadFile(@RequestParam("file") MultipartFile file, HttpServletRequest req) {
         // 检查文件是否为空
         if (file.isEmpty()) {
             return ApiResult.failed("文件为空，请选择一个文件");
@@ -58,19 +61,22 @@ public class ImageController {
             return ApiResult.failed("文件名称为空");
         }
 
-        // 设置保存文件的路径
-        String uploadDir = UPLOAD_DIR;
-        File uploadPath = new File(uploadDir);
-        if (!uploadPath.exists()) {
-            uploadPath.mkdirs(); // 如果目录不存在，创建目录
+        String format = sdf.format(new Date());
+        String path = DetectConfig.getProfile() + format;
+        File folder = new File(path);
+        if (!folder.exists()) {
+            folder.mkdirs(); // 如果目录不存在，创建目录
         }
+        String oldName = file.getOriginalFilename();
+        String newName = System.currentTimeMillis() + oldName.substring(oldName.lastIndexOf("."));
 
         // 保存文件到指定路径
         try {
-            file.transferTo(new File(uploadDir + fileName));
-            // 构造成功响应对象并设置文件名作为 data
+            file.transferTo(new File(folder, newName));
+            // http://localhost:8898/uploads/2025/07/11/test.jpg
+            String url = req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() + "/uploads" + format + newName;
             ApiResult<String> result = ApiResult.success("文件上传成功");
-            result.setData("http://localhost:8898/uploads/" + fileName);  // 只返回文件名
+            result.setData(url);
             return result;
         } catch (IOException e) {
             e.printStackTrace();

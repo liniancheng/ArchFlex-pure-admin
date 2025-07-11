@@ -65,3 +65,11 @@ custom:
   public:
     #  获取系统配置参数
     code: system.pwd.cycle.edit,system.pwd.rule.msg,system.pwd.rule.pattern,system.pwd.cycle.tips,system.pwd.edit.first,system.pwd.lock.numb,system.login.logo.text,system.index.logo.image,system.title,system.login.logo.image,system.copyright.version,system.index.banner,system.copyright.name,system.login.banner
+
+# 项目相关配置
+detect:
+  # 文件路径 示例（ Windows配置D:/ai-interview/uploadPath，Linux配置 /home/ai-interview/uploadPath）
+  profile: D:/work/tobacco/upload
+  weightsPath: D:/work/tobacco/weights
+  scriptPath: D:/PycharmProjects/ultralytics-main/ultralytics/predict.py
+  outputDir: D:/work/tobacco/result
