@@ -3,11 +3,11 @@
         <div class="detect-tobacco-image-index_header">
             <div class="detect-tobacco-image-index_header_title-box">烟虫检测</div>
         </div>
-        <div class="detect-tobacco-image-index_form-wrapper">
-            <el-form
-                ref="detectionFormRef"
-                :model="detectionParam"
-            >
+        <el-form
+            ref="detectionFormRef"
+            :model="detectionParam"
+        >
+            <div class="detect-tobacco-image-index_form-wrapper">
                 <el-row :gutter="48">
                     <el-col
                         v-for="select in selectList"
@@ -31,49 +31,51 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="7" :xs="24" :sm="24" :md="14" :lg="12" :xl="7">
-                        <el-form-item label="最小置信度阈值">
+                        <el-form-item label="最小置信度阈值" prop="minThreshold">
                             <el-slider v-model="detectionParam.minThreshold" :max="1" :min="0" :step="0.1"></el-slider>
                         </el-form-item>
                     </el-col>
                     <el-col :span="5" :xs="24" :sm="24" :md="10" :lg="24" :xl="5">
                         <span class="detect-tobacco-image-index_buttons">
-                            <el-button type="primary" @click="handleDetection">开始预测</el-button>
+                            <el-button type="primary" :loading="detecting" @click="handleDetection">开始预测</el-button>
                             <el-button type="primary" @click="handleExport">PDF导出</el-button>
                             <el-button @click="handleReset">重置</el-button>
                         </span>
                     </el-col>
                 </el-row>
-            </el-form>
-        </div>
-        <div
-            class="detect-tobacco-image-index_upload-wrapper"
-            :class="{
-                'detect-tobacco-image-index_upload-wrapper--selectedImage': selectedImage
-            }"
-        >
-            <el-upload
-                class="detect-tobacco-image-index_upload-container"
-                v-if="!selectedImage"
-                drag
-                name="file"
-                :maxCount="1"
-                :showUploadList="false"
-                :beforeUpload="beforeUpload"
-            >
-                <div class="detect-tobacco-image-index_upload-box">
-                    <el-icon color="#888" :size="48">
-                        <UploadIcon/>
-                    </el-icon>
-                    <div class="detect-tobacco-image-index_upload-box_text">点击上传</div>
+            </div>
+            <el-form-item prop="originalImage" required>
+                <div
+                    class="detect-tobacco-image-index_upload-wrapper"
+                    :class="{
+                        'detect-tobacco-image-index_upload-wrapper--selectedImage': selectedImage
+                    }"
+                >
+                    <el-upload
+                        class="detect-tobacco-image-index_upload-container"
+                        v-if="!selectedImage"
+                        drag
+                        name="file"
+                        :maxCount="1"
+                        :showUploadList="false"
+                        :beforeUpload="beforeUpload"
+                    >
+                        <div class="detect-tobacco-image-index_upload-box">
+                            <el-icon color="#888" :size="48">
+                                <UploadIcon/>
+                            </el-icon>
+                            <div class="detect-tobacco-image-index_upload-box_text">点击上传</div>
+                        </div>
+                    </el-upload>
+                    <img
+                        v-else
+                        :src="detectionParam?.originalImage"
+                        :alt="imageFile.name"
+                        class="detect-tobacco-image-index_upload-tobacco-image"
+                    />
                 </div>
-            </el-upload>
-            <img
-                v-else
-                :src="detectionParam?.originalImage"
-                :alt="imageFile.name"
-                class="detect-tobacco-image-index_upload-tobacco-image"
-            />
-        </div>
+            </el-form-item>
+        </el-form>
         <div class="detect-tobacco-image-index_header">
             <div class="detect-tobacco-image-index_header_title-box">AI建议</div>
         </div>
@@ -88,6 +90,7 @@ import UploadIcon from "~icons/ri/upload-2-line?width=26&height=26";
 import type { FormInstance } from "element-plus";
 
 
+const detecting = ref(false);
 const detectionFormRef = ref<FormInstance>(); // 表单ref
 const imageFile = ref(); // 图片文件
 // 检测参数
@@ -145,6 +148,7 @@ function beforeUpload(file) {
 
 function handleFileSelect(file: File) {
     imageFile.value = file;
+    detectionFormRef.value.clearValidate(['originalImage']);
     customUpload();
 }
 
@@ -163,11 +167,14 @@ function handleDetection() {
     detectionFormRef.value.validate(valid => {
         if (!valid) return;
         // 检测图片方法
+        detecting.value = true;
         detect(detectionParam.value).then((res)=>{
             // TODO
             message(JSON.stringify(res), { type: "success" });
         }).catch((err)=>{
             message(err?.message, { type: "error" });
+        }).finally(()=>{
+            detecting.value = false;
         })
     })
 }
