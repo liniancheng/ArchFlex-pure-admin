@@ -17,6 +17,15 @@ export interface DetectImage {
     aiAssistant: string, // AI助手使用情况
 }
 
+export interface DetectResult {
+    detectionResults: {
+        bowl: number,
+        broccoli: number,
+        hotDog: number,
+    },  // 检测结果
+    resultFileName: string,  // 结果图片路径
+}
+
 /* 图片上传 */
 export function upload(file: File) {
     const formData = new FormData();

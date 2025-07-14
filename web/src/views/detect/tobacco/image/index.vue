@@ -46,6 +46,7 @@
             </div>
             <el-form-item prop="originalImage" required>
                 <div
+                    v-if="!detectionResult"
                     class="detect-tobacco-image-index_upload-wrapper"
                     :class="{
                         'detect-tobacco-image-index_upload-wrapper--selectedImage': selectedImage
@@ -74,6 +75,36 @@
                         class="detect-tobacco-image-index_upload-tobacco-image"
                     />
                 </div>
+                <div v-else class="detect-tobacco-image-index_result-wrapper">
+                    <el-row justify="space-between" :gutter="18">
+                        <el-col :span="16">
+                            <div class="detect-tobacco-image-index_result-image">
+                                <img
+                                    class="detect-tobacco-image-index_result-image-detail"
+                                    alt="检测结果"
+                                    :src="detectionResult?.resultFileName"
+                                />
+                            </div>
+                        </el-col>
+                        <el-col :span="8">
+                            <div class="detect-tobacco-image-index_result-info">
+                                <div class="detect-tobacco-image-index_result-info-overview">
+                                    检测结果
+                                </div>
+                                <div class="detect-tobacco-image-index_result-info-detail">
+                                    <span class="detect-tobacco-image-index_result-info-detail_title">
+                                        详细结果
+                                    </span>
+                                    <pure-table
+                                        emptyText="未检测到目标"
+                                        :data="detectResultData"
+                                        :columns="detectResultColumns"
+                                    ></pure-table>
+                                </div>
+                            </div>
+                        </el-col>
+                    </el-row>
+                </div>
             </el-form-item>
         </el-form>
         <div class="detect-tobacco-image-index_header">
@@ -83,9 +114,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { message } from "@/utils/message";
-import { DetectImage, detect, upload } from "@/api/detect/image";
+import { DetectImage, DetectResult, detect, upload } from "@/api/detect/image";
 import UploadIcon from "~icons/ri/upload-2-line?width=26&height=26";
 import type { FormInstance } from "element-plus";
 
@@ -101,6 +132,29 @@ const detectionParam = ref<DetectImage>({
     aiAssistant: null,
     minThreshold: 0.5
 });
+// 检测结果
+const detectionResult = ref<DetectResult>(
+    // {
+    //     detectionsResults: {
+    //         bowl: 4,
+    //         broccoli: 1,
+    //         hotDog: 1,
+    //     },  // 检测结果
+    //     resultFileName: "http://127.0.0.1:8898/uploads/2025/07/13/1752338270952.jpg",  // 结果图片路径
+    // }
+);
+
+const detectResultData = ref(
+    // [
+    //     { type: "bowl", count: 4 },
+    //     { type: "broccoli", count: 1 },
+    //     { type: "hotDog", count: 1 },
+    // ]
+);
+const detectResultColumns = ref([
+    { label: "种类", prop: "type" },
+    { label: "数量", prop: "count" },
+]);
 
 const selectList = ref({
     model: {
@@ -139,8 +193,17 @@ const selectedImage = computed(()=>{
     return !!detectionParam.value?.originalImage;
 })
 
+watch(detectionResult, (val: DetectResult) => {
+    detectResultData.value = [];
+    if (val) {
+        for (let key in val.detectionResults) {
+            detectResultData.value.push({ type: key, count: val.detectionResults[key] });
+        }
+    }
+}, { deep: true })
 
-function beforeUpload(file) {
+
+function beforeUpload(file: File) {
     // 上传图片前处理方法
     handleFileSelect(file);
     return false;
@@ -170,7 +233,17 @@ function handleDetection() {
         detecting.value = true;
         detect(detectionParam.value).then((res)=>{
             // TODO
-            message(JSON.stringify(res), { type: "success" });
+            // detectionResult.value = res.data;
+            // for test
+            // detectionResult.value = {
+            //     detectionResults: {
+            //         bowl: 4,
+            //         broccoli: 1,
+            //         hotDog: 1,
+            //     },  // 检测结果
+            //     resultFileName: "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",  // 结果图片路径
+            // };
+            message(JSON.stringify(res?.message), { type: "success" });
         }).catch((err)=>{
             message(err?.message, { type: "error" });
         }).finally(()=>{
@@ -268,6 +341,57 @@ function handleReset() {
             height: 100%;
         }
 
+    }
+
+    &_result {
+        &-wrapper {
+            width: 100%;
+            height: 500px;
+            margin-top: 20px;
+        }
+
+        &-image {
+            width: 100%;
+            height: 500px;
+            background-color: #c8e7ff;
+            border-radius: 10px;
+            border: 1px solid #d9d9d9;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            &-detail {
+                height: 100%;
+                object-fit: contain;
+            }
+        }
+
+        &-info {
+            @extend .detect-tobacco-image-index_result-image;
+            flex-direction: column;
+            justify-content: flex-start;
+
+            &-overview {
+                width: 100%;
+                background-color: #aadcff;
+                border: 1px solid #d9d9d9;
+                border-radius: 10px;
+                padding: 10px;
+            }
+
+            &-detail {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+
+                &_title {
+                    font-weight: bolder;
+                    text-align: center;
+                    margin-top: 20px;
+                }
+            }
+        }
     }
 }
 </style>
