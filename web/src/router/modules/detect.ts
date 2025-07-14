@@ -19,30 +19,6 @@ export default {
             }
         },
         {
-            path: "/detect/tobacco/batch",
-            name: "Batch",
-            component: () => import("@/views/detect/tobacco/batch/index.vue"),
-            meta: {
-                title: $t("menus.detect.tobacco.batch")
-            }
-        },
-        {
-            path: "/detect/tobacco/camera",
-            name: "Camera",
-            component: () => import("@/views/detect/tobacco/camera/index.vue"),
-            meta: {
-                title: $t("menus.detect.tobacco.camera")
-            }
-        },
-        {
-            path: "/detect/tobacco/cameraRecord",
-            name: "CameraRecord",
-            component: () => import("@/views/detect/tobacco/cameraRecord/index.vue"),
-            meta: {
-                title: $t("menus.detect.tobacco.cameraRecord")
-            }
-        },
-        {
             path: "/detect/tobacco/image",
             name: "Image",
             component: () => import("@/views/detect/tobacco/image/index.vue"),
@@ -51,11 +27,11 @@ export default {
             }
         },
         {
-            path: "/detect/tobacco/imageRecord",
-            name: "ImageRecord",
-            component: () => import("@/views/detect/tobacco/imageRecord/index.vue"),
+            path: "/detect/tobacco/batch",
+            name: "Batch",
+            component: () => import("@/views/detect/tobacco/batch/index.vue"),
             meta: {
-                title: $t("menus.detect.tobacco.imageRecord")
+                title: $t("menus.detect.tobacco.batch")
             }
         },
         {
@@ -67,11 +43,35 @@ export default {
             }
         },
         {
+            path: "/detect/tobacco/camera",
+            name: "Camera",
+            component: () => import("@/views/detect/tobacco/camera/index.vue"),
+            meta: {
+                title: $t("menus.detect.tobacco.camera")
+            }
+        },
+        {
+            path: "/detect/tobacco/imageRecord",
+            name: "ImageRecord",
+            component: () => import("@/views/detect/tobacco/imageRecord/index.vue"),
+            meta: {
+                title: $t("menus.detect.tobacco.imageRecord")
+            }
+        },
+        {
             path: "/detect/tobacco/videoRecord",
             name: "VideoRecord",
             component: () => import("@/views/detect/tobacco/videoRecord/index.vue"),
             meta: {
                 title: $t("menus.detect.tobacco.videoRecord")
+            }
+        },
+        {
+            path: "/detect/tobacco/cameraRecord",
+            name: "CameraRecord",
+            component: () => import("@/views/detect/tobacco/cameraRecord/index.vue"),
+            meta: {
+                title: $t("menus.detect.tobacco.cameraRecord")
             }
         }
     ]

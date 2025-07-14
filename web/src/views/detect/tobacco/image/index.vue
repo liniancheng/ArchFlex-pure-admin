@@ -89,7 +89,21 @@
                         <el-col :span="8">
                             <div class="detect-tobacco-image-index_result-info">
                                 <div class="detect-tobacco-image-index_result-info-overview">
-                                    检测结果
+                                    <span class="detect-tobacco-image-index_result-info-overview_title">
+                                        检测结果
+                                    </span>
+                                    <span class="detect-tobacco-image-index_result-info-overview_count">
+                                        种类：
+                                        <span class="detect-tobacco-image-index_result-info-overview_count-number">
+                                            {{ detectResultSummary?.sumType }}
+                                        </span>
+                                    </span>
+                                    <span class="detect-tobacco-image-index_result-info-overview_count">
+                                        总数：
+                                        <span class="detect-tobacco-image-index_result-info-overview_count-number">
+                                            {{ detectResultSummary?.sum }}
+                                        </span>
+                                    </span>
                                 </div>
                                 <div class="detect-tobacco-image-index_result-info-detail">
                                     <span class="detect-tobacco-image-index_result-info-detail_title">
@@ -97,7 +111,7 @@
                                     </span>
                                     <pure-table
                                         emptyText="未检测到目标"
-                                        :data="detectResultData"
+                                        :data="detectResultDetail"
                                         :columns="detectResultColumns"
                                     ></pure-table>
                                 </div>
@@ -114,7 +128,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import { message } from "@/utils/message";
 import { DetectImage, DetectResult, detect, upload } from "@/api/detect/image";
 import UploadIcon from "~icons/ri/upload-2-line?width=26&height=26";
@@ -135,7 +149,7 @@ const detectionParam = ref<DetectImage>({
 // 检测结果
 const detectionResult = ref<DetectResult>(
     // {
-    //     detectionsResults: {
+    //     detectionResults: {
     //         bowl: 4,
     //         broccoli: 1,
     //         hotDog: 1,
@@ -144,13 +158,6 @@ const detectionResult = ref<DetectResult>(
     // }
 );
 
-const detectResultData = ref(
-    // [
-    //     { type: "bowl", count: 4 },
-    //     { type: "broccoli", count: 1 },
-    //     { type: "hotDog", count: 1 },
-    // ]
-);
 const detectResultColumns = ref([
     { label: "种类", prop: "type" },
     { label: "数量", prop: "count" },
@@ -193,14 +200,22 @@ const selectedImage = computed(()=>{
     return !!detectionParam.value?.originalImage;
 })
 
-watch(detectionResult, (val: DetectResult) => {
-    detectResultData.value = [];
-    if (val) {
-        for (let key in val.detectionResults) {
-            detectResultData.value.push({ type: key, count: val.detectionResults[key] });
-        }
-    }
-}, { deep: true })
+const detectResultDetail = computed(()=>{
+    if (!detectionResult.value?.detectionResults) return [];
+
+    return Object.entries(detectionResult.value.detectionResults).map(
+        ([type, count]) => ({ type, count })
+    );
+});
+
+const detectResultSummary = computed(() => {
+    const details = detectResultDetail.value;
+    const sum = details.reduce((total, item) => total + item.count, 0);
+    return {
+        sum,
+        sumType: details.length
+    };
+});
 
 
 function beforeUpload(file: File) {
@@ -232,7 +247,6 @@ function handleDetection() {
         // 检测图片方法
         detecting.value = true;
         detect(detectionParam.value).then((res)=>{
-            // TODO
             detectionResult.value = res.data;
             // for test
             // detectionResult.value = {
@@ -266,6 +280,7 @@ function handleReset() {
         minThreshold: 0.5
     };
     imageFile.value = null;
+    detectionResult.value = null;
 }
 
 </script>
@@ -378,6 +393,27 @@ function handleReset() {
                 border: 1px solid #d9d9d9;
                 border-radius: 10px;
                 padding: 10px;
+                display: flex;
+                flex-direction: column;
+
+                &_title {
+                    font-weight: bolder;
+                    text-align: center;
+                }
+
+                &_count {
+                    display: flex;
+                    justify-content: space-around;
+                    border-bottom: 1px solid #d9d9d9;
+
+                    &:last-of-type {
+                        border-bottom: none;
+                    }
+
+                    &-number {
+                        font-weight: bolder;
+                    }
+                }
             }
 
             &-detail {
@@ -386,8 +422,7 @@ function handleReset() {
                 flex-direction: column;
 
                 &_title {
-                    font-weight: bolder;
-                    text-align: center;
+                    @extend .detect-tobacco-image-index_result-info-overview_title;
                     margin-top: 20px;
                 }
             }
