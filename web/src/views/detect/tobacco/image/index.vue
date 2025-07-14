@@ -233,7 +233,7 @@ function handleDetection() {
         detecting.value = true;
         detect(detectionParam.value).then((res)=>{
             // TODO
-            // detectionResult.value = res.data;
+            detectionResult.value = res.data;
             // for test
             // detectionResult.value = {
             //     detectionResults: {
