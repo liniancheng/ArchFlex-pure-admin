@@ -1,0 +1,26 @@
+server:
+  port: 6671
+spring:
+  application:
+    name: base-cloud-config-server
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    #password: 123456
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          searchLocations: classpath:/config
+
+eureka:
+  instance:
+    ip-address: 127.0.0.1
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
+
+
