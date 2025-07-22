@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.adtec.rdc.base.user.mapper.SysRoleInfoMapper">
+<mapper namespace="com.littlelee.base.user.mapper.SysRoleInfoMapper">
 
     <select id="pageByQuery" resultType="SysRoleInfo">
         select * from sys_role_info
@@ -47,7 +47,7 @@
     	</where>
     </select>
     	<resultMap
-		type="com.adtec.rdc.base.common.model.vo.SysRoleVo"
+		type="com.littlelee.base.common.model.vo.SysRoleVo"
 		id="SysRoleVoMap">
 		<id property="roleId" column="ROLE_ID" />
 		<result property="roleCode" column="ROLE_CODE" />

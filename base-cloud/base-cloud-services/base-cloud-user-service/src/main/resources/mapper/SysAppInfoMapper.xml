@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper
-	namespace="com.adtec.rdc.base.tenant.mapper.SysAppInfoMapper">
+	namespace="com.littlelee.base.tenant.mapper.SysAppInfoMapper">
 
 	<!-- 基本resultMap -->
 	<resultMap
-		type="com.adtec.rdc.base.tenant.model.po.SysAppInfo"
+		type="com.littlelee.base.tenant.model.po.SysAppInfo"
 		id="SysAppInfoMap">
 		<id property="appId" column="app_id" />
 		<result property="appLogo" column="app_logo" />

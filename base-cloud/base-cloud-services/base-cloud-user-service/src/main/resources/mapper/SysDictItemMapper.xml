@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper
-	namespace="com.adtec.rdc.base.dict.mapper.SysDictItemMapper">
+	namespace="com.littlelee.base.dict.mapper.SysDictItemMapper">
 
 	<!-- 基本resultMap -->
 	<resultMap
-		type="com.adtec.rdc.base.dict.model.po.SysDictItem"
+		type="com.littlelee.base.dict.model.po.SysDictItem"
 		id="SysDictItemMap">
 		<id property="id" column="ID" />
 		<result property="dictId" column="DICT_ID" />
@@ -19,14 +19,14 @@
 	</resultMap>
 	<!-- 通过字典code获取字典数据 -->
 	<select id="queryDictItemsByCode" parameterType="String"
-		resultType="com.adtec.rdc.base.dict.model.vo.DictModel">
+		resultType="com.littlelee.base.dict.model.vo.DictModel">
 		SELECT S.ITEM_VALUE as value,S.ITEM_TEXT as text FROM SYS_DICT_ITEM S
 		WHERE DICT_ID = (SELECT ID FROM SYS_DICT WHERE DICT_CODE = #{dictCode})
 		ORDER BY S.SORT_ORDER ASC
 	</select>
     <!-- 查询所有字典数据 -->
 	<select id="queryAllDictItems"
-		resultType="com.adtec.rdc.base.dict.model.vo.DictModel">
+		resultType="com.littlelee.base.dict.model.vo.DictModel">
 		SELECT S.ITEM_VALUE as value,S.ITEM_TEXT as text FROM SYS_DICT_ITEM S
 		WHERE DICT_ID = (SELECT ID FROM SYS_DICT)
 		ORDER BY S.SORT_ORDER ASC
@@ -39,12 +39,12 @@
 		AND S.ITEM_VALUE = #{key}
 	</select>
 	<!-- 通过字典id获取字典数据 -->
-	<select id="selectItemsByDictId" parameterType="String" resultType="com.adtec.rdc.base.dict.model.po.SysDictItem">
+	<select id="selectItemsByDictId" parameterType="String" resultType="com.littlelee.base.dict.model.po.SysDictItem">
 		SELECT * FROM SYS_DICT_ITEM WHERE DICT_ID = #{dictId} ORDER BY SORT_ORDER
 		ASC, ITEM_VALUE ASC
 	</select>
 	<!--通过查询指定table的 text code 获取字典-->
-	<select id="queryTableDictItemsByCode" parameterType="String"  resultType="com.adtec.rdc.base.dict.model.vo.DictModel">
+	<select id="queryTableDictItemsByCode" parameterType="String"  resultType="com.littlelee.base.dict.model.vo.DictModel">
 		   select ${text} as "text",${code} as "value" from ${table}
 	</select>
 	<select id="pageByQuery" resultMap="SysDictItemMap">

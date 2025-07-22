@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.adtec.rdc.base.resource.mapper.SysDblinkInfoMapper">
+<mapper namespace="com.littlelee.base.resource.mapper.SysDblinkInfoMapper">
 
     <!-- 基本resultMap -->
-    <resultMap type="com.adtec.rdc.base.resource.model.po.SysDblinkInfo" id="SysDblinkInfoMap">
+    <resultMap type="com.littlelee.base.resource.model.po.SysDblinkInfo" id="SysDblinkInfoMap">
             <id property="dblinkId" column="dblink_id"/>
             <result property="dblinkName" column="dblink_name"/>
             <result property="dblinkRmk" column="dblink_rmk"/>
@@ -35,7 +35,7 @@
             <result property="filters" column="filters"/>
     </resultMap>
     
-    <resultMap id="dblinkVoResultMap" type="com.adtec.rdc.base.common.model.vo.SysDblinkVo" extends="SysDblinkInfoMap">
+    <resultMap id="dblinkVoResultMap" type="com.littlelee.base.common.model.vo.SysDblinkVo" extends="SysDblinkInfoMap">
     </resultMap>
 
     <select id="pageByQuery" resultMap="SysDblinkInfoMap">

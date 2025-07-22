@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper
-	namespace="com.adtec.rdc.base.workflow.mapper.SysWorkflowNodeInfoMapper">
+	namespace="com.littlelee.base.workflow.mapper.SysWorkflowNodeInfoMapper">
 
 	<!-- 基本resultMap -->
 	<resultMap
-		type="com.adtec.rdc.base.workflow.model.po.SysWorkflowNodeInfo"
+		type="com.littlelee.base.workflow.model.po.SysWorkflowNodeInfo"
 		id="SysWorkflowNodeInfoMap">
 		<id property="wfnodeId" column="NODE_ID" />
 		<result property="wfnodeName" column="NODE_NAME" />

@@ -1,7 +1,7 @@
 package ${tableInfo.mapperPackageName};
 
 import ${tableInfo.poPackageName}.${tableInfo.className};
-import com.adtec.rdc.base.common.base.mapper.BaseMapper;
+import com.littlelee.base.common.base.mapper.BaseMapper;
 
 /**
  * @author $tableInfo.authorName

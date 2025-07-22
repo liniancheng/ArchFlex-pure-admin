@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper	namespace="com.adtec.rdc.base.user.mapper.SysUserGroupRelMapper">
+<mapper	namespace="com.littlelee.base.user.mapper.SysUserGroupRelMapper">
 	<delete id="removeByIds" parameterType="java.util.List">
 		DELETE FROM sys_user_group_rel WHERE group_id = #{groupId,jdbcType=VARCHAR} AND user_id in
 		<foreach collection="userIds" item="item" open="(" separator="," close=")">
@@ -8,7 +8,7 @@
 		</foreach>
 	</delete>
 	
-	<resultMap type="com.adtec.rdc.base.tenant.model.bo.TransferVo" id="SysUserGroupRelMap">
+	<resultMap type="com.littlelee.base.tenant.model.bo.TransferVo" id="SysUserGroupRelMap">
             <id property="key" column="user_id"/>
             <result property="title" column="user_name"/>
             <result property="chosen" column="is_chosen"/>

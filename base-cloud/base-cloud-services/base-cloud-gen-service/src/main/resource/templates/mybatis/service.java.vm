@@ -1,6 +1,6 @@
 package ${tableInfo.servicePackageName};
 
-import com.adtec.rdc.base.common.base.service.BaseService;
+import com.littlelee.base.common.base.service.BaseService;
 import $!{tableInfo.poPackageName}.$!{tableInfo.className};
 import $!{tableInfo.queryPackageName}.$!{tableInfo.className}Query;
 

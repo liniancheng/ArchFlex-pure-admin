@@ -1,15 +1,15 @@
 package ${tableInfo.controllerPackageName};
 
-import com.adtec.rdc.base.common.annotation.SysLog;
-import com.adtec.rdc.base.common.constants.ServiceNameConstants;
-import com.adtec.rdc.base.common.util.ApiResult;
+import com.littlelee.base.common.annotation.SysLog;
+import com.littlelee.base.common.constants.ServiceNameConstants;
+import com.littlelee.base.common.util.ApiResult;
 import ${tableInfo.poPackageName}.${tableInfo.className};
 import ${tableInfo.queryPackageName}.${tableInfo.className}Query;
 import ${tableInfo.servicePackageName}.${tableInfo.className}Service;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,7 +35,7 @@ public class $!{tableInfo.className}Controller {
     private ${tableInfo.className}Service service;
 
     @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_USER_SERVICE, moduleName = FUNC_NAME, actionName = "添加${tableInfo.funcDesc}")
-    @ApiOperation(value = "添加${tableInfo.funcDesc}", notes = "${tableInfo.funcDesc}信息", httpMethod = "POST")
+    @Operation(value = "添加${tableInfo.funcDesc}", notes = "${tableInfo.funcDesc}信息", httpMethod = "POST")
     @ApiImplicitParam(name = "${tableInfo.funcName}", value = "${tableInfo.funcDesc}信息", required = true, dataType = "${tableInfo.className}")
     @PostMapping
     public ApiResult<Boolean> save(@RequestBody ${tableInfo.className} ${tableInfo.funcName}){
@@ -43,7 +43,7 @@ public class $!{tableInfo.className}Controller {
     }
 
     @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_USER_SERVICE, moduleName = FUNC_NAME, actionName = "修改${tableInfo.funcDesc}")
-    @ApiOperation(value = "修改${tableInfo.funcDesc}", notes = "${tableInfo.funcDesc}信息", httpMethod = "PUT")
+    @Operation(value = "修改${tableInfo.funcDesc}", notes = "${tableInfo.funcDesc}信息", httpMethod = "PUT")
     @ApiImplicitParam(name = "${tableInfo.funcName}", value = "${tableInfo.funcDesc}信息", required = true, dataType = "${tableInfo.className}")
     @PutMapping
     public ApiResult<Boolean> update(@RequestBody ${tableInfo.className} ${tableInfo.funcName}){
@@ -51,7 +51,7 @@ public class $!{tableInfo.className}Controller {
     }
 
     @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_USER_SERVICE, moduleName = FUNC_NAME, actionName = "删除${tableInfo.funcDesc}")
-    @ApiOperation(value = "删除${tableInfo.funcDesc}", notes = "删除${tableInfo.funcDesc}信息", httpMethod = "DELETE")
+    @Operation(value = "删除${tableInfo.funcDesc}", notes = "删除${tableInfo.funcDesc}信息", httpMethod = "DELETE")
     @ApiImplicitParam(name = "id", value = "${tableInfo.funcDesc}id", required = true, dataType = "string")
     @DeleteMapping("/{id}")
     public ApiResult<Boolean> delete(@PathVariable("id") String id){
@@ -59,14 +59,14 @@ public class $!{tableInfo.className}Controller {
     }
 
     @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_USER_SERVICE, moduleName = FUNC_NAME, actionName = "通过主键查询${tableInfo.funcDesc}信息")
-    @ApiOperation(value = "查询${tableInfo.funcDesc}信息", notes = "通过主键查询${tableInfo.funcDesc}信息", httpMethod = "GET")
+    @Operation(value = "查询${tableInfo.funcDesc}信息", notes = "通过主键查询${tableInfo.funcDesc}信息", httpMethod = "GET")
     @ApiImplicitParam(name = "id", value = "${tableInfo.funcDesc}id", required = true, dataType = "string")
     @GetMapping("/{id}")
     public ApiResult<${tableInfo.className}> getById(@PathVariable("id") String id){
         return new ApiResult<>(service.getById(id));
     }
 
-    @ApiOperation(value = "${tableInfo.funcDesc}信息分页查询", notes = "${tableInfo.funcDesc}信息分页查询", httpMethod = "GET")
+    @Operation(value = "${tableInfo.funcDesc}信息分页查询", notes = "${tableInfo.funcDesc}信息分页查询", httpMethod = "GET")
     @ApiImplicitParam(name = "query", value = "${tableInfo.funcDesc}信息查询类", required = false, dataType = "${tableInfo.className}Query")
     @GetMapping("/page")
     public ApiResult<${tableInfo.className}Query> pageByQuery(${tableInfo.className}Query query){

@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper
-	namespace="com.adtec.rdc.base.user.mapper.SysUserPwdLogInfoMapper">
+	namespace="com.littlelee.base.user.mapper.SysUserPwdLogInfoMapper">
 
 	<!-- 基本resultMap -->
 	<resultMap
-		type="com.adtec.rdc.base.user.model.po.SysUserPwdLogInfo"
+		type="com.littlelee.base.user.model.po.SysUserPwdLogInfo"
 		id="SysUserPwdLogInfoMap">
 		<id property="logId" column="LOG_ID" />
 		<result property="createTime" column="CREATE_TIME" />

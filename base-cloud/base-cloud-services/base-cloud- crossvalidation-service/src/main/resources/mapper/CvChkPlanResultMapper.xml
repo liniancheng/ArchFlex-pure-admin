@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.adtec.rdc.base.crossvalidation.mapper.CvChkPlanResultMapper">
+<mapper namespace="com.littlelee.base.crossvalidation.mapper.CvChkPlanResultMapper">
 
     <!-- 基本resultMap -->
-    <resultMap type="com.adtec.rdc.base.crossvalidation.model.po.CvChkPlanResult" id="CvChkPlanResultMap">
+    <resultMap type="com.littlelee.base.crossvalidation.model.po.CvChkPlanResult" id="CvChkPlanResultMap">
         <id property="id" column="ID"/>
         <result property="planId" column="PLAN_ID"/>
         <result property="indNo" column="IND_NO"/>
@@ -15,7 +15,7 @@
         <result property="resultVal" column="RESULT_VAL"/>
     </resultMap>
 
-    <select id="showResult" resultType="com.adtec.rdc.base.crossvalidation.model.po.CvChkPlanResult">
+    <select id="showResult" resultType="com.littlelee.base.crossvalidation.model.po.CvChkPlanResult">
         SELECT c.*,d.EXEC_SQL as CHK_SQL
         FROM (select a.*,b.IND_NM from cv_chk_plan_result a left join cv_chk_ind b on a.IND_NO=b.IND_NO
         <where>

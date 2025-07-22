@@ -14,7 +14,7 @@ spring:
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml,/entranceMapper/*Mapper.xml
   #实体扫描，多个package用逗号或者分号分隔
-  typeAliasesPackage: com.adtec.rdc.base.crossvalidation.model.po,com.adtec.rdc.base.entrancevalidation.model.po
+  typeAliasesPackage: com.littlelee.base.crossvalidation.model.po,com.littlelee.base.entrancevalidation.model.po
   global-config:
     db-config:
       #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
@@ -46,7 +46,7 @@ mybatis-plus:
 # Logger Config
 logging:
   level:
-    com.adtec.rdc.base.crossvalidation.mapper: debug
+    com.littlelee.base.crossvalidation.mapper: debug
 
 system:
   forget-password:

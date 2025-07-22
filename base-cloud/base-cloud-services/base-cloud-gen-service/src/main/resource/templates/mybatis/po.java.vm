@@ -30,7 +30,7 @@ public class ${tableInfo.className} implements Serializable {
     /**
      * $!tableInfo.pk.columnComment
      */
-    @TableId(value = "$!tableInfo.pk.columnName", type = IdType.UUID)
+    @TableId(value = "$!tableInfo.pk.columnName", type = IdType.ASSIGN_UUID)
     private $!tableInfo.pk.attrType $!tableInfo.pk.attrName;
 
     #foreach ($column in ${tableInfo.columnInfo})
@@ -38,7 +38,7 @@ public class ${tableInfo.className} implements Serializable {
     /**
      * $!{column.columnComment}
      */
-    @TableField(value = "$!column.columnName", strategy = FieldStrategy.IGNORED) 
+    @TableField(value = "$!column.columnName", insertStrategy = FieldStrategy.IGNORED, updateStrategy = FieldStrategy.IGNORED)
     private $column.attrType $column.attrName;
         #end
     #end

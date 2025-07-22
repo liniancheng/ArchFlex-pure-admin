@@ -16,7 +16,7 @@ import com.adtec.moia.base.engine.database.dialect.MySQLDialect;
 import com.adtec.moia.base.engine.database.dialect.OracleDialect;
 import com.adtec.moia.base.engine.database.dialect.SQLServerDialect;
 import com.adtec.moia.base.engine.database.dialect.SybaseDialect;
-import com.adtec.rdc.base.common.exception.ServiceException;
+import com.littlelee.base.common.exception.ServiceException;
 
 public class DatabaseManage {
 	/**

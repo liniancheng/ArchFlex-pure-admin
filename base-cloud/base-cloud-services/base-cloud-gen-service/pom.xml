@@ -12,7 +12,7 @@
 
 	<parent>
 		<artifactId>base-cloud-services</artifactId>
-		<groupId>com.adtec.rdc</groupId>
+		<groupId>com.littlelee</groupId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
@@ -26,13 +26,13 @@
     <dependencies>
         <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
             <version>${mybatis-plus-starter.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
 
@@ -70,10 +70,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>1.8</version>
-				<configuration>
-					<skipTests>true</skipTests>
-				</configuration>
+				<version>3.6.0</version>
 				<executions>
 					<execution>
 						<id>add-source</id>

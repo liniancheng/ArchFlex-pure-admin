@@ -18,7 +18,7 @@ spring:
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml,/workflowMapper/*Mapper.xml,/noticeMapper/*Mapper.xml,/layoutMapper/*Mapper.xml
   #实体扫描，多个package用逗号或者分号分隔
-  typeAliasesPackage: com.adtec.rdc.base.user.model.po,com.adtec.rdc.base.common.model.vo,com.adtec.rdc.base.user.model.query,com.adtec.rdc.base.anno.model.po,com.adtec.rdc.base.anno.model.query
+  typeAliasesPackage: com.littlelee.base.user.model.po,com.littlelee.base.common.model.vo,com.littlelee.base.user.model.query,com.littlelee.base.anno.model.po,com.littlelee.base.anno.model.query
   global-config:
     db-config:
       #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
@@ -50,9 +50,9 @@ mybatis-plus:
 # Logger Config
 logging:
   level:
-    com.adtec.rdc.base.user.mapper: debug
-    com.adtec.rdc.base.anno.mapper: debug
-    com.adtec.rdc.base.migrate.mapper: debug
+    com.littlelee.base.user.mapper: debug
+    com.littlelee.base.anno.mapper: debug
+    com.littlelee.base.migrate.mapper: debug
 
 system:
   forget-password:

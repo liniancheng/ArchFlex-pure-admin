@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.adtec.rdc.base.resource.mapper.NoticeSystemMessageMapper">
+<mapper namespace="com.littlelee.base.resource.mapper.NoticeSystemMessageMapper">
 
     <!-- 基本resultMap -->
-    <resultMap type="com.adtec.rdc.base.resource.model.po.NoticeSystemMessage" id="NoticeSystemMessageMap">
+    <resultMap type="com.littlelee.base.resource.model.po.NoticeSystemMessage" id="NoticeSystemMessageMap">
             <id property="msgId" column="MSG_ID"/>
             <result property="receiveUser" column="RECEIVE_USER"/>
             <result property="sendUser" column="SEND_USER"/>

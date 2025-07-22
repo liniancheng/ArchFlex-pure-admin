@@ -1,6 +1,6 @@
 package ${tableInfo.servicePackageName}.impl;
 
-import com.adtec.rdc.base.common.base.service.impl.BaseServiceImpl;
+import com.littlelee.base.common.base.service.impl.BaseServiceImpl;
 import ${tableInfo.mapperPackageName}.${tableInfo.className}Mapper;
 import ${tableInfo.poPackageName}.${tableInfo.className};
 import $!{tableInfo.queryPackageName}.$!{tableInfo.className}Query;
@@ -20,7 +20,8 @@ public class ${tableInfo.className}ServiceImpl extends BaseServiceImpl<$!{tableI
 	
 	@Override
 	public $!{tableInfo.className}Query pageByQuery($!{tableInfo.className}Query query) {
-		query.setDesc("create_time", "modify_time");
+		query.addOrder(OrderItem.desc("create_time"))
+     .addOrder(OrderItem.desc("modify_time"));
 		mapper.pageByQuery(query);
         return query;
 	}

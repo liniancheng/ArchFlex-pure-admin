@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.adtec.rdc.base.tenant.mapper.SysMenuTmpMapper">
+<mapper namespace="com.littlelee.base.tenant.mapper.SysMenuTmpMapper">
 
     <!-- 基本resultMap -->
-    <resultMap type="com.adtec.rdc.base.tenant.model.po.SysMenuTmp" id="SysMenuTmpMap">
+    <resultMap type="com.littlelee.base.tenant.model.po.SysMenuTmp" id="SysMenuTmpMap">
             <id property="menuId" column="menu_id"/>
             <result property="menuName" column="menu_name"/>
             <result property="menuRouteName" column="menu_route_name"/>

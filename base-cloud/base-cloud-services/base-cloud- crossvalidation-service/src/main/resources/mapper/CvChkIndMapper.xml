@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.adtec.rdc.base.crossvalidation.mapper.CvChkIndMapper">
+<mapper namespace="com.littlelee.base.crossvalidation.mapper.CvChkIndMapper">
 
     <!-- 基本resultMap -->
-    <resultMap type="com.adtec.rdc.base.crossvalidation.model.po.CvChkInd" id="CvChkIndMap">
+    <resultMap type="com.littlelee.base.crossvalidation.model.po.CvChkInd" id="CvChkIndMap">
         <id property="indNo" column="IND_NO"/>
         <result property="indNm" column="IND_NM"/>
         <result property="indLevel" column="IND_LEVEL"/>

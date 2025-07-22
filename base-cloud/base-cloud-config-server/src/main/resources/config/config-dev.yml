@@ -33,10 +33,7 @@ spring:
     validation-query: SELECT 1
     hikari:
       minimum-idle: 0
-  redis:
-    host: 127.0.0.1
-    port: 6379
-    #password: 123456
+
 
   rabbitmq:
     host: 127.0.0.1
@@ -52,10 +49,15 @@ spring:
           max-interval: 10s #重试最大间隔时间
           initial-interval: 5s #重试初始间隔时间
           multiplier: 2 #间隔时间乘子,间隔时间*乘子=下一次的间隔时间,最大不能超过设置的最大间隔时间
+  elasticsearch:
+    uris: 127.0.0.1:9300
+    username: docker-cluster
+    password: 123456
   data:
-    elasticsearch:
-      cluster-name: docker-cluster
-      cluster-nodes: 127.0.0.1:9300
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      #password: 123456
   autoconfigure:
     #关闭rabbitmq
     exclude:
