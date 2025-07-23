@@ -70,7 +70,6 @@ type ResultTable = {
 const formatLoginData = (data: string) => {
     if (!data) return data;
     const parseData = JSON.parse(data);
-    console.error("????????????????????", parseData);
     const { access_token, refresh_token, expires_in, login_name, ...rest } =
         parseData.data;
     return {
