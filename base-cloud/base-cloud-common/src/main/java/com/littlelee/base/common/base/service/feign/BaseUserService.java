@@ -18,7 +18,7 @@ import com.littlelee.base.common.model.bo.SysOperlog;
 @FeignClient(name = "base-cloud-user-service", contextId = "base-cloud-common-base-user")
 public interface BaseUserService {
 	@PostMapping("/log/save")
-	Future<Boolean> saveOperLog(@RequestBody SysOperlog operLog);
+	Boolean saveOperLog(@RequestBody SysOperlog operLog);
 
 	@PostMapping("/statisticalInfo/save")
 	Future<Boolean> saveStatistical(@RequestBody StatisticalInfo statisticalInfo);

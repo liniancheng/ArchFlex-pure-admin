@@ -138,6 +138,6 @@ public class SysOperlogInfoController {
         SysOperlogInfo info = new SysOperlogInfo();
         BeanUtils.copyProperties(operLog, info);
         info.setCreateTime(new Date());
-        return new AsyncResult<>(sysLogService.saveOperLog(info));
+        return sysLogService.saveOperLog(info);
     }
 }

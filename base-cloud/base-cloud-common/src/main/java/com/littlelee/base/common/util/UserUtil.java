@@ -6,6 +6,7 @@ import java.util.Base64;
 import java.util.List;
 
 import com.littlelee.base.common.app.constants.AppConstants;
+import com.littlelee.base.common.constants.JwtClaimConstants;
 import com.littlelee.base.common.constants.SecurityConstants;
 import com.littlelee.base.common.constants.UserConstants;
 
@@ -136,7 +137,7 @@ public class UserUtil {
             return null;
         }
         Claims claims = getClaims(token);
-        String loginname = (String) claims.get(UserConstants.LOGIN_NAME);
+        String loginname = (String) claims.get(JwtClaimConstants.USERNAME);
         log.info("获取loginname成功，值为{}", loginname);
         return loginname;
     }

@@ -6,6 +6,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import jakarta.servlet.http.HttpServletResponse;
@@ -42,8 +43,8 @@ public class SysOperlogInfoServiceImpl extends ServiceImpl<SysOperlogInfoMapper,
 	
 	@Async
 	@Override
-	public Boolean saveOperLog(SysOperlogInfo info) {
-		return this.save(info);
+	public CompletableFuture<Boolean> saveOperLog(SysOperlogInfo info) {
+		return CompletableFuture.completedFuture(this.save(info));
 	}
 
 	@Override

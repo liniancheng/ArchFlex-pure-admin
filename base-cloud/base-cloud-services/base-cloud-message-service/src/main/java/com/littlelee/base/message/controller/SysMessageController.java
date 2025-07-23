@@ -2,6 +2,7 @@ package com.littlelee.base.message.controller;
 
 import java.util.concurrent.Future;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -14,12 +15,11 @@ import com.littlelee.base.common.template.email.EmailMessageTemplate;
 import com.littlelee.base.common.template.sms.SmsMessageTemplate;
 import com.littlelee.base.message.log.service.SysMessageService;
 
-import io.swagger.annotations.Api;
 
 @EnableAsync
 @RestController
 @RequestMapping("/message")
-@Api(value = "消息controller", tags = { "消息发送接口" })
+@Tag(name = "消息发送接口", description = "消息controller")
 public class SysMessageController {
 	@Autowired
 	private SysMessageService service;

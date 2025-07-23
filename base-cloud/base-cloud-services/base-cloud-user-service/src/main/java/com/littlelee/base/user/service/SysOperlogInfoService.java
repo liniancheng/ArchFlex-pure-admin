@@ -1,6 +1,7 @@
 package com.littlelee.base.user.service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -31,5 +32,5 @@ public interface SysOperlogInfoService extends IService<SysOperlogInfo> {
      * @param info
      * @return
      */
-    Boolean saveOperLog(SysOperlogInfo info);
+    CompletableFuture<Boolean> saveOperLog(SysOperlogInfo info);
 }
