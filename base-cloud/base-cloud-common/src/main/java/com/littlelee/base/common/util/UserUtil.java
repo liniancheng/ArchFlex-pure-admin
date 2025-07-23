@@ -1,5 +1,6 @@
 package com.littlelee.base.common.util;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -8,6 +9,8 @@ import com.littlelee.base.common.app.constants.AppConstants;
 import com.littlelee.base.common.constants.SecurityConstants;
 import com.littlelee.base.common.constants.UserConstants;
 
+import com.nimbusds.jose.JWSObject;
+import com.nimbusds.jwt.JWTClaimsSet;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
@@ -73,9 +76,20 @@ public class UserUtil {
      * @return claim
      */
     public static Claims getClaims(String token) {
-        String key = Base64.getEncoder().encodeToString(SecurityConstants.SIGN_KEY.getBytes());
-        Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
-        return claims;
+        try {
+            // 只解析不验证签名（注意安全性）
+            JWSObject jwsObject = JWSObject.parse(token);
+            String payload = jwsObject.getPayload().toString();
+
+            JWTClaimsSet jwtClaimsSet = JWTClaimsSet.parse(payload);
+
+            Claims claims = Jwts.claims();
+            jwtClaimsSet.getClaims().forEach(claims::put);
+            return claims;
+        } catch (ParseException e) {
+            log.error("解析 JWT token 失败", e);
+            throw new IllegalArgumentException("Invalid JWT token", e);
+        }
     }
 
     /**

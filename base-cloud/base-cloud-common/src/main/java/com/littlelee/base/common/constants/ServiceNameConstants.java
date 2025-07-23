@@ -13,6 +13,7 @@ public class ServiceNameConstants {
 	public static final String BASE_CLOUD_SERVER = "BASE_CLOUD_SERVER";
 	public static final String BASE_CLOUD_USER_SERVICE = "BASE_CLOUD_USER_SERVICE";
 	public static final String BASE_CLOUD_CHECK_SERVICE = "BASE_CLOUD_CHECK_SERVICE";
+	public static final String BASE_CLOUD_DETECT_SERVICE = "BASE_CLOUD_DETECT_SERVICE";
 	public static final String BASE_CLOUD_MESSAGE_SERVICE = "BASE_CLOUD_MESSAGE_SERVICE";
 	public static final String BASE_CLOUD_GEN_SERVICE = "BASE_CLOUD_GEN_SERVICE";
 	public static final String UDS_CLOUD_REPORT_SERVICE = "UDS_CLOUD_REPORT_SERVICE";

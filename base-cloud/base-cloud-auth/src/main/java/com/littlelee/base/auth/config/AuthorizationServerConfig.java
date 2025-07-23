@@ -18,6 +18,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -88,9 +89,9 @@ public class AuthorizationServerConfig {
             HttpSecurity http,
             AuthenticationManager authenticationManager,
             OAuth2AuthorizationService authorizationService,
-            OAuth2TokenGenerator<?> tokenGenerator
+            OAuth2TokenGenerator<?> tokenGenerator,
 
-    ) throws Exception {
+            OAuth2ResourceServerProperties oAuth2ResourceServerProperties) throws Exception {
 
         OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
 
@@ -124,6 +125,8 @@ public class AuthorizationServerConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests.anyRequest().authenticated())
                 .csrf(csrf -> csrf.ignoringRequestMatchers(endpointsMatcher))
                 .apply(authorizationServerConfigurer);
+        http.oauth2ResourceServer(oAuth2ResourceServer ->
+                oAuth2ResourceServer.jwt(Customizer.withDefaults()));
 
         return http.build();
     }
@@ -144,6 +147,7 @@ public class AuthorizationServerConfig {
         return new ImmutableJWKSet<>(jwkSet);
     }
 
+    // 生成 RSA 密钥对
     private static KeyPair generateRsaKey() { // <6>
         KeyPair keyPair;
         try {
@@ -186,6 +190,9 @@ public class AuthorizationServerConfig {
         @Override
         public boolean matches(CharSequence rawPassword, String encodedPassword) {
             String rawCode = CryptUtils.getCBCDesEncrypt(rawPassword.toString(),CryptUtils.AES_KEY,CryptUtils.AES_IV);
+            System.out.println("rawPassword: " + rawPassword);
+            System.out.println("encodedPassword: " + encodedPassword);
+            System.out.println("matches: " + super.matches(rawCode, encodedPassword));
             return super.matches(rawCode, encodedPassword);
         };
     }

@@ -10,6 +10,7 @@ import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -66,12 +67,9 @@ public class ReactiveResourceServerConfig {
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http,
                                                             ReactiveAuthExceptionEntryPoint authEntryPoint,
-                                                            ReactiveCustomAccessDeniedHandler accessDeniedHandler,
-                                                            Converter<Jwt, AbstractAuthenticationToken> jwtAuthConverter) {
+                                                            ReactiveCustomAccessDeniedHandler accessDeniedHandler) {
 
-        // 把非 Reactive 转成 Reactive
-        ReactiveJwtAuthenticationConverterAdapter reactiveConverter =
-                new ReactiveJwtAuthenticationConverterAdapter(jwtAuthenticationConverter());
+
         // 1. 白名单放行
         ignoreUrlPropertiesConfig.getUrls()
                 .forEach(url -> http.authorizeExchange(ex -> ex.pathMatchers(url).permitAll()));
@@ -91,7 +89,13 @@ public class ReactiveResourceServerConfig {
                         .accessDeniedHandler(accessDeniedHandler))
                 // 6. OAuth2 资源服务器 (JWT)
                 .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt -> jwt.jwtAuthenticationConverter(reactiveConverter)));
+                        .jwt(jwt -> jwt
+                                .jwtAuthenticationConverter(
+                                        new ReactiveJwtAuthenticationConverterAdapter(jwtAuthenticationConverter()
+                                        )
+                                )
+                        )
+                );
 
         return http.build();
     }

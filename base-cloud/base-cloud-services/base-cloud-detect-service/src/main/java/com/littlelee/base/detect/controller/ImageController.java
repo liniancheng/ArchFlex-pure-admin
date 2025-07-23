@@ -10,12 +10,12 @@ import com.littlelee.base.detect.service.ImageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
-import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +38,7 @@ public class ImageController {
     @Autowired
     private ImageService imageService;  // 注入 ImageService
 
-    @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_USER_SERVICE, moduleName = FUNC_NAME, actionName = "上传文件")
+    @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_DETECT_SERVICE, moduleName = FUNC_NAME, actionName = "上传文件")
     @Operation(summary = "上传文件", description = "上传文件到服务器", method = "POST")
     @Parameter(name = "file", description = "上传的文件", required = true)
     @PostMapping("/upload")
@@ -77,7 +77,7 @@ public class ImageController {
         }
     }
 
-    @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_USER_SERVICE, moduleName = FUNC_NAME, actionName = "图像检测")
+    @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_DETECT_SERVICE, moduleName = FUNC_NAME, actionName = "图像检测")
     @Operation(summary = "图像检测", description = "使用指定模型和权重文件检测上传的图像", method = "POST")
     @PostMapping("/detect")
     public ApiResult<Map<String, Object>> detectImage(@RequestBody DetectImage detectImage) {

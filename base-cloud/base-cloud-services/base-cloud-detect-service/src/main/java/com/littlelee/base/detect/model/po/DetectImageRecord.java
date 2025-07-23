@@ -29,49 +29,49 @@ public class DetectImageRecord implements Serializable {
     /**
      * 原始图片路径
      */
-    @TableField(value = "original_image", strategy = FieldStrategy.IGNORED)
+    @TableField(value = "original_image", updateStrategy = FieldStrategy.IGNORED)
     private String originalImage;
 
     /**
      * 预测图片路径
      */
-    @TableField(value = "predicted_image", strategy = FieldStrategy.IGNORED)
+    @TableField(value = "predicted_image", updateStrategy = FieldStrategy.IGNORED)
     private String predictedImage;
 
     /**
      * 识别权重
      */
-    @TableField(value = "recognition_weight", strategy = FieldStrategy.IGNORED)
+    @TableField(value = "recognition_weight", updateStrategy = FieldStrategy.IGNORED)
     private String recognitionWeight;
 
     /**
      * 最小阈值
      */
-    @TableField(value = "min_threshold", strategy = FieldStrategy.IGNORED)
+    @TableField(value = "min_threshold", updateStrategy = FieldStrategy.IGNORED)
     private Double minThreshold;
 
     /**
      * AI助手使用情况
      */
-    @TableField(value = "ai_assistant", strategy = FieldStrategy.IGNORED)
+    @TableField(value = "ai_assistant", updateStrategy = FieldStrategy.IGNORED)
     private String aiAssistant;
 
     /**
      * AI建议
      */
-    @TableField(value = "ai_suggestion", strategy = FieldStrategy.IGNORED)
+    @TableField(value = "ai_suggestion", updateStrategy = FieldStrategy.IGNORED)
     private String aiSuggestion;
 
     /**
      * 识别时间
      */
-    @TableField(value = "recognition_time", strategy = FieldStrategy.IGNORED)
+    @TableField(value = "recognition_time", updateStrategy = FieldStrategy.IGNORED)
     private Date recognitionTime;
 
     /**
      * 识别用户
      */
-    @TableField(value = "recognition_user", strategy = FieldStrategy.IGNORED)
+    @TableField(value = "recognition_user", updateStrategy = FieldStrategy.IGNORED)
     private String recognitionUser;
 
     /**

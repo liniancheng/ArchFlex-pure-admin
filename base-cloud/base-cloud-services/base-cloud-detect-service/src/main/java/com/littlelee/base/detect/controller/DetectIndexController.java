@@ -3,7 +3,6 @@ package com.littlelee.base.detect.controller;
 import com.littlelee.base.common.exception.ServiceException;
 import com.littlelee.base.common.util.DateUtil;
 import com.littlelee.base.common.util.UserUtil;
-import com.littlelee.base.detect.service.DetectIndexService;
 import com.littlelee.base.common.annotation.SysLog;
 import com.littlelee.base.common.constants.ServiceNameConstants;
 import com.littlelee.base.common.model.bo.TreeNode;
@@ -25,8 +24,6 @@ import org.springframework.web.bind.annotation.*;
 public class DetectIndexController {
     private static final String FUNC_NAME = "检测首页功能";
 
-    @Autowired
-    private DetectIndexService service;
 
 
 }
