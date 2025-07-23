@@ -1,3 +1,4 @@
+import { getToken } from "@/utils/auth";
 import { http } from "@/utils/http";
 import qs from "qs";
 
@@ -100,6 +101,15 @@ export const getLogin = (data?: object) => {
                 return formatLoginData(responseData);
             }
         ]
+    });
+};
+
+/** 登出 */
+export const doLogOut = () => {
+    return http.delete(`/auth/oauth2/token/${getToken().accessToken}`, {
+        headers: {
+            "Content-Type": "application/json;charset=UTF-8",
+        }
     });
 };
 
