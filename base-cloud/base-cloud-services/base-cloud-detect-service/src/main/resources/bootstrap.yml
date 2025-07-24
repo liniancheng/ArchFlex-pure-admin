@@ -14,6 +14,11 @@ spring:
     multipart:
       max-file-size: 20MB
       max-request-size: 20MB
+  ai:
+    ollama:
+      base-url: http://192.168.0.219:11434
+      chat:
+        model: deepseek-r1:14b
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
