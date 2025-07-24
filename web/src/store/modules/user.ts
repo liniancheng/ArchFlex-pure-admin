@@ -16,6 +16,7 @@ import {
 } from "@/api/user";
 import { useMultiTagsStoreHook } from "./multiTags";
 import { type DataInfo, setToken, removeToken, userKey } from "@/utils/auth";
+import { message } from "@/utils/message";
 
 export const useUserStore = defineStore("pure-user", {
     state: (): userType => ({
@@ -80,12 +81,12 @@ export const useUserStore = defineStore("pure-user", {
             this.loginDay = Number(value);
         },
         /** 登入 */
-        async loginByUsername(data) {
+        async loginByUsername(data: AnyObject) {
             return new Promise<UserResult>((resolve, reject) => {
                 getLogin(data)
-                    .then(data => {
-                        if (data) setToken(data);
-                        resolve(data);
+                    .then(loginData => {
+                        if (loginData?.data) setToken(loginData.data);
+                        resolve(loginData.data);
                     })
                     .catch(error => {
                         reject(error);
@@ -94,18 +95,21 @@ export const useUserStore = defineStore("pure-user", {
         },
         /** 前端登出（调用接口） */
         logOut() {
-            // fixme: 退出登录调用接口有问题
-            doLogOut().then(() => {
-                this.username = "";
-                this.roles = [];
-                this.permissions = [];
-                removeToken();
-                useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
-                resetRouter();
-                router.push("/login");
-            }).catch(() => {
-                console.error("退出失败，请稍后重试");
-            })
+            doLogOut()
+                .then(() => {
+                    this.username = "";
+                    this.roles = [];
+                    this.permissions = [];
+                    removeToken();
+                    useMultiTagsStoreHook().handleTags("equal", [
+                        ...routerArrays
+                    ]);
+                    resetRouter();
+                    router.push("/login");
+                })
+                .catch(() => {
+                    message("退出失败，请稍后重试", { type: "error" });
+                });
         },
         /** 刷新`token` */
         async handRefreshToken(data) {

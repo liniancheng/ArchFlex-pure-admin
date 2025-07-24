@@ -75,6 +75,13 @@ interface ComponentElRef<T extends HTMLElement = HTMLDivElement> {
   $el: T;
 }
 
+/* 接口返回数据结构 */
+interface AxiosResult<T = any> {
+    code: number;
+    data: T;
+    msg: string;
+}
+
 function parseInt(s: string | number, radix?: number): number;
 
 function parseFloat(string: string | number): number;

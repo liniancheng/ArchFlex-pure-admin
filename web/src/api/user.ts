@@ -71,14 +71,19 @@ type ResultTable = {
 const formatLoginData = (data: string) => {
     if (!data) return data;
     const parseData = JSON.parse(data);
+    if (!parseData.data) return parseData;
+    const { data: loginData, ...res } = parseData;
     const { access_token, refresh_token, expires_in, login_name, ...rest } =
-        parseData.data;
+        loginData;
     return {
-        ...rest,
-        accessToken: access_token,
-        refreshToken: refresh_token,
-        expires: expires_in,
-        username: login_name
+        ...res,
+        data: {
+            ...rest,
+            accessToken: access_token,
+            refreshToken: refresh_token,
+            expires: expires_in,
+            username: login_name
+        }
     };
 };
 
@@ -90,10 +95,10 @@ export const getLogin = (data?: object) => {
     const authBase64 = btoa(authString);
     const authHeader = `Basic ${authBase64}`;
 
-    return http.request<UserResult>("post", "/auth/oauth2/token", {
+    return http.request<AxiosResult<UserResult>>("post", "/auth/oauth2/token", {
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            "Authorization": authHeader
+            Authorization: authHeader
         },
         data: qs.stringify(data),
         transformResponse: [
@@ -108,7 +113,7 @@ export const getLogin = (data?: object) => {
 export const doLogOut = () => {
     return http.delete(`/auth/token/${getToken().accessToken}`, {
         headers: {
-            "Content-Type": "application/json;charset=UTF-8",
+            "Content-Type": "application/json;charset=UTF-8"
         }
     });
 };
