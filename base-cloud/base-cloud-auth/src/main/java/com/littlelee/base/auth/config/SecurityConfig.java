@@ -72,14 +72,14 @@ public class SecurityConfig {
                             }
                             // 动态加载白名单路径
                             ignoreUrlPropertiesConfig.getUrls().forEach(e -> {
-                                System.out.println("白名单" + ignoreUrlPropertiesConfig.getUrls());
-                                requests.requestMatchers(mvcMatcherBuilder.pattern(e)).permitAll();
+                                System.out.println("白名单路径：" + e);  // 每个打印
+                                requests.requestMatchers(new AntPathRequestMatcher(e)).permitAll();
                             });
                             requests.anyRequest().authenticated();
                         }
                 )
                 .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(Customizer.withDefaults());
+                .formLogin(AbstractHttpConfigurer::disable);
 
         return http.build();
     }
@@ -91,7 +91,6 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers(
-                AntPathRequestMatcher.antMatcher("/token/**"),
                 AntPathRequestMatcher.antMatcher("/auth/**"),
                 AntPathRequestMatcher.antMatcher("/webjars/**"),
                 AntPathRequestMatcher.antMatcher("/doc.html"),

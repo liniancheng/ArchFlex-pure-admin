@@ -106,7 +106,7 @@ export const getLogin = (data?: object) => {
 
 /** 登出 */
 export const doLogOut = () => {
-    return http.delete(`/auth/oauth2/token/${getToken().accessToken}`, {
+    return http.delete(`/auth/token/${getToken().accessToken}`, {
         headers: {
             "Content-Type": "application/json;charset=UTF-8",
         }

@@ -5,8 +5,10 @@ import cn.hutool.captcha.generator.CodeGenerator;
 import cn.hutool.core.util.StrUtil;
 import com.littlelee.base.auth.handler.MyAuthenticationFailureHandler;
 import com.littlelee.base.auth.handler.MyAuthenticationSuccessHandler;
+import com.littlelee.base.auth.jackson.SysUserMixin;
 import com.littlelee.base.auth.password.PasswordAuthenticationConverter;
 import com.littlelee.base.auth.password.PasswordAuthenticationProvider;
+import com.littlelee.base.auth.security.UserDetailsImpl;
 import com.littlelee.base.common.util.CryptUtils;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -221,7 +223,7 @@ public class AuthorizationServerConfig {
         objectMapper.registerModules(securityModules);
         objectMapper.registerModule(new OAuth2AuthorizationServerJackson2Module());
         // 使用刷新模式，需要从 oauth2_authorization 表反序列化attributes字段得到用户信息(SysUserDetails)
-//        objectMapper.addMixIn(SysUserDetails.class, SysUserMixin.class);
+        objectMapper.addMixIn(UserDetailsImpl.class, SysUserMixin.class);
         objectMapper.addMixIn(Long.class, Object.class);
 
         rowMapper.setObjectMapper(objectMapper);
