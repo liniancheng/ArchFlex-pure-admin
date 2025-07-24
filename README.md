@@ -2,12 +2,15 @@
 ![image-20250514144458912](assets/ArchFlex.png)
 <h1 style="margin: 30px 0 30px; font-weight: bold; text-align:center;">ArchFlex v0.0.1</h1>
 
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-2.1.17.RELEASE-%236DB33F?style=plastic&logo=springboot)](https://docs.spring.io/spring-boot/index.html)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5.0-%236DB33F?style=plastic&logo=springboot)](https://docs.spring.io/spring-boot/index.html)
+[![Spring Security](https://img.shields.io/badge/Spring_Security-5.0.8.RELEASE-%236DB33F?style=plastic&logo=springsecurity)](https://springdoc.cn/spring-security/)
+[![MyBatis-Plus](https://img.shields.io/badge/MyBatis--Plus-3.5.7-%23468ef7?style=plastic)](https://baomidou.com/)
 [![Maven](https://img.shields.io/badge/Maven-apache--maven--3.9.9-%23C71A36?style=plastic&logo=apachemaven)](https://maven.apache.org/)
 [![Redis](https://img.shields.io/badge/Redis-5.0.14.1-%23FF4438?style=plastic&logo=redis)](https://redis.io/)  
 [![Vue](https://img.shields.io/badge/Vue-3.5.16-%234FC08D?style=plastic&logo=vue.js)](https://cn.vuejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-%233178C6?style=plastic&logo=typescript)](https://www.tslang.cn/)
 [![Sass](https://img.shields.io/badge/Sass-1.89.1-%23CC6699?style=plastic&logo=sass)](https://www.sass.hk/)
+[![Apache Echarts](https://img.shields.io/badge/Apache_Echarts-5.6.0-%23AA344D?style=plastic&logo=apacheecharts)](https://echarts.apache.org/zh/index.html)
 
 
 ### 目录
