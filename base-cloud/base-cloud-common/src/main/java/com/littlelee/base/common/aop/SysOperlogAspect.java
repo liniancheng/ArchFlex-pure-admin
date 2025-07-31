@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
 
 /**
  * @author: littlelee
- * @date: 2018/11/14 11:26
+ * @date: 2025/7/30 11:26
  */
 @Aspect
 @Component
@@ -76,7 +76,7 @@ public class SysOperlogAspect {
             operlog.setCreateBy(username);
         }
         try {
-            result = pjp.proceed();
+            result = pjp.proceed();  // 执行原方法
             operlog.setLogStatus(OperationStatusEnum.SUCCESS.getCode());
         } catch (Throwable e) {
         	operlog.setExceptionStr(UrlUtil.getTrace(e));

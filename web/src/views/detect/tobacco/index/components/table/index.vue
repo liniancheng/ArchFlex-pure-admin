@@ -49,7 +49,7 @@ const { loading, columns, dataList, pagination, Empty, onCurrentChange } = useCo
 const props = defineProps({
     title: {
         type: String,
-        default: $t("detect.tobacco.ten"),
+        default: $t("detect.tobacco.real"),
     }
 });
 </script>

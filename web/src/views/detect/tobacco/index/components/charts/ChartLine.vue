@@ -22,7 +22,7 @@ const props = defineProps({
     },
     title: {
         type: String,
-        default: $t("detect.tobacco.real"),
+        default: $t("detect.tobacco.ten"),
     }
 });
 

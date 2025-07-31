@@ -179,7 +179,7 @@ const selectList = ref({
         name: "recognitionWeight",
         placeholder: "请选择权重文件",
         data: [
-            { label: "best.onnx", value: "best.onnx" },
+            { label: "tobacco_worm.pt", value: "tobacco_worm.pt" },
             { label: "yolov8n.pt", value: "yolov8n.pt" },
             { label: "yolov11n.pt", value: "yolov11n.pt" }
         ]

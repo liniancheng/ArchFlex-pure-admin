@@ -82,6 +82,12 @@
             <version>1.0.0</version>
         </dependency>
 
+        <!-- 引入 websocket 的坐标 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>
