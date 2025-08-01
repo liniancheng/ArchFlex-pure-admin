@@ -1,16 +1,21 @@
 package com.littlelee.base.detect.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.alibaba.fastjson.JSONObject;
+import com.littlelee.base.common.annotation.SysLog;
+import com.littlelee.base.common.constants.ServiceNameConstants;
 import com.littlelee.base.common.util.ApiResult;
+import com.littlelee.base.detect.mapper.CameraRecordsMapper;
+import com.littlelee.base.detect.model.bo.PredictRequest;
+import com.littlelee.base.detect.model.po.CameraRecords;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.client.RestTemplate;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Map;
 
 /**
  * @author littlelee
@@ -21,35 +26,67 @@ import java.util.Map;
 @Tag(name = "摄像检测Controller", description = "摄像检测操作接口")
 public class CameraController {
 
+    private static final String FUNC_NAME = "摄像检测功能";
 
-    @PostMapping("/detect")
-    public ApiResult<Map<String, Object>> detectFrame(@RequestParam("frame") MultipartFile frame) throws IOException, InterruptedException {
-        File tempFile = File.createTempFile("frame_", ".jpg");
-        frame.transferTo(tempFile);
+    @Autowired
+    private CameraRecordsMapper cameraRecordsMapper;
 
-        String weightsPath = "D:/work/tobacco/weights/yolov8n.pt";
+    private final RestTemplate restTemplate = new RestTemplate();
 
-        ProcessBuilder pb = new ProcessBuilder(
-                "D:/work/miniconda3/envs/yolov11/python.exe",
-                "D:/PycharmProjects/ultralytics-main/ultralytics/detect_frame.py",
-                "--weights", weightsPath,
-                "--input", tempFile.getAbsolutePath()
-        );
-        pb.redirectErrorStream(true);
-        Process process = pb.start();
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        StringBuilder output = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            output.append(line);
+    @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_DETECT_SERVICE, moduleName = FUNC_NAME, actionName = "图像检测")
+    @Operation(summary = "摄像检测", description = "使用指定模型和权重文件进行摄像检测", method = "POST")
+    @PostMapping("/predict")
+    public ApiResult<?> predict(@RequestBody PredictRequest request) {
+        if (request.getWeight() == null || request.getWeight().isEmpty()) {
+            return ApiResult.failed("未提供权重");
         }
-        process.waitFor();
 
-        ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> result = mapper.readValue(output.toString(), Map.class);
+        try {
+            // 创建请求体
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<PredictRequest> requestEntity = new HttpEntity<>(request, headers);
 
-        return ApiResult.success(result);
+            // 调用 Flask API
+            String response = restTemplate.postForObject("http://localhost:5000/predictCamera", requestEntity, String.class);
+            System.out.println("Received response: " + response);
+            JSONObject responses = JSONObject.parseObject(response);
+            if(responses.get("status").equals(400)){
+                return ApiResult.failed("Error: " + responses.get("message"));
+            }else {
+                CameraRecords cameraRecords = new CameraRecords();
+                cameraRecords.setWeight(request.getWeight());
+                cameraRecords.setKind(request.getKind());
+                cameraRecords.setUsername(request.getUsername());
+                cameraRecords.setOutVideo(String.valueOf(responses.get("outVideo")));
+                cameraRecordsMapper.insert(cameraRecords); // 插入到数据库
+                return ApiResult.success(response);
+            }
+        } catch (Exception e) {
+            return ApiResult.failed("Error: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/file_names")
+    public ApiResult<?> getFileNames() {
+        try {
+            // 调用 Flask API
+            String response = restTemplate.getForObject("http://127.0.0.1:5000/file_names", String.class);
+            return ApiResult.success(response);
+        } catch (Exception e) {
+            return ApiResult.failed("Error: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/stopCamera")
+    public ApiResult<?> stopCamera() {
+        try {
+            // 调用 Flask API
+            String response = restTemplate.getForObject("http://127.0.0.1:5000/stopCamera", String.class);
+            return ApiResult.success(response);
+        } catch (Exception e) {
+            return ApiResult.failed("Error: " + e.getMessage());
+        }
     }
 
 

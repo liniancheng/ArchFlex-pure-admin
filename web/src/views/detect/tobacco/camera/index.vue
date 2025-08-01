@@ -1,119 +1,225 @@
 <template>
-    <div class="flex flex-col items-center justify-center w-full h-full space-y-4">
-        <video ref="videoRef" autoplay muted class="w-[640px] h-[480px] border"></video>
-        <canvas ref="canvasRef" class="hidden"></canvas>
-        <img :src="resultImage" alt="检测结果" v-if="resultImage" class="w-[640px] h-[480px] border" />
-
-        <div class="space-x-4">
-            <button @click="startRecording" class="bg-green-500 text-white px-4 py-2 rounded">开始录制</button>
-            <button @click="stopRecording" class="bg-red-500 text-white px-4 py-2 rounded">结束录制</button>
+    <div class="system-predict-container layout-padding">
+        <div class="system-predict-padding layout-padding-auto layout-padding-view">
+            <div class="header">
+                <div class="kind">
+                    <el-select v-model="kind" placeholder="请选择作物种类" size="large" style="width: 180px" @change="getData">
+                        <el-option v-for="item in state.kind_items" :key="item.value" :label="item.label"
+                                   :value="item.value" />
+                    </el-select>
+                </div>
+                <div class="weight">
+                    <el-select v-model="weight" placeholder="请选择模型" size="large" style="margin-left: 20px;width: 180px">
+                        <el-option v-for="item in state.weight_items" :key="item.value" :label="item.label"
+                                   :value="item.value" />
+                    </el-select>
+                </div>
+                <div class="conf" style="margin-left: 20px;display: flex; flex-direction: row;">
+                    <div
+                        style="font-size: 14px;margin-right: 20px;display: flex;justify-content: start;align-items: center;color: #909399;">
+                        设置最小置信度阈值</div>
+                    <el-slider v-model="conf" :format-tooltip="formatTooltip" style="width: 280px;" />
+                </div>
+                <div class="button-section" style="margin-left: 20px">
+                    <el-button type="primary" @click="start" class="predict-button">开始录制</el-button>
+                </div>
+                <div class="button-section" style="margin-left: 20px">
+                    <el-button type="primary" @click="stop" class="predict-button">结束录制</el-button>
+                </div>
+                <div class="demo-progress" v-if="state.isShow">
+                    <el-progress :text-inside="true" :stroke-width="20" :percentage=state.percentage style="width: 380px;">
+                        <span>{{ state.type_text }} {{ state.percentage }}%</span>
+                    </el-progress>
+                </div>
+            </div>
+            <div class="cards" ref="cardsContainer">
+                <img v-if="state.cameraisShow" class="video" :src="state.video_path">
+            </div>
         </div>
     </div>
 </template>
 
-<script lang="ts" setup>
-import { ref, onBeforeUnmount } from 'vue'
 
-const videoRef = ref<HTMLVideoElement | null>(null)
-const canvasRef = ref<HTMLCanvasElement | null>(null)
-const resultImage = ref<string>('')
+<script setup lang="ts">
+import { reactive, ref, onMounted } from 'vue';
+import { ElMessage } from 'element-plus';
+// import request from '@/utils/request';
+// import { useUserInfo } from '/@/stores/userInfo';
+import { storeToRefs } from 'pinia';
+import type { UploadInstance, UploadProps } from 'element-plus';
+import { SocketService } from '@/utils/socket';
+// import { formatDate } from '/@/utils/formatTime';
 
-let socket: WebSocket | null = null
-let intervalId: number | null = null
+// const stores = useUserInfo();
+const conf = ref('');
+const kind = ref('');
+const weight = ref('');
+// const { userInfos } = storeToRefs(stores);
 
-const startRecording = async () => {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true })
-        if (videoRef.value) {
-            videoRef.value.srcObject = stream
-        }
+const state = reactive({
+    weight_items: [] as any,
+    kind_items: [
+        {
+            value: 'corn',
+            label: '玉米',
+        },
+        {
+            value: 'rice',
+            label: '水稻',
+        },
+        {
+            value: 'strawberry',
+            label: '草莓',
+        },
+        {
+            value: 'tomato',
+            label: '西红柿',
+        },
+    ],
+    data: {} as any,
+    video_path: '',
+    type_text: "正在保存",
+    percentage: 50,
+    isShow: false,
+    cameraisShow: false,
+    form: {
+        username: '',
+        weight: '',
+        conf: null as any,
+        kind: '',
+        startTime: ''
+    },
+});
 
-        // 如果已经存在 WebSocket 连接，先关闭它
-        if (socket) {
-            if (socket.readyState === WebSocket.OPEN) {
-                socket.close()
-            }
-            socket = null
-        }
+const socketService = new SocketService();
 
-        // 创建新的 WebSocket 连接
-        socket = new WebSocket('ws://localhost:8898/ws/camera/detect')
+socketService.on('message', (data) => {
+    console.log('Received message:', data);
+    ElMessage.success(data);
+});
 
-        socket.onmessage = (event) => {
-            resultImage.value = `data:image/jpeg;base64,${event.data}`
-        }
-
-        socket.onopen = () => {
-            console.log('WebSocket 已连接')
-            intervalId = window.setInterval(() => {
-                if (!canvasRef.value || !videoRef.value) return
-
-                const canvas = canvasRef.value
-                const video = videoRef.value
-
-                canvas.width = video.videoWidth
-                canvas.height = video.videoHeight
-
-                const ctx = canvas.getContext('2d')
-                if (ctx) {
-                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
-                    const base64 = canvas.toDataURL('image/jpeg', 0.3)  // 降低质量
-                    const payload = base64.replace(/^data:image\/jpeg;base64,/, '')
-
-                    // 检查 WebSocket 状态，确保它处于 OPEN 状态
-                    if (socket && socket.readyState === WebSocket.OPEN) {
-                        socket.send(payload)
-                    }
-                }
-            }, 300)
-        }
-
-        socket.onclose = (event) => {
-            console.log('WebSocket 已关闭', event.code, event.reason)
-            socket = null
-        }
-
-        socket.onerror = (error) => {
-            console.error('WebSocket 错误:', error)
-            socket = null
-        }
-    } catch (error) {
-        console.error('无法访问摄像头:', error)
-    }
+const formatTooltip = (val: number) => {
+    return val / 100
 }
 
-const stopRecording = () => {
-    console.log('调用了 stopRecording 方法')
-    if (intervalId) {
-        clearInterval(intervalId)
-        intervalId = null
+socketService.on('progress', (data) => {
+    state.percentage = parseInt(data);
+    if (parseInt(data) < 100) {
+        state.isShow = true;
+    } else {
+        //两秒后隐藏进度条
+        ElMessage.success("保存成功！");
+        setTimeout(() => {
+            state.isShow = false;
+            state.percentage = 0;
+        }, 2000);
     }
+    console.log('Received message:', data);
+});
 
-    if (socket) {
-        // 检查 WebSocket 状态，确保它处于 OPEN 或 CLOSING 状态
-        if (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CLOSING) {
-            socket.close()
-        }
-        socket = null
-    }
+// const getData = () => {
+//     request.get('/api/flask/file_names').then((res) => {
+//         if (res.code == 0) {
+//             res.data = JSON.parse(res.data);
+//             state.weight_items = res.data.weight_items.filter(item => item.value.includes(kind.value));
+//         } else {
+//             ElMessage.error(res.msg);
+//         }
+//     });
+// };
 
-    const stream = videoRef.value?.srcObject as MediaStream
-    if (stream) {
-        stream.getTracks().forEach(track => track.stop())
-    }
 
-    resultImage.value = ''
-}
+// const start = () => {
+//     state.form.weight = weight.value;
+//     state.form.kind = kind.value;
+//     state.form.conf = (parseFloat(conf.value)/100);
+//     state.form.username = userInfos.value.userName;
+//     state.form.startTime = formatDate(new Date(), 'YYYY-mm-dd HH:MM:SS');
+//     console.log(state.form);
+//     const queryParams = new URLSearchParams(state.form).toString();
+//     state.cameraisShow = true
+//     state.video_path = `http://127.0.0.1:5000/predictCamera?${queryParams}`;
+// };
 
-onBeforeUnmount(() => {
-    stopRecording()
-})
+// const stop = () => {
+//     request.get('/flask/stopCamera').then((res) => {
+//         if (res.code == 0) {
+//             res.data = JSON.parse(res.data);
+//             console.log(res.data);
+//             state.weight_items = res.data.weight_items;
+//         } else {
+//             ElMessage.error(res.msg);
+//         }
+//     });
+//     state.cameraisShow = false
+// };
+
+onMounted(() => {
+    getData();
+});
 </script>
 
-<style lang="scss" scoped>
-video,
-img {
+<style scoped lang="scss">
+.system-predict-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    // background: radial-gradient(circle, #d3e3f1 0%, #ffffff 100%);
+
+    .system-predict-padding {
+        padding: 15px;
+        background: radial-gradient(circle, #d3e3f1 0%, #ffffff 100%);
+
+        .el-table {
+            flex: 1;
+        }
+    }
+}
+
+.header {
+    width: 100%;
+    height: 5%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    font-size: 20px;
+}
+
+.cards {
+    width: 100%;
+    height: 95%;
+    border-radius: 5px;
+    margin-top: 15px;
+    padding: 0px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle, #d3e3f1 0%, #ffffff 100%);
+    /* 防止视频溢出 */
+}
+
+.video {
+    width: 100%;
+    max-height: 100%;
+    /* 限制视频最大高度不超过父元素高度 */
+    height: auto;
     object-fit: contain;
-    border-radius: 0.5rem;
+}
+
+.button-section {
+    display: flex;
+    justify-content: center;
+}
+
+.predict-button {
+    width: 100%;
+    /* 按钮宽度填满 */
+}
+
+.demo-progress .el-progress--line {
+    margin-left: 20px;
+    width: 600px;
 }
 </style>

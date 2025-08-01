@@ -78,17 +78,22 @@ public class DetectImageRecord implements Serializable {
      * 额外字段，不在数据库中存储
      */
     @TableField(exist = false)
-    private String extraField1;
+    private String allTime;
 
+    /**
+     * 标签
+     */
+    @TableField(value = "label", updateStrategy = FieldStrategy.IGNORED)
+    private String label;
     /**
      * 额外字段，不在数据库中存储
      */
     @TableField(exist = false)
-    private String extraField2;
-
+    private String kind;
     /**
      * 额外字段，不在数据库中存储
      */
     @TableField(exist = false)
-    private List<String> extraListField;
+    private String confidence;
+
 }

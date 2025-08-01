@@ -1,10 +1,14 @@
 package com.littlelee.base.detect.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.littlelee.base.common.annotation.SysLog;
 import com.littlelee.base.common.constants.ServiceNameConstants;
 import com.littlelee.base.common.enums.ResponseCodeEnum;
 import com.littlelee.base.common.util.ApiResult;
+import com.littlelee.base.detect.mapper.VideoRecordsMapper;
 import com.littlelee.base.detect.model.bo.DetectVideo;
+import com.littlelee.base.detect.model.bo.PredictRequest;
+import com.littlelee.base.detect.model.po.VideoRecords;
 import com.littlelee.base.detect.service.ImageService;
 import com.littlelee.base.detect.service.VideoService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,7 +19,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -33,58 +41,45 @@ public class VideoController {
 
     private static final String FUNC_NAME = "视频检测功能";
 
-    private static final String UPLOAD_DIR = "D:\\work\\tobacco\\upload\\";  // 注意路径分隔符使用双反斜杠
-
     @Autowired
-    private ImageService imageService;  // 注入 ImageService
-    @Autowired
-    private VideoService videoService;
+    private VideoRecordsMapper videoRecordsMapper;
 
-    @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_USER_SERVICE, moduleName = FUNC_NAME, actionName = "上传文件")
-    @Operation(summary = "上传文件", description = "上传文件到服务器", method = "POST")
-    @Parameter(name = "file", description = "上传的文件", required = true, schema = @Schema(implementation = MultipartFile.class))
-    @PostMapping("/upload")
-    public ApiResult<String> uploadFile(@RequestParam("file") MultipartFile file) {
-        // 检查文件是否为空
-        if (file.isEmpty()) {
-            return ApiResult.failed("文件为空，请选择一个文件");
+    private final RestTemplate restTemplate = new RestTemplate();
+
+    @PostMapping("/predict")
+    public ApiResult<?> predict(@RequestBody PredictRequest request) {
+        if (request == null || request.getInputVideo() == null || request.getInputVideo().isEmpty()) {
+            return ApiResult.failed("未提供视频链接");
+        } else if (request.getWeight() == null || request.getWeight().isEmpty()) {
+            return ApiResult.failed("未提供权重");
         }
 
-        // 获取文件的原始名称
-        String fileName = file.getOriginalFilename();
-        if (fileName == null) {
-            return ApiResult.failed("文件名称为空");
-        }
-
-        // 设置保存文件的路径
-        String uploadDir = UPLOAD_DIR;
-        File uploadPath = new File(uploadDir);
-        if (!uploadPath.exists()) {
-            uploadPath.mkdirs(); // 如果目录不存在，创建目录
-        }
-
-        // 保存文件到指定路径
         try {
-            file.transferTo(new File(uploadDir + fileName));
-            // 构造成功响应对象并设置文件名作为 data
-            ApiResult<String> result = ApiResult.success("文件上传成功");
-            result.setData("http://localhost:8898/uploads/" + fileName);  // 只返回文件名
-            return result;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ApiResult.failed("文件上传失败：" + e.getMessage());
-        }
-    }
+            // 创建请求体
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<PredictRequest> requestEntity = new HttpEntity<>(request, headers);
 
-    @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_USER_SERVICE, moduleName = FUNC_NAME, actionName = "视频检测")
-    @Operation(summary = "视频检测", description = "使用指定模型和权重文件检测上传的视频", method = "POST")
-    @PostMapping("/detect")
-    public ApiResult<Map<String, Object>> detectVideo(@RequestBody DetectVideo detectVideo) {
-        Map<String, Object> resultData = videoService.detectVideo(detectVideo);
-        if (resultData != null) {
-            return new ApiResult<>(resultData, ResponseCodeEnum.SUCCESS);
-        } else {
-            return ApiResult.failed("视频检测失败");
+            // 调用 Flask API
+            String response = restTemplate.postForObject("http://localhost:5000/predictVideo", requestEntity, String.class);
+            System.out.println("Received response: " + response);
+            JSONObject responses = JSONObject.parseObject(response);
+            if(responses.get("status").equals(400)){
+                return ApiResult.failed("Error: " + responses.get("message"));
+            }else {
+                VideoRecords videoRecords = new VideoRecords();
+                videoRecords.setWeight(request.getWeight());
+                videoRecords.setConf(request.getConf());
+                videoRecords.setKind(request.getKind());
+                videoRecords.setInputVideo(request.getInputImg());
+                videoRecords.setUsername(request.getUsername());
+                videoRecords.setStartTime(request.getStartTime());
+                videoRecords.setOutVideo(String.valueOf(responses.get("outVideo")));
+                videoRecordsMapper.insert(videoRecords); // 插入到数据库
+                return ApiResult.success(response);
+            }
+        } catch (Exception e) {
+            return ApiResult.failed("Error: " + e.getMessage());
         }
     }
 }
