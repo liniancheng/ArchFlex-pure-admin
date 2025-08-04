@@ -12,7 +12,7 @@ CREATE TABLE `video_records`  (
      `input_video` varchar(255) DEFAULT NULL,
      `out_video` varchar(255) DEFAULT NULL,
      `username` varchar(255) NULL DEFAULT NULL,
-     `start_time` varchar(255) DEFAULT NULL,
+     `start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
      `conf` varchar(255) DEFAULT NULL,
      `weight` varchar(255) DEFAULT NULL,
      `kind` varchar(255) DEFAULT NULL,
@@ -24,12 +24,12 @@ CREATE TABLE `video_records`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `camera_records`;
 CREATE TABLE `camera_records`  (
-                                  `id` int NOT NULL AUTO_INCREMENT,
-                                  `weight` varchar(255) DEFAULT NULL,
-                                  `conf` varchar(255) DEFAULT NULL,
-                                  `username` varchar(255) DEFAULT NULL,
-                                  `start_time` varchar(255) DEFAULT NULL,
-                                  `out_video` varchar(255) DEFAULT NULL,
-                                  `kind` varchar(255) DEFAULT NULL,
-                                  PRIMARY KEY (`id`) USING BTREE
+      `id` int NOT NULL AUTO_INCREMENT,
+      `weight` varchar(255) DEFAULT NULL,
+      `conf` varchar(255) DEFAULT NULL,
+      `username` varchar(255) DEFAULT NULL,
+      `start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      `out_video` varchar(255) DEFAULT NULL,
+      `kind` varchar(255) DEFAULT NULL,
+      PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COMMENT='摄像检测记录表';

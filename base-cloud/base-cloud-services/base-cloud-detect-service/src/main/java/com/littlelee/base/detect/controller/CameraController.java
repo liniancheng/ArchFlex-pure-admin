@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.littlelee.base.common.annotation.SysLog;
 import com.littlelee.base.common.constants.ServiceNameConstants;
 import com.littlelee.base.common.util.ApiResult;
+import com.littlelee.base.detect.config.DetectConfig;
 import com.littlelee.base.detect.mapper.CameraRecordsMapper;
 import com.littlelee.base.detect.model.bo.PredictRequest;
 import com.littlelee.base.detect.model.po.CameraRecords;
@@ -48,7 +49,7 @@ public class CameraController {
             HttpEntity<PredictRequest> requestEntity = new HttpEntity<>(request, headers);
 
             // 调用 Flask API
-            String response = restTemplate.postForObject("http://localhost:5000/predictCamera", requestEntity, String.class);
+            String response = restTemplate.postForObject(DetectConfig.getFlaskUrl() + "predictCamera", requestEntity, String.class);
             System.out.println("Received response: " + response);
             JSONObject responses = JSONObject.parseObject(response);
             if(responses.get("status").equals(400)){
@@ -71,7 +72,7 @@ public class CameraController {
     public ApiResult<?> getFileNames() {
         try {
             // 调用 Flask API
-            String response = restTemplate.getForObject("http://127.0.0.1:5000/file_names", String.class);
+            String response = restTemplate.getForObject(DetectConfig.getFlaskUrl() + "file_names", String.class);
             return ApiResult.success(response);
         } catch (Exception e) {
             return ApiResult.failed("Error: " + e.getMessage());
@@ -82,7 +83,7 @@ public class CameraController {
     public ApiResult<?> stopCamera() {
         try {
             // 调用 Flask API
-            String response = restTemplate.getForObject("http://127.0.0.1:5000/stopCamera", String.class);
+            String response = restTemplate.getForObject(DetectConfig.getFlaskUrl() + "stopCamera", String.class);
             return ApiResult.success(response);
         } catch (Exception e) {
             return ApiResult.failed("Error: " + e.getMessage());

@@ -2,12 +2,12 @@ package com.littlelee.base.detect.model.bo;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 public class PredictRequest {
 
-    private String startTime;
+    private LocalDateTime startTime;
 
     private String weight;
 

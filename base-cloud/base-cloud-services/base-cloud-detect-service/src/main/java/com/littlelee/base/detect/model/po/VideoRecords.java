@@ -1,11 +1,14 @@
 package com.littlelee.base.detect.model.po;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 视频识别记录实体类
@@ -25,6 +28,10 @@ public class VideoRecords implements Serializable {
     private String conf;
     private String username;
     private String kind;
-    private String startTime;
+    /**
+     * 识别时间
+     */
+    @TableField(value = "start_time", updateStrategy = FieldStrategy.IGNORED)
+    private LocalDateTime startTime;
 
 }

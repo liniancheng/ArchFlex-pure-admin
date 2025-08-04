@@ -78,3 +78,4 @@ detect:
   weightsPath: D:/work/tobacco/weights
   scriptPath: D:/PycharmProjects/ultralytics-main/ultralytics/predict.py
   outputDir: D:/work/tobacco/result
+  flaskUrl: http://localhost:5000/

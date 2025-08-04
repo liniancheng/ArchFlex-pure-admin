@@ -3,18 +3,11 @@ package com.littlelee.base.detect.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.littlelee.base.common.annotation.SysLog;
 import com.littlelee.base.common.constants.ServiceNameConstants;
-import com.littlelee.base.common.enums.ResponseCodeEnum;
 import com.littlelee.base.common.util.ApiResult;
+import com.littlelee.base.detect.config.DetectConfig;
 import com.littlelee.base.detect.mapper.VideoRecordsMapper;
-import com.littlelee.base.detect.model.bo.DetectVideo;
 import com.littlelee.base.detect.model.bo.PredictRequest;
 import com.littlelee.base.detect.model.po.VideoRecords;
-import com.littlelee.base.detect.service.ImageService;
-import com.littlelee.base.detect.service.VideoService;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -24,11 +17,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * @author littlelee
@@ -46,6 +34,8 @@ public class VideoController {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
+    @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_DETECT_SERVICE, moduleName = FUNC_NAME, actionName = "视频检测")
+    @Operation(summary = "视频检测", description = "使用指定模型和权重文件检测上传的视频", method = "POST")
     @PostMapping("/predict")
     public ApiResult<?> predict(@RequestBody PredictRequest request) {
         if (request == null || request.getInputVideo() == null || request.getInputVideo().isEmpty()) {
@@ -61,8 +51,8 @@ public class VideoController {
             HttpEntity<PredictRequest> requestEntity = new HttpEntity<>(request, headers);
 
             // 调用 Flask API
-            String response = restTemplate.postForObject("http://localhost:5000/predictVideo", requestEntity, String.class);
-            System.out.println("Received response: " + response);
+            String response = restTemplate.postForObject(DetectConfig.getFlaskUrl() + "predictVideo", requestEntity, String.class);
+//            System.out.println("Received response: " + response);
             JSONObject responses = JSONObject.parseObject(response);
             if(responses.get("status").equals(400)){
                 return ApiResult.failed("Error: " + responses.get("message"));
@@ -73,7 +63,6 @@ public class VideoController {
                 videoRecords.setKind(request.getKind());
                 videoRecords.setInputVideo(request.getInputImg());
                 videoRecords.setUsername(request.getUsername());
-                videoRecords.setStartTime(request.getStartTime());
                 videoRecords.setOutVideo(String.valueOf(responses.get("outVideo")));
                 videoRecordsMapper.insert(videoRecords); // 插入到数据库
                 return ApiResult.success(response);

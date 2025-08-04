@@ -21,6 +21,10 @@ public class DetectConfig {
     private static String scriptPath;
 
     private static String outputDir;
+    /**
+     * Flask端路径
+     */
+    private static String flaskUrl;
 
     public static String getProfile() {
         return profile;
@@ -50,6 +54,13 @@ public class DetectConfig {
     }
     public void setOutputDir(String outputDir) {
         DetectConfig.outputDir = outputDir;
+    }
+
+    public static String getFlaskUrl() {
+        return flaskUrl;
+    }
+    public void setFlaskUrl(String flaskUrl) {
+        DetectConfig.flaskUrl = flaskUrl;
     }
 
 }
