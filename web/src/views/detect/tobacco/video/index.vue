@@ -19,9 +19,13 @@
                     设置最小置信度阈值</div>
                 <el-slider v-model="conf" :format-tooltip="formatTooltip" style="width: 280px;" />
             </div>
-            <el-upload v-model="state.form.inputVideo" ref="uploadFile" class="avatar-uploader"
-                       action="http://localhost:9999/files/upload" :show-file-list="false"
-                       :on-success="handleAvatarSuccessOne">
+            <el-upload
+                class="avatar-uploader"
+                :maxCount="1"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccessOne"
+                :beforeUpload="beforeUpload"
+            >
                 <div class="button-section" style="margin-left: 20px">
                     <el-button type="info" class="predict-button">上传视频</el-button>
                 </div>
@@ -47,11 +51,9 @@ import { storeToRefs } from 'pinia';
 import { message } from "@/utils/message";
 import { formatDate } from "@vueuse/core";
 import { SocketService } from '@/utils/socket';
-import { getWeightList } from "@/api/detect/video";
 import { useUserStoreHook } from "@/store/modules/user";
-import type { UploadInstance } from 'element-plus';
+import { getWeightList, upload } from "@/api/detect/video";
 
-const uploadFile = ref<UploadInstance>();
 const stores = useUserStoreHook();
 const conf = ref(0);
 const kind = ref('');
@@ -110,6 +112,14 @@ function formatTooltip(val: number): number {
 function handleAvatarSuccessOne(response: any) {
     message("上传成功！", { type: "success" });
     state.form.inputVideo = response.data;
+}
+
+function beforeUpload(file: File) {
+    // 上传图片前处理方法
+    upload(file).then(res => {
+        state.form.inputVideo = res.data;
+    });
+    return false;
 }
 
 function getData() {

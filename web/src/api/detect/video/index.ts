@@ -18,16 +18,23 @@ export interface DetectImage {
     aiAssistant: string, // AI助手使用情况
 }
 
-/* 图片上传 */
+/* 获取权重文件 */
 export function getWeightList() {
     // TODO: get weight list
     // http.get("/detect/image/weight");
 }
 
-/* 图片检测 */
-export function detect(data: DetectImage) {
-    return http.post<AnyObject, DetectImage>(
-        "/detect/image/detect",
-        data,
+/* 视频上传 */
+export function upload(file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+    return http.post<AnyObject, FormData>(
+        "/detect/files/upload",
+        formData,
+        {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        }
     );
 }
