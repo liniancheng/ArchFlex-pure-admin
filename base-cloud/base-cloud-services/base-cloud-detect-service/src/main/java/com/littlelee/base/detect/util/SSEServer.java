@@ -50,7 +50,7 @@ public class SSEServer {
 
     /**
      * @Description: 发送单条消息
-     * @Author 风间影月
+     * @Author littlelee
      * @param userId
      * @param message
      * @param msgType
@@ -68,7 +68,7 @@ public class SSEServer {
 
     /**
      * @Description: 发送消息给所有人
-     * @Author 风间影月
+     * @Author littlelee
      * @param message
      */
     public static void sendMessageToAllUsers(String message) {
@@ -84,7 +84,7 @@ public class SSEServer {
 
     /**
      * @Description: 使用SseEmitter推送消息
-     * @Author 风间影月
+     * @Author littlelee
      * @param sseEmitter
      * @param userId
      * @param message
@@ -110,7 +110,7 @@ public class SSEServer {
 
     /**
      * @Description: 主动切断，停止sse服务和客户端的连接
-     * @Author 风间影月
+     * @Author littlelee
      * @param userId
      */
     public static void stopServer(String userId) {
@@ -133,7 +133,7 @@ public class SSEServer {
 
     /**
      * @Description: SSE连接完成后的回调方法（关闭连接的时候调用）
-     * @Author 风间影月
+     * @Author littlelee
      * @param userId
      * @return Runnable
      */
@@ -146,7 +146,7 @@ public class SSEServer {
 
     /**
      * @Description: SSE连接超时的时候进行调用
-     * @Author 风间影月
+     * @Author littlelee
      * @param userId
      * @return Runnable
      */
@@ -159,7 +159,7 @@ public class SSEServer {
 
     /**
      * @Description: SSE连接发生错误的时候进行调用
-     * @Author 风间影月
+     * @Author littlelee
      * @param userId
      * @return Runnable
      */
@@ -172,7 +172,7 @@ public class SSEServer {
 
     /**
      * @Description: 从整个SSE服务中移除用户连接
-     * @Author 风间影月
+     * @Author littlelee
      * @param userId
      */
     public static void removeConnection(String userId) {
@@ -184,7 +184,7 @@ public class SSEServer {
 
     /**
      * @Description: 获得当前所有的会话总连接数（在线人数）
-     * @Author 风间影月
+     * @Author littlelee
      * @param
      * @return int
      */

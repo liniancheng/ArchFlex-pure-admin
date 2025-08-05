@@ -6,7 +6,7 @@ import com.littlelee.base.detect.model.po.ChatRecord;
 
 /**
  * @ClassName ChatRecordMapper
- * @Author 风间影月
+ * @Author littlelee
  * @Version 1.0
  * @Description ChatRecordMapper
  **/
