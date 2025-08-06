@@ -1,44 +1,64 @@
 <template>
     <div>
-        <div class="header">
-            <div class="kind">
-                <el-select v-model="kind" placeholder="请选择作物种类" size="large" style="width: 180px" @change="getData">
-                    <el-option v-for="item in state.kind_items" :key="item.value" :label="item.label"
-                               :value="item.value" />
-                </el-select>
-            </div>
-            <div class="weight">
-                <el-select v-model="weight" placeholder="请选择模型" size="large" style="margin-left: 20px;width: 180px">
-                    <el-option v-for="item in state.weight_items" :key="item.value" :label="item.label"
-                               :value="item.value" />
-                </el-select>
-            </div>
-            <div class="conf" style="margin-left: 20px;display: flex; flex-direction: row;">
-                <div
-                    style="font-size: 14px;margin-right: 20px;display: flex;justify-content: start;align-items: center;color: #909399;">
-                    设置最小置信度阈值</div>
-                <el-slider v-model="conf" :format-tooltip="formatTooltip" style="width: 280px;" />
-            </div>
-            <el-upload
-                class="avatar-uploader"
-                :maxCount="1"
-                :show-file-list="false"
-                :on-success="handleAvatarSuccessOne"
-                :beforeUpload="beforeUpload"
-            >
-                <div class="button-section" style="margin-left: 20px">
-                    <el-button type="info" class="predict-button">上传视频</el-button>
-                </div>
-            </el-upload>
-            <div class="button-section" style="margin-left: 20px">
-                <el-button type="primary" @click="upData" class="predict-button">开始处理</el-button>
-            </div>
-            <div class="demo-progress" v-if="state.isShow">
-                <el-progress :text-inside="true" :stroke-width="20" :percentage=state.percentage style="width: 380px;">
-                    <span>{{ state.type_text }} {{ state.percentage }}%</span>
-                </el-progress>
-            </div>
-        </div>
+        <el-form ref="detectionFormRef" :model="state.form" size="large">
+            <el-row :gutter="24">
+                <el-col :span="3" :xs="24" :sm="6" :md="6" :lg="5" :xl="3">
+                    <el-form-item prop="kind" required>
+                        <el-select v-model="state.form.kind" placeholder="请选择作物种类" @change="getData">
+                            <el-option
+                                v-for="item in state.kind_items"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                            />
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="3" :xs="24" :sm="6" :md="6" :lg="5" :xl="3">
+                    <el-form-item prop="weight" required>
+                        <el-select v-model="state.form.weight" placeholder="请选择模型">
+                            <el-option
+                                v-for="item in state.weight_items"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                            />
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8" :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+                    <el-form-item label="设置最小置信度阈值" prop="conf">
+                        <el-slider v-model="state.form.conf" :step="0.01" :min="0" :max="1"/>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="4" :xs="24" :sm="8" :md="8" :lg="6" :xl="4">
+                    <el-row :gutter="12">
+                        <el-col :span="12" :xs="24">
+                            <el-form-item prop="inputVideo" required>
+                                <el-upload
+                                    :maxCount="1"
+                                    :show-file-list="false"
+                                    :on-success="handleAvatarSuccessOne"
+                                    :beforeUpload="beforeUpload"
+                                >
+                                    <el-button type="info">上传视频</el-button>
+                                </el-upload>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12" :xs="24">
+                            <el-button type="primary" :loading="detecting" @click="upData">开始处理</el-button>
+                        </el-col>
+                    </el-row>
+                </el-col>
+                <el-col :span="6" :xs="24" :sm="16" :md="16" :lg="24" :xl="6">
+                    <div v-if="state.isShow">
+                        <el-progress :text-inside="true" :stroke-width="20" :percentage=state.percentage>
+                            <span>{{ state.type_text }} {{ state.percentage }}%</span>
+                        </el-progress>
+                    </div>
+                </el-col>
+            </el-row>
+        </el-form>
         <div class="cards" ref="cardsContainer">
             <img v-if="state.video_path" class="video" :src="state.video_path" alt="结果">
         </div>
@@ -46,51 +66,50 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, onMounted } from 'vue';
-import { storeToRefs } from 'pinia';
+import { reactive, ref, onMounted } from "vue";
+import { storeToRefs } from "pinia";
 import { message } from "@/utils/message";
 import { formatDate } from "@vueuse/core";
-import { SocketService } from '@/utils/socket';
+import { SocketService } from "@/utils/socket";
 import { useUserStoreHook } from "@/store/modules/user";
 import { getWeightList, upload } from "@/api/detect/video";
 
 const stores = useUserStoreHook();
-const conf = ref(0);
-const kind = ref('');
-const weight = ref('');
 const { username } = storeToRefs(stores);
+const detectionFormRef = ref();
+const detecting = ref(false);
 
 const state = reactive({
     weight_items: [] as any,
     kind_items: [
         {
-            value: 'tobacco',
-            label: '烟草',
+            value: "tobacco",
+            label: "烟草",
         }
     ],
     data: {} as any,
-    video_path: '',
+    video_path: "",
     type_text: "正在保存",
     percentage: 50,
     isShow: false,
     form: {
-        username: '',
+        username: "",
         inputVideo: null as any,
-        weight: '',
-        conf: null as any,
-        kind: '',
-        startTime: ''
+        weight: "",
+        conf: 0.5 as any,
+        kind: "",
+        startTime: ""
     },
 });
 
 const socketService = new SocketService();
 
-socketService.on('message', (data: string) => {
-    console.log('Received message:', data);
+socketService.on("message", (data: string) => {
+    console.log("Received message:", data);
     message(data, { type: "success" });
 });
 
-socketService.on('progress', (data: number) => {
+socketService.on("progress", (data: number) => {
     state.percentage = parseInt(data);
     if (parseInt(data) < 100) {
         state.isShow = true;
@@ -100,13 +119,14 @@ socketService.on('progress', (data: number) => {
         setTimeout(() => {
             state.isShow = false;
             state.percentage = 0;
+            detecting.value = false;
         }, 2000);
     }
-    console.log('Received message:', data);
+    console.log("Received message:", data);
 });
 
 function formatTooltip(val: number): number {
-    return val / 100
+    return val / 100;
 }
 
 function handleAvatarSuccessOne(response: any) {
@@ -127,22 +147,23 @@ function getData() {
     getWeightList();
     state.weight_items = [
         {
-            value: 'yolo11n.pt',
-            label: 'yolo11n.pt',
+            value: "yolo11n.pt",
+            label: "yolo11n.pt",
         }
     ];
 }
 
 function upData() {
-    state.form.weight = weight.value;
-    state.form.conf = (parseFloat(conf.value)/100);
-    state.form.username = username.value;
-    state.form.kind = kind.value;
-    state.form.startTime = formatDate(new Date(), 'YYYY-mm-dd HH:MM:SS');
-    console.log(state.form);
-    const queryParams = new URLSearchParams(state.form).toString();
-    state.video_path = `http://127.0.0.1:5000/predictVideo?${queryParams}`;
-    message("正在加载！", { type: "success" });
+    detectionFormRef.value.validate(valid => {
+        if (!valid) return;
+        detecting.value = true;
+        state.form.username = username.value;
+        state.form.startTime = formatDate(new Date(), "YYYY-MM-DD hh:mm:ss");
+        console.log(state.form);
+        const queryParams = new URLSearchParams(state.form).toString();
+        state.video_path = `http://127.0.0.1:5000/predictVideo?${queryParams}`;
+        message("正在加载！", { type: "success" });
+    })
 }
 
 onMounted(() => {
@@ -151,15 +172,6 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-.header {
-    width: 100%;
-    height: 5%;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    font-size: 20px;
-}
-
 .cards {
     width: 100%;
     height: 95%;
@@ -181,20 +193,5 @@ onMounted(() => {
     /* 限制视频最大高度不超过父元素高度 */
     height: auto;
     object-fit: contain;
-}
-
-.button-section {
-    display: flex;
-    justify-content: center;
-}
-
-.predict-button {
-    width: 100%;
-    /* 按钮宽度填满 */
-}
-
-.demo-progress .el-progress--line {
-    margin-left: 20px;
-    width: 600px;
 }
 </style>
