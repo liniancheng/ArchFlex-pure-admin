@@ -1,9 +1,11 @@
 package com.littlelee.base.auth.password;
 
 import cn.hutool.core.util.ReflectUtil;
+import com.littlelee.base.auth.security.UserDetailsImpl;
 import com.littlelee.base.auth.util.OAuth2AuthenticationProviderUtils;
 import com.baomidou.mybatisplus.core.toolkit.Assert;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.littlelee.base.common.constants.JwtClaimConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -168,9 +170,19 @@ public class PasswordAuthenticationProvider implements AuthenticationProvider {
 
         // 持久化令牌发放记录到数据库
         this.authorizationService.save(authorization);
-        additionalParameters = Collections.emptyMap();
 
-        return new OAuth2AccessTokenAuthenticationToken(registeredClient, clientPrincipal, accessToken, refreshToken, additionalParameters);
+        // 构造新的 additionalParameters，供后续返回给前端
+        Map<String, Object> customAdditionalParameters = new java.util.HashMap<>();
+        Object principal = usernamePasswordAuthentication.getPrincipal();
+        if (principal instanceof UserDetailsImpl userDetails) {
+            customAdditionalParameters.put(JwtClaimConstants.USER_ID, userDetails.getUserId());
+            customAdditionalParameters.put(JwtClaimConstants.USERNAME, userDetails.getUsername());
+            // 可添加更多字段
+        }
+
+//        additionalParameters = Collections.emptyMap();
+
+        return new OAuth2AccessTokenAuthenticationToken(registeredClient, clientPrincipal, accessToken, refreshToken, customAdditionalParameters);
     }
 
     /**

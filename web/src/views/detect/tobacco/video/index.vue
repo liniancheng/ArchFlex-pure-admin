@@ -69,7 +69,6 @@
 import { reactive, ref, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { message } from "@/utils/message";
-import { formatDate } from "@vueuse/core";
 import { SocketService } from "@/utils/socket";
 import { useUserStoreHook } from "@/store/modules/user";
 import { getWeightList, upload } from "@/api/detect/video";
@@ -158,7 +157,10 @@ function upData() {
         if (!valid) return;
         detecting.value = true;
         state.form.username = username.value;
-        state.form.startTime = formatDate(new Date(), "YYYY-MM-DD hh:mm:ss");
+        const now = new Date();
+        const offset = now.getTimezoneOffset() * 60000; // 转换为毫秒
+        const localTime = new Date(now.getTime() - offset);
+        state.form.startTime = localTime.toISOString();
         console.log(state.form);
         const queryParams = new URLSearchParams(state.form).toString();
         state.video_path = `http://127.0.0.1:5000/predictVideo?${queryParams}`;

@@ -257,7 +257,7 @@ public class AuthorizationServerConfig {
     }
 
     /**
-     * 初始化创建商城管理客户端
+     * 初始化创建管理客户端
      *
      * @param registeredClientRepository
      */

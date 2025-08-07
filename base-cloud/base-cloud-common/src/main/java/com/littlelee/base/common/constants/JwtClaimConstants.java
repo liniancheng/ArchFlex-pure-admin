@@ -5,12 +5,12 @@ public interface JwtClaimConstants {
     /**
      * 用户ID
      */
-    String USER_ID = "userId";
+    String USER_ID = "user_id";
 
     /**
      * 用户名
      */
-    String USERNAME = "username";
+    String USERNAME = "login_name";
 
     /**
      * 部门ID
