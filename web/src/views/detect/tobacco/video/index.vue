@@ -69,9 +69,10 @@
 import { reactive, ref, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { message } from "@/utils/message";
+import { upload } from "@/api/detect/video";
+import { getWeightList } from "@/api/detect";
 import { SocketService } from "@/utils/socket";
 import { useUserStoreHook } from "@/store/modules/user";
-import { getWeightList, upload } from "@/api/detect/video";
 
 const stores = useUserStoreHook();
 const { username } = storeToRefs(stores);
@@ -124,10 +125,6 @@ socketService.on("progress", (data: number) => {
     console.log("Received message:", data);
 });
 
-function formatTooltip(val: number): number {
-    return val / 100;
-}
-
 function handleAvatarSuccessOne(response: any) {
     message("上传成功！", { type: "success" });
     state.form.inputVideo = response.data;
@@ -153,7 +150,7 @@ function getData() {
 }
 
 function upData() {
-    detectionFormRef.value.validate(valid => {
+    detectionFormRef.value.validate((valid: boolean) => {
         if (!valid) return;
         detecting.value = true;
         state.form.username = username.value;

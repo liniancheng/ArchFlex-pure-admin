@@ -8,7 +8,6 @@
  * @LastEditTime: 2025-08-05 22:38:27
  */
 import { http } from "@/utils/http";
-import { ElMessage } from "element-plus";
 
 export interface DetectImage {
     originalImage: string,  // 原始图片路径
@@ -16,12 +15,6 @@ export interface DetectImage {
     recognitionWeight: string,  // 识别权重
     minThreshold: number, // 最小阈值
     aiAssistant: string, // AI助手使用情况
-}
-
-/* 获取权重文件 */
-export function getWeightList() {
-    // TODO: get weight list
-    // http.get("/detect/image/weight");
 }
 
 /* 视频上传 */
