@@ -59,8 +59,8 @@
                 </el-col>
             </el-row>
         </el-form>
-        <div class="cards" ref="cardsContainer">
-            <img v-if="state.video_path" class="video" :src="state.video_path" alt="结果">
+        <div class="detect-tobacco-video-index_result">
+            <img v-if="state.video_path" class="detect-tobacco-video-index_result-video" :src="state.video_path" alt="结果">
         </div>
     </div>
 </template>
@@ -174,26 +174,27 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-.cards {
-    width: 100%;
-    height: 95%;
-    min-height: 70vh;
-    border-radius: 5px;
-    margin-top: 15px;
-    padding: 0;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: radial-gradient(circle, #d3e3f1 0%, #ffffff 100%);
-    /* 防止视频溢出 */
-}
+.detect-tobacco-video-index {
+    &_result {
+        width: 100%;
+        height: 70vh;
+        border-radius: 5px;
+        margin-top: 15px;
+        padding: 0;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #d3e3f1;
+        /* 防止视频溢出 */
 
-.video {
-    width: 100%;
-    max-height: 100%;
-    /* 限制视频最大高度不超过父元素高度 */
-    height: auto;
-    object-fit: contain;
+        &-video {
+            width: 100%;
+            max-height: 100%;
+            /* 限制视频最大高度不超过父元素高度 */
+            height: auto;
+            object-fit: contain;
+        }
+    }
 }
 </style>
