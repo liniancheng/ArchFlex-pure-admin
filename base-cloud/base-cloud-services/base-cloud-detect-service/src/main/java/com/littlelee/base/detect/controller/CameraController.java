@@ -9,6 +9,7 @@ import com.littlelee.base.detect.mapper.CameraRecordsMapper;
 import com.littlelee.base.detect.model.bo.PredictRequest;
 import com.littlelee.base.detect.model.po.CameraRecords;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -36,6 +37,7 @@ public class CameraController {
 
     @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_DETECT_SERVICE, moduleName = FUNC_NAME, actionName = "图像检测")
     @Operation(summary = "摄像检测", description = "使用指定模型和权重文件进行摄像检测", method = "POST")
+    @Parameter(name = "request", description = "检测请求体", required = true)
     @PostMapping("/predict")
     public ApiResult<?> predict(@RequestBody PredictRequest request) {
         if (request.getWeight() == null || request.getWeight().isEmpty()) {
@@ -79,12 +81,17 @@ public class CameraController {
         }
     }
 
+    @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_DETECT_SERVICE, moduleName = FUNC_NAME, actionName = "停止录制")
+    @Operation(summary = "停止录制", description = "停止摄像头检测", method = "GET")
     @GetMapping("/stopCamera")
     public ApiResult<?> stopCamera() {
         try {
             // 调用 Flask API
             String response = restTemplate.getForObject(DetectConfig.getFlaskUrl() + "stopCamera", String.class);
-            return ApiResult.success(response);
+            JSONObject responses = JSONObject.parseObject(response);
+            // 获取python端返回的信息
+            String message =  (String) responses.get("message");
+            return ApiResult.success(message);
         } catch (Exception e) {
             return ApiResult.failed("Error: " + e.getMessage());
         }

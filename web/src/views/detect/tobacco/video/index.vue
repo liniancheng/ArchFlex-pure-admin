@@ -4,7 +4,7 @@
             <el-row :gutter="24">
                 <el-col :span="3" :xs="24" :sm="6" :md="6" :lg="5" :xl="3">
                     <el-form-item prop="kind" required>
-                        <el-select v-model="state.form.kind" placeholder="请选择作物种类" @change="getData">
+                        <el-select v-model="state.form.kind" placeholder="请选择检测种类" @change="getData">
                             <el-option
                                 v-for="item in state.kind_items"
                                 :key="item.value"
@@ -85,6 +85,10 @@ const state = reactive({
         {
             value: "tobacco",
             label: "烟草",
+        },
+        {
+            value: "coco",
+            label: "coco",
         }
     ],
     data: {} as any,

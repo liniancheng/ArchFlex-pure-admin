@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 
 /**
@@ -49,6 +50,6 @@ public class CameraRecords implements Serializable {
      * 开始时间
      */
     @TableField(value = "start_time", updateStrategy = FieldStrategy.IGNORED)
-    private String startTime;
+    private LocalDateTime startTime;
 
 }

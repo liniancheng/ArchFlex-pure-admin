@@ -9,7 +9,7 @@
  */
 import { http } from "@/utils/http";
 
-/* 视频上传 */
+/* 停止录制 */
 export function stopCamera() {
-    return http.get("/camera/stopCamera");
+    return http.get("/detect/camera/stopCamera");
 }
