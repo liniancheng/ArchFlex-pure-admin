@@ -118,11 +118,12 @@ public class SysMenuInfoServiceImpl extends ServiceImpl<SysMenuInfoMapper, SysMe
         // 2、找出类型为菜单类型的 然后排序
         List<SysMenuInfo> newMenus = sysMenus.stream()
                 .filter(sysMenu -> ResourceTypeEnum.MENU.getCode().equals(sysMenu.getMenuType()))
-                .peek(sysMenu -> {
-                    if (StringUtils.isNotBlank(sysMenu.getMenuRouteName())) {
-                        sysMenu.setMenuName(sysMenu.getMenuRouteName());
-                    }
-                })
+                // 前端 name 和 routeName 属性不是同一概念，两者需要区分开
+                //.peek(sysMenu -> {
+                //    if (StringUtils.isNotBlank(sysMenu.getMenuRouteName())) {
+                //        sysMenu.setMenuName(sysMenu.getMenuRouteName());
+                //    }
+                //})
                 .sorted(Comparator.comparingInt(SysMenuInfo::getMenuSort))
                 .collect(Collectors.toList());
         // 3、构建树

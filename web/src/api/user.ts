@@ -82,7 +82,8 @@ const formatLoginData = (data: string) => {
             accessToken: access_token,
             refreshToken: refresh_token,
             expires: expires_in,
-            username: login_name
+            username: login_name,
+            roles: ["admin"],
         }
     };
 };

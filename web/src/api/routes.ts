@@ -39,17 +39,19 @@ interface FormattedRoute {
 }
 
 const formatRoutes = (data: RouteItem[]): FormattedRoute[] => {
-  if (!data || data?.length <= 0) return [];
+  if (!data || data?.length <= 0) return undefined;
   return data.map(item => {
+    const { path, name, component, routeName, children, ...moreItem} = item;
     const formattedItem: FormattedRoute = {
-      path: item.path,
-      name: item.name,
-      component: item.component,
+      path: path,
+      name: routeName,
+      component: component,
       meta: {
-        title: item.routeName,
-        ...item
+        title: name,
+        roles: ["admin"],
+        ...moreItem
       },
-      children: formatRoutes(item.children)
+      children: formatRoutes(children)
     };
     return formattedItem;
   });
