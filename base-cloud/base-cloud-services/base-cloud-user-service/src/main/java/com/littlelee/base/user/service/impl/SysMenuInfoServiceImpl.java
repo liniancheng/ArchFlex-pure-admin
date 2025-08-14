@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -144,6 +143,14 @@ public class SysMenuInfoServiceImpl extends ServiceImpl<SysMenuInfoMapper, SysMe
     	
     	List<SysMenuInfo> list = sysMenuInfoMapper.selectList(query);
     	return TreeUtil.list2Tree(list, CommonConstants.TREE_ROOT);
+    }
+
+    @Override
+    public List<SysMenuInfo> getAllMenuList(String appId) {
+    	QueryWrapper<SysMenuInfo> query  = new QueryWrapper<SysMenuInfo>();
+    	query.lambda().eq(SysMenuInfo::getDelFlag, DataStatusEnum.NORMAL.getCode()).eq(SysMenuInfo::getAppId, appId).orderByAsc(SysMenuInfo::getMenuSort);
+
+        return sysMenuInfoMapper.selectList(query);
     }
 
     @Override

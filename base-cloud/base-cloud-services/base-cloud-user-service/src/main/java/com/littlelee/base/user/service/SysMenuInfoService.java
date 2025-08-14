@@ -53,6 +53,13 @@ public interface SysMenuInfoService extends IService<SysMenuInfo> {
     List<SysMenuTree> getAllMenuTree(String appId);
 
     /**
+     * 查询所有的菜单（一维数组）
+     * @param appId
+     * @return
+     */
+    List<SysMenuInfo> getAllMenuList(String appId);
+
+    /**
      * 查询所有的菜单
      * @param appId 
      * @return

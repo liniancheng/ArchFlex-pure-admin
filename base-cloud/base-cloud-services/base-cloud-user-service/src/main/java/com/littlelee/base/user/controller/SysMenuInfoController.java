@@ -61,6 +61,12 @@ public class SysMenuInfoController {
         return new ApiResult<>(sysMenuInfoService.getAllMenuTreeNode(UserUtil.getAppId(request)));
     }
 
+    @Operation(summary = "获取所有菜单的列表（一维数组）", description = "获取所有菜单的列表")
+    @GetMapping("/menu/list")
+    public ApiResult<List<SysMenuInfo>> getAllMenuList() {
+        return new ApiResult<>(sysMenuInfoService.getAllMenuList(UserUtil.getAppId(request)));
+    }
+
     @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_USER_SERVICE,
             moduleName = MODULE_NAME, actionName = "添加菜单信息")
     @Operation(summary = "添加菜单信息", description = "添加菜单信息")
