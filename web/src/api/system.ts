@@ -20,49 +20,66 @@ type ResultTable = {
 };
 
 /** 接口返回的菜单信息 */
-interface ApiMenuItem {
-    aliveFlag: number;
-    appId: string;
-    authFlag: number;
-    buttonPermission: string;
-    componentPath: string;
-    createTime: string;
-    delFlag: number;
-    hideFlag: number;
-    httpMethod: string;
-    menuColor: string;
-    menuIcon: string;
+export interface ApiMenuItem {
+    aliveFlag?: string; // 后端傻逼，数字要写成字符串
+    appId?: string;
+    authFlag?: string;
+    buttonPermission?: string;
+    componentPath?: string;
+    createTime?: string;
+    delFlag?: string;
+    hideFlag?: string;
+    httpMethod?: string;
+    menuColor?: string;
+    menuIcon?: string;
     menuId: string;
     menuName: string;
     menuPath: string;
     menuRouteName: string;
-    menuSort: number;
-    menuType: number;
-    menuUrl: string;
-    modifyTime: string;
-    parentId: string;
+    menuSort?: number;
+    menuType: string;
+    menuUrl?: string;
+    modifyTime?: string;
+    parentId?: string;
 }
 /** 菜单项信息 */
 interface MenuItem {
-    id: string;
-    appId: string;
+    id?: string;
+    appId?: string;
     title: string;
     name: string;
     menuType: number;
     path: string;
-    icon: string;
-    component: string;
-    rank: number;
+    icon?: string;
+    component?: string;
+    rank?: number;
     children?: MenuItem[];
-    parentId: string;
-    auths: number;
-    hiddenTag: number;
-    keepAlive: number;
-    createTime: string;
-    modifyTime: string;
+    parentId?: string;
+    auths?: string;
+    deleteTag?: boolean;
+    hiddenTag?: boolean;
+    keepAlive?: boolean;
+    createTime?: string;
+    modifyTime?: string;
+    buttonPermission?: string;
+    httpMethod?: string;
+    color?: string;
+    url?: string;
+    // 以下为后端暂无属性
+    higherMenuOptions?: Record<string, unknown>[];
+    redirect?: string;
+    extraIcon?: string;
+    enterTransition?: string;
+    leaveTransition?: string;
+    activePath?: string;
+    frameSrc?: string;
+    frameLoading?: boolean;
+    fixedTag?: boolean;
+    showLink?: boolean;
+    showParent?: boolean;
 }
 
-const formatMenu = (data: ApiMenuItem[]): MenuItem[] => {
+export const formatMenu = (data: ApiMenuItem[]): MenuItem[] => {
     if (!data || data?.length <= 0) return [];
     return data.map(item => {
         return {
@@ -71,18 +88,48 @@ const formatMenu = (data: ApiMenuItem[]): MenuItem[] => {
             title: item.menuName,
             name: item.menuRouteName,
             menuType: Number(item.menuType),
+            delFlag: item.delFlag,
             path: item.menuPath,
             icon: item.menuIcon,
             component: item.componentPath,
             rank: Number(item.menuSort),
             parentId: item.parentId,
             auths: item.authFlag,
-            hiddenTag: Number(item.hideFlag),
-            keepAlive: Number(item.aliveFlag),
+            hiddenTag: Number(item.hideFlag) === 1,
+            keepAlive: Number(item.aliveFlag) === 1,
             createTime: item.createTime,
             modifyTime: item.modifyTime,
-        }
+            buttonPermission: item.buttonPermission,
+            httpMethod: item.httpMethod,
+            color: item.menuColor,
+            url: item.menuUrl
+        };
     });
+};
+
+export const unFormatMenu = (item: MenuItem): ApiMenuItem => {
+    return {
+        aliveFlag: item?.keepAlive ? "1" : "0",
+        appId: item?.appId,
+        authFlag: item?.auths.toString(),
+        buttonPermission: item?.buttonPermission,
+        componentPath: item?.component,
+        createTime: item?.createTime,
+        delFlag: item?.deleteTag ? "1" : "0",
+        hideFlag: item?.hiddenTag ? "1" : "0",
+        httpMethod: item?.httpMethod,
+        menuColor: item?.color,
+        menuIcon: item?.icon,
+        menuId: item?.id,
+        menuName: item?.title,
+        menuPath: item?.path,
+        menuRouteName: item?.name,
+        menuSort: item?.rank,
+        menuType: item?.menuType.toString(),
+        menuUrl: item?.url,
+        modifyTime: item?.modifyTime,
+        parentId: item?.parentId
+    };
 };
 
 /** 处理后端路由接口返回信息 */
@@ -115,9 +162,14 @@ export const getRoleList = (data?: object) => {
 
 /** 获取系统管理-菜单管理列表 */
 export const getMenuList = (data?: object) => {
-    return http.request<Result>("get", "/admin/resource/menu/list", { data }, {
-        transformResponse: formatMenuData
-    });
+    return http.request<Result>(
+        "get",
+        "/admin/resource/menu/list",
+        { data },
+        {
+            transformResponse: formatMenuData
+        }
+    );
 };
 
 /** 获取系统管理-部门管理列表 */

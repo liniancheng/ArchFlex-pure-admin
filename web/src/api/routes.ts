@@ -1,4 +1,5 @@
 import { http } from "@/utils/http";
+import { ApiMenuItem } from "@/api/system";
 
 type Result = {
   success: boolean;
@@ -69,4 +70,20 @@ export const getAsyncRoutes = () => {
   return http.request<Result>("get", "/admin/resource/menu/tree", {
     transformResponse: formatRoutesData
   });
+};
+
+export const saveAsyncRoutes = (data: ApiMenuItem) => {
+  return http.request<Result>("post", "/admin/resource", {
+    data: data,
+  });
+};
+
+export const updateAsyncRoutes = (data: ApiMenuItem) => {
+  return http.request<Result>("put", "/admin/resource", {
+    data: data,
+  });
+};
+
+export const deleteAsyncRoutes = (id: string) => {
+  return http.request<Result>("delete", `/admin/resource/id/${id}`);
 };

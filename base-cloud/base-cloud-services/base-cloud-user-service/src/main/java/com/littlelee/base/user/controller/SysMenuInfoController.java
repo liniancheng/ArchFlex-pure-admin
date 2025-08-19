@@ -73,9 +73,9 @@ public class SysMenuInfoController {
     @PostMapping
     public ApiResult<Boolean> saveMenu(
             @Parameter(description = "菜单信息", required = true)
-            @RequestBody SysMenuVo menu) {
+            @RequestBody SysMenuInfo menu) {
         menu.setAppId(UserUtil.getAppId(request));
-        return new ApiResult<>(sysMenuInfoService.save(TreeUtil.copyMenuVoToMenuInfo(menu)));
+        return new ApiResult<>(sysMenuInfoService.save(menu));
     }
 
     @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_USER_SERVICE,
@@ -84,9 +84,9 @@ public class SysMenuInfoController {
     @PutMapping
     public ApiResult<Boolean> updateMenu(
             @Parameter(description = "菜单信息", required = true)
-            @RequestBody SysMenuVo menu) {
+            @RequestBody SysMenuInfo menu) {
         menu.setAppId(UserUtil.getAppId(request));
-        return new ApiResult<>(sysMenuInfoService.updateById(TreeUtil.copyMenuVoToMenuInfo(menu)));
+        return new ApiResult<>(sysMenuInfoService.updateById(menu));
     }
 
     @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_USER_SERVICE,
