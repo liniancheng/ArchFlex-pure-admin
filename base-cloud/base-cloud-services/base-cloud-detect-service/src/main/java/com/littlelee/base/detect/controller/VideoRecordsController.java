@@ -65,4 +65,12 @@ public class VideoRecordsController {
         return ApiResult.success(Page);
     }
 
+    @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_DETECT_SERVICE, moduleName = FUNC_NAME, actionName = "视频检测")
+    @Operation(summary = "通过ID查询视频检测记录", description = "通过ID查询视频检测记录", method = "GET")
+    @GetMapping("/{id}")
+    public ApiResult<?> getById(@PathVariable int id) {
+        System.out.println(id);
+        return ApiResult.success(videoRecordsMapper.selectById(id));
+    }
+
 }
