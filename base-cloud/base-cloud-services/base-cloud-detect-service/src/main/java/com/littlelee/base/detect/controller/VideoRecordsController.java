@@ -9,6 +9,7 @@ import com.littlelee.base.common.constants.ServiceNameConstants;
 import com.littlelee.base.common.util.ApiResult;
 import com.littlelee.base.detect.mapper.VideoRecordsMapper;
 import com.littlelee.base.detect.model.po.VideoRecords;
+import com.littlelee.base.detect.service.VideoRecordsService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,8 @@ public class VideoRecordsController {
 
     @Autowired
     private VideoRecordsMapper videoRecordsMapper;
+    @Autowired
+    private VideoRecordsService videoRecordsService;
 
     @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_DETECT_SERVICE, moduleName = FUNC_NAME, actionName = "视频检测")
     @Operation(summary = "视频检测记录保存", description = "视频检测记录保存", method = "POST")
@@ -71,6 +74,18 @@ public class VideoRecordsController {
     public ApiResult<?> getById(@PathVariable int id) {
         System.out.println(id);
         return ApiResult.success(videoRecordsMapper.selectById(id));
+    }
+
+    @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_DETECT_SERVICE, moduleName = FUNC_NAME, actionName = "视频检测")
+    @Operation(summary = "删除视频检测记录", description = "删除视频检测记录", method = "DELETE")
+    @DeleteMapping("/{ids}")
+    public ApiResult<?> delete(@PathVariable Long[] ids) {
+        boolean deleted = videoRecordsService.deleteVideoRecords(ids);
+        if (deleted) {
+            return ApiResult.success("删除成功");
+        }else {
+            return ApiResult.failed("删除失败，ID不存在");
+        }
     }
 
 }

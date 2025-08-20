@@ -3,8 +3,8 @@
 		<div class="system-predict-padding layout-padding-auto layout-padding-view">
 			<div class="header">
 				<div class="kind">
-					<text>作物种类：</text>
-					<el-input v-model="state.form.weight" style="width: 150px" size="large" disabled />
+					<text>检测种类：</text>
+					<el-input v-model="state.form.kind" style="width: 150px" size="large" disabled />
 				</div>
 				<div class="model">
 					<text>使用权重：</text>

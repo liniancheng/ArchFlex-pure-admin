@@ -51,5 +51,10 @@ public class CameraRecords implements Serializable {
      */
     @TableField(value = "start_time", updateStrategy = FieldStrategy.IGNORED)
     private LocalDateTime startTime;
+    /**
+     * 开始时间
+     */
+    @TableField(value = "del_flag", updateStrategy = FieldStrategy.IGNORED)
+    private Integer delFlag;
 
 }

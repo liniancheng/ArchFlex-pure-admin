@@ -33,5 +33,10 @@ public class VideoRecords implements Serializable {
      */
     @TableField(value = "start_time", updateStrategy = FieldStrategy.IGNORED)
     private LocalDateTime startTime;
+    /**
+     * 删除标志
+     */
+    @TableField(value = "del_flag", updateStrategy = FieldStrategy.IGNORED)
+    private Integer delFlag;
 
 }
