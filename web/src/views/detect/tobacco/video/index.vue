@@ -4,7 +4,11 @@
             <el-row :gutter="24">
                 <el-col :span="3" :xs="24" :sm="6" :md="6" :lg="5" :xl="3">
                     <el-form-item prop="kind" required>
-                        <el-select v-model="state.form.kind" placeholder="请选择检测种类" @change="getData">
+                        <el-select
+                            v-model="state.form.kind"
+                            placeholder="请选择检测种类"
+                            @change="getData"
+                        >
                             <el-option
                                 v-for="item in state.kind_items"
                                 :key="item.value"
@@ -16,7 +20,10 @@
                 </el-col>
                 <el-col :span="3" :xs="24" :sm="6" :md="6" :lg="5" :xl="3">
                     <el-form-item prop="weight" required>
-                        <el-select v-model="state.form.weight" placeholder="请选择模型">
+                        <el-select
+                            v-model="state.form.weight"
+                            placeholder="请选择模型"
+                        >
                             <el-option
                                 v-for="item in state.weight_items"
                                 :key="item.value"
@@ -28,7 +35,12 @@
                 </el-col>
                 <el-col :span="8" :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
                     <el-form-item label="设置最小置信度阈值" prop="conf">
-                        <el-slider v-model="state.form.conf" :step="0.01" :min="0" :max="1"/>
+                        <el-slider
+                            v-model="state.form.conf"
+                            :step="0.01"
+                            :min="0"
+                            :max="1"
+                        />
                     </el-form-item>
                 </el-col>
                 <el-col :span="4" :xs="24" :sm="8" :md="8" :lg="6" :xl="4">
@@ -46,7 +58,13 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="8" :xs="24">
-                            <el-button type="primary" :loading="detecting" @click="upData">开始处理</el-button>
+                            <el-button
+                                type="primary"
+                                :loading="detecting"
+                                @click="upData"
+                            >
+                                {{ detecting ? '正在处理' : '开始处理' }}
+                            </el-button>
                         </el-col>
                         <el-col :span="8" :xs="24">
                             <el-button @click="handleReset">重置</el-button>
@@ -55,15 +73,27 @@
                 </el-col>
                 <el-col :span="6" :xs="24" :sm="16" :md="16" :lg="24" :xl="6">
                     <div v-if="state.isShow">
-                        <el-progress :text-inside="true" :stroke-width="20" :percentage=state.percentage>
-                            <span>{{ state.type_text }} {{ state.percentage }}%</span>
+                        <el-progress
+                            :text-inside="true"
+                            :stroke-width="20"
+                            :percentage="state.percentage"
+                        >
+                            <span
+                                >{{ state.type_text }}
+                                {{ state.percentage }}%</span
+                            >
                         </el-progress>
                     </div>
                 </el-col>
             </el-row>
         </el-form>
         <div class="detect-tobacco-video-index_result">
-            <img v-if="state.video_path" class="detect-tobacco-video-index_result-video" :src="state.video_path" alt="结果">
+            <img
+                v-if="state.video_path"
+                class="detect-tobacco-video-index_result-video"
+                :src="state.video_path"
+                alt="结果"
+            />
         </div>
     </div>
 </template>
@@ -87,11 +117,11 @@ const state = reactive({
     kind_items: [
         {
             value: "tobacco",
-            label: "烟草",
+            label: "烟草"
         },
         {
             value: "coco",
-            label: "coco",
+            label: "coco"
         }
     ],
     data: {} as any,
@@ -106,7 +136,7 @@ const state = reactive({
         conf: 0.5 as any,
         kind: "",
         startTime: ""
-    },
+    }
 });
 
 const socketService = new SocketService();
@@ -151,7 +181,7 @@ function getData() {
     state.weight_items = [
         {
             value: "yolo11n.pt",
-            label: "yolo11n.pt",
+            label: "yolo11n.pt"
         }
     ];
 }
@@ -169,7 +199,7 @@ function upData() {
         const queryParams = new URLSearchParams(state.form).toString();
         state.video_path = `http://127.0.0.1:5000/predictVideo?${queryParams}`;
         message("正在加载！", { type: "success" });
-    })
+    });
 }
 
 function handleReset() {
@@ -182,7 +212,7 @@ function handleReset() {
         kind: "",
         startTime: ""
     };
-    state.data = {}
+    state.data = {};
     state.video_path = "";
     state.percentage = 0;
     state.isShow = false;
