@@ -1,37 +1,45 @@
 <template>
     <div class="detect-tobacco-video-record_container">
         <div class="detect-tobacco-video-record_inner">
-            <div class="detect-tobacco-video-record_search">
-                <el-input
-                    v-model="state.tableData.param.search1"
-                    size="default"
-                    placeholder="请输入检测类型"
-                    style="max-width: 180px"
-                >
-                </el-input>
-                <el-input
-                    v-model="state.tableData.param.search3"
-                    size="default"
-                    placeholder="请输入最低阈值"
-                    style="max-width: 180px; margin: 0 15px"
-                ></el-input>
-                <el-button
-                    size="default"
-                    type="primary"
-                    @click="getTableData()"
-                >
-                    <el-icon>
-                        <Search />
-                    </el-icon>
-                    查询
-                </el-button>
-            </div>
+            <el-row :gutter="10" justify="space-between">
+                <el-col :span="16">
+                    <el-input
+                        v-model="state.tableData.param.search1"
+                        size="default"
+                        placeholder="请输入检测类型"
+                        style="max-width: 180px"
+                    >
+                    </el-input>
+                    <el-input
+                        v-model="state.tableData.param.search3"
+                        size="default"
+                        placeholder="请输入最低阈值"
+                        style="max-width: 180px; margin: 0 15px"
+                    ></el-input>
+                    <el-button size="default" type="primary" @click="getTableData">
+                        <el-icon>
+                            <Search />
+                        </el-icon>
+                        <span>查询</span>
+                    </el-button>
+                </el-col>
+                <el-col :span="8" style="display: flex; justify-content: flex-end">
+                    <el-button size="default" type="danger" @click="onHandleBulkDelete">
+                        <el-icon>
+                            <Delete />
+                        </el-icon>
+                        <span>批量删除</span>
+                    </el-button>
+                </el-col>
+            </el-row>
             <el-table
                 class="detect-tobacco-video-record_table"
                 :data="state.tableData.data"
                 v-loading="state.tableData.loading"
                 style="width: 100%"
+                @selection-change="onHandleSelectionChange"
             >
+                <el-table-column type="selection" width="40" align="center" fixed />
                 <el-table-column
                     column-key="num"
                     prop="num"
@@ -114,7 +122,12 @@
                     show-overflow-tooltip
                     align="center"
                 ></el-table-column>
-                <el-table-column column-key="operation" label="操作" width="240" align="center">
+                <el-table-column
+                    column-key="operation"
+                    label="操作"
+                    width="240"
+                    align="center"
+                >
                     <template #default="scope">
                         <el-button
                             size="small"
@@ -160,6 +173,7 @@ import { storeToRefs } from "pinia";
 import { useUserStoreHook } from "@/store/modules/user";
 import { deleteRecord, getRecords } from "@/api/detect/video";
 import Search from "~icons/ep/search";
+import Delete from "~icons/ep/delete";
 
 const stores = useUserStoreHook();
 const { username } = storeToRefs(stores);
@@ -182,6 +196,7 @@ const state = reactive<SysRoleState>({
 
 // 唯一标识符，动态刷新
 const uniqueKey = ref(0);
+const multipleSelection = ref([]);
 
 const getTableData = () => {
     state.tableData.loading = true;
@@ -243,6 +258,33 @@ const onHandleCurrentChange = (val: number) => {
     getTableData();
 };
 
+const onHandleSelectionChange = (val: AnyArray) => {
+    multipleSelection.value = val;
+};
+
+const onHandleBulkDelete = () => {
+    ElMessageBox.confirm(`此操作将删除所有选中的记录，是否继续?`, "提示", {
+        confirmButtonText: "确认",
+        cancelButtonText: "取消",
+        type: "warning"
+    })
+        .then(() => {
+            deleteRecord(
+                multipleSelection.value.map(item => item.id).join(",")
+            ).then(res => {
+                if (res.code == 0) {
+                    message("删除成功！", { type: "success" });
+                } else {
+                    message(res.msg, { type: "error" });
+                }
+            });
+            setTimeout(() => {
+                getTableData();
+            }, 500);
+        })
+        .catch(() => {});
+};
+
 onMounted(() => {
     getTableData();
 });
@@ -261,7 +303,6 @@ onMounted(() => {
                 background: #d3e3f1;
 
                 .detect-tobacco-video-record {
-
                     &_table {
                         background: #d3e3f1;
                         flex: 1;
