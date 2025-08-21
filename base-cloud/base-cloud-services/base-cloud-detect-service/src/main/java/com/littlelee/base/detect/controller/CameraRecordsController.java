@@ -63,21 +63,22 @@ public class CameraRecordsController {
                               @RequestParam(defaultValue = "") String search1,
                               @RequestParam(defaultValue = "") String search3,
                               @RequestParam(defaultValue = "") String search2) {
-        LambdaQueryWrapper<CameraRecords> wrapper = Wrappers.<CameraRecords>lambdaQuery();
-        wrapper.orderByDesc(CameraRecords::getStartTime);
+        LambdaQueryWrapper<CameraRecords> qw = Wrappers.<CameraRecords>lambdaQuery();
+        qw.orderByDesc(CameraRecords::getStartTime);
+        qw.eq(CameraRecords::getDelFlag, 1);
         if (StrUtil.isNotBlank(search)) {
-            wrapper.like(CameraRecords::getUsername, search);
+            qw.like(CameraRecords::getUsername, search);
         }
         if (StrUtil.isNotBlank(search1)) {
-            wrapper.like(CameraRecords::getKind, search1);
+            qw.like(CameraRecords::getKind, search1);
         }
         if (StrUtil.isNotBlank(search2)) {
-            wrapper.like(CameraRecords::getWeight, search2);
+            qw.like(CameraRecords::getWeight, search2);
         }
         if (StrUtil.isNotBlank(search3)) {
-            wrapper.like(CameraRecords::getConf, search3);
+            qw.like(CameraRecords::getConf, search3);
         }
-        Page<CameraRecords> Page = cameraRecordsMapper.selectPage(new Page<>(pageNum, pageSize), wrapper);
+        Page<CameraRecords> Page = cameraRecordsMapper.selectPage(new Page<>(pageNum, pageSize), qw);
         return ApiResult.success(Page);
     }
 

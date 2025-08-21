@@ -5,7 +5,7 @@
                 <el-input
                     v-model="state.tableData.param.search1"
                     size="default"
-                    placeholder="请输入农作物类型"
+                    placeholder="请输入检测类型"
                     style="max-width: 180px"
                 >
                 </el-input>
@@ -83,7 +83,7 @@
                 <el-table-column
                     column-key="kind"
                     prop="kind"
-                    label="农作物种类"
+                    label="检测种类"
                     align="center"
                 />
                 <el-table-column

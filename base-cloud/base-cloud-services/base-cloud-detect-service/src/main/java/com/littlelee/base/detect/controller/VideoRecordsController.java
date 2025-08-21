@@ -50,21 +50,22 @@ public class VideoRecordsController {
                               @RequestParam(defaultValue = "") String search1,
                               @RequestParam(defaultValue = "") String search3,
                               @RequestParam(defaultValue = "") String search2) {
-        LambdaQueryWrapper<VideoRecords> wrapper = Wrappers.<VideoRecords>lambdaQuery();
-        wrapper.orderByDesc(VideoRecords::getStartTime);
+        LambdaQueryWrapper<VideoRecords> qw = Wrappers.<VideoRecords>lambdaQuery();
+        qw.orderByDesc(VideoRecords::getStartTime);
+        qw.eq(VideoRecords::getDelFlag, 1);
         if (StrUtil.isNotBlank(search)) {
-            wrapper.like(VideoRecords::getUsername, search);
+            qw.like(VideoRecords::getUsername, search);
         }
         if (StrUtil.isNotBlank(search1)) {
-            wrapper.like(VideoRecords::getKind, search1);
+            qw.like(VideoRecords::getKind, search1);
         }
         if (StrUtil.isNotBlank(search2)) {
-            wrapper.like(VideoRecords::getWeight, search2);
+            qw.like(VideoRecords::getWeight, search2);
         }
         if (StrUtil.isNotBlank(search3)) {
-            wrapper.like(VideoRecords::getConf, search3);
+            qw.like(VideoRecords::getConf, search3);
         }
-        Page<VideoRecords> Page = videoRecordsMapper.selectPage(new Page<>(pageNum, pageSize), wrapper);
+        Page<VideoRecords> Page = videoRecordsMapper.selectPage(new Page<>(pageNum, pageSize), qw);
         return ApiResult.success(Page);
     }
 
