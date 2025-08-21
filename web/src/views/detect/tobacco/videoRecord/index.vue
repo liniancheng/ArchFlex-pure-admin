@@ -16,15 +16,26 @@
                         placeholder="请输入最低阈值"
                         style="max-width: 180px; margin: 0 15px"
                     ></el-input>
-                    <el-button size="default" type="primary" @click="getTableData">
+                    <el-button
+                        size="default"
+                        type="primary"
+                        @click="getTableData"
+                    >
                         <el-icon>
                             <Search />
                         </el-icon>
                         <span>查询</span>
                     </el-button>
                 </el-col>
-                <el-col :span="8" style="display: flex; justify-content: flex-end">
-                    <el-button size="default" type="danger" @click="onHandleBulkDelete">
+                <el-col
+                    :span="8"
+                    style="display: flex; justify-content: flex-end"
+                >
+                    <el-button
+                        size="default"
+                        type="danger"
+                        @click="onHandleBulkDelete"
+                    >
                         <el-icon>
                             <Delete />
                         </el-icon>
@@ -39,7 +50,12 @@
                 style="width: 100%"
                 @selection-change="onHandleSelectionChange"
             >
-                <el-table-column type="selection" width="40" align="center" fixed />
+                <el-table-column
+                    type="selection"
+                    width="40"
+                    align="center"
+                    fixed
+                />
                 <el-table-column
                     column-key="num"
                     prop="num"
@@ -121,6 +137,7 @@
                     label="识别时间"
                     show-overflow-tooltip
                     align="center"
+                    :formatter="formatStartTime"
                 ></el-table-column>
                 <el-table-column
                     column-key="operation"
@@ -171,6 +188,7 @@ import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
 import { storeToRefs } from "pinia";
 import { useUserStoreHook } from "@/store/modules/user";
+import { dayjs } from "@/views/detect/tobacco/index/utils";
 import { deleteRecord, getRecords } from "@/api/detect/video";
 import Search from "~icons/ep/search";
 import Delete from "~icons/ep/delete";
@@ -225,6 +243,10 @@ const getTableData = () => {
 
 const show = (row: any) => {
     window.open("http://localhost:8000/#/videoShow?id=" + row.id);
+};
+
+const formatStartTime = (row: any, column: any, cellValue: string) => {
+    return dayjs(cellValue).format("YYYY-MM-DD HH:mm:ss");
 };
 
 const onRowDel = (row: any) => {
@@ -294,23 +316,19 @@ onMounted(() => {
 .detect-tobacco-video-record {
     &_container {
         height: 100%;
+    }
 
-        .detect-tobacco-video-record {
-            &_inner {
-                height: 100%;
-                border-radius: 10px;
-                padding: 15px;
-                background: #d3e3f1;
+    &_inner {
+        height: 100%;
+        border-radius: 10px;
+        padding: 15px;
+        background: #d3e3f1;
+    }
 
-                .detect-tobacco-video-record {
-                    &_table {
-                        background: #d3e3f1;
-                        flex: 1;
-                        margin: 15px 0;
-                    }
-                }
-            }
-        }
+    &_table {
+        background: #d3e3f1;
+        flex: 1;
+        margin: 15px 0;
     }
 
     &_video {

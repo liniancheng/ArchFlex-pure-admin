@@ -40,7 +40,7 @@ export function getRecord(id: string) {
     return http.get<AnyObject, FormData>(`/detect/videoRecords/${id}`);
 }
 
-/* 视频检测记录 */
+/* 删除视频检测记录 */
 export function deleteRecord(id: string) {
     return http.delete<AxiosResult, string>(`/detect/videoRecords/${id}`);
 }
