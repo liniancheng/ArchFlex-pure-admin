@@ -16,7 +16,7 @@ public class CameraRecordsServiceImpl extends BaseServiceImpl<CameraRecordsMappe
     public boolean deleteCameraRecords(Long[] ids) {
         LambdaUpdateWrapper<CameraRecords> uw = new LambdaUpdateWrapper<>();
         uw.in(CameraRecords::getId, ids);
-        uw.set(CameraRecords::getDelFlag, 0);
+        uw.set(CameraRecords::getDelFlag, 1);
         return update(uw);
     }
 }

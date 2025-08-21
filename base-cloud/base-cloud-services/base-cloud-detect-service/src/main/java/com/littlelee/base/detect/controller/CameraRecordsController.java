@@ -65,7 +65,7 @@ public class CameraRecordsController {
                               @RequestParam(defaultValue = "") String search2) {
         LambdaQueryWrapper<CameraRecords> qw = Wrappers.<CameraRecords>lambdaQuery();
         qw.orderByDesc(CameraRecords::getStartTime);
-        qw.eq(CameraRecords::getDelFlag, 1);
+        qw.eq(CameraRecords::getDelFlag, 0);
         if (StrUtil.isNotBlank(search)) {
             qw.like(CameraRecords::getUsername, search);
         }

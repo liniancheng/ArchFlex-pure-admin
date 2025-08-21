@@ -52,7 +52,7 @@ public class VideoRecordsController {
                               @RequestParam(defaultValue = "") String search2) {
         LambdaQueryWrapper<VideoRecords> qw = Wrappers.<VideoRecords>lambdaQuery();
         qw.orderByDesc(VideoRecords::getStartTime);
-        qw.eq(VideoRecords::getDelFlag, 1);
+        qw.eq(VideoRecords::getDelFlag, 0);
         if (StrUtil.isNotBlank(search)) {
             qw.like(VideoRecords::getUsername, search);
         }

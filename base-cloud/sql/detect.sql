@@ -19,7 +19,7 @@ CREATE TABLE `detect_img_records`  (
    `start_time` varchar(255) NULL DEFAULT NULL,
    `label` varchar(255) NULL DEFAULT NULL,
    `kind` varchar(255) NULL DEFAULT NULL,
-   `del_flag` int(11) DEFAULT '1',
+   `del_flag` int(11) COMMENT '是否删除 1-删除，0-未删除' DEFAULT '0',
    PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COMMENT='图片检测记录表';
 
@@ -36,7 +36,7 @@ CREATE TABLE `detect_video_records`  (
      `conf` varchar(255) DEFAULT NULL,
      `weight` varchar(255) DEFAULT NULL,
      `kind` varchar(255) DEFAULT NULL,
-     `del_flag` int(11) DEFAULT '1',
+     `del_flag` int(11) COMMENT '是否删除 1-删除，0-未删除' DEFAULT '0',
      PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COMMENT='视频检测记录表';
 
@@ -52,6 +52,6 @@ CREATE TABLE `detect_camera_records`  (
       `start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
       `out_video` varchar(255) DEFAULT NULL,
       `kind` varchar(255) DEFAULT NULL,
-      `del_flag` int(11) DEFAULT '1',
+      `del_flag` int(11) COMMENT '是否删除 1-删除，0-未删除' DEFAULT '0',
       PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COMMENT='摄像检测记录表';
