@@ -33,7 +33,7 @@
                 </el-col>
                 <el-col :span="4" :xs="24" :sm="8" :md="8" :lg="6" :xl="4">
                     <el-row :gutter="12">
-                        <el-col :span="12" :xs="24">
+                        <el-col :span="8" :xs="24">
                             <el-form-item prop="inputVideo" required>
                                 <el-upload
                                     :maxCount="1"
@@ -45,8 +45,11 @@
                                 </el-upload>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="12" :xs="24">
+                        <el-col :span="8" :xs="24">
                             <el-button type="primary" :loading="detecting" @click="upData">开始处理</el-button>
+                        </el-col>
+                        <el-col :span="8" :xs="24">
+                            <el-button @click="handleReset">重置</el-button>
                         </el-col>
                     </el-row>
                 </el-col>
@@ -167,6 +170,22 @@ function upData() {
         state.video_path = `http://127.0.0.1:5000/predictVideo?${queryParams}`;
         message("正在加载！", { type: "success" });
     })
+}
+
+function handleReset() {
+    // 重置参数
+    state.form = {
+        username: "",
+        inputVideo: null,
+        weight: "",
+        conf: 0.5,
+        kind: "",
+        startTime: ""
+    };
+    state.data = {}
+    state.video_path = "";
+    state.percentage = 0;
+    state.isShow = false;
 }
 
 onMounted(() => {
