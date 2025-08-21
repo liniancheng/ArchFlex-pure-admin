@@ -32,6 +32,7 @@
                     style="display: flex; justify-content: flex-end"
                 >
                     <el-button
+                        v-show="multipleSelection.length > 0"
                         size="default"
                         type="danger"
                         @click="onHandleBulkDelete"
