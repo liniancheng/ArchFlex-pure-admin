@@ -45,10 +45,10 @@
                 </el-col>
             </el-row>
             <el-table
-                class="detect-tobacco-camera-record_table"
-                :data="state.tableData.data"
                 v-loading="state.tableData.loading"
+                class="detect-tobacco-camera-record_table"
                 style="width: 100%"
+                :data="state.tableData.data"
                 @selection-change="onHandleSelectionChange"
             >
                 <el-table-column

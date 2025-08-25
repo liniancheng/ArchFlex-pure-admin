@@ -8,6 +8,7 @@
  * @LastEditTime: 2025-07-02 22:38:27
  */
 import { http } from "@/utils/http";
+import axios from "axios";
 
 export interface DetectImage {
     originalImage: string,  // 原始图片路径
@@ -47,4 +48,20 @@ export function detect(data: DetectImage) {
         "/detect/image/detect",
         data,
     );
+}
+
+/* 获取图像检测记录 */
+export function getRecords(params?: AnyObject) {
+    const url = axios.getUri({ url: "/detect/imgRecords", params: params });
+    return http.get<AnyObject, FormData>(url);
+}
+
+/* 获取单条图像检测记录 */
+export function getRecord(id: string) {
+    return http.get<AnyObject, FormData>(`/detect/imgRecords/${id}`);
+}
+
+/* 删除图像检测记录 */
+export function deleteRecord(id: string) {
+    return http.delete<AxiosResult, string>(`/detect/imgRecords/${id}`);
 }
