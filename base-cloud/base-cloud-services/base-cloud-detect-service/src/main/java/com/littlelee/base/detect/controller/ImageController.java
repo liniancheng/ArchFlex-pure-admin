@@ -27,8 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.text.SimpleDateFormat;
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author littlelee
@@ -103,7 +102,7 @@ public class ImageController {
 
     @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_DETECT_SERVICE, moduleName = FUNC_NAME, actionName = "图像检测")
     @Operation(summary = "使用Flask的方式进行图像检测", description = "使用Flask的方式进行图像检测", method = "POST")
-    @PostMapping("/predict")
+    @PostMapping("/flaskDetect")
     public ApiResult<?> predict(@RequestBody PredictRequest request) {
         if (request == null || request.getInputImg() == null || request.getInputImg().isEmpty()) {
             return ApiResult.failed("未提供图片链接");
@@ -117,8 +116,8 @@ public class ImageController {
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<PredictRequest> requestEntity = new HttpEntity<>(request, headers);
 
-            // 调用 Flask API
-            String response = restTemplate.postForObject("http://localhost:5000/predictImg", requestEntity, String.class);
+            // 调用 Flask API，http://localhost:5000/predictImg
+            String response = restTemplate.postForObject(DetectConfig.getFlaskUrl() + "predictImg", requestEntity, String.class);
             System.out.println("Received response: " + response);
             JSONObject responses = JSONObject.parseObject(response);
             if(responses.get("status").equals(400)){
@@ -136,10 +135,25 @@ public class ImageController {
                 imgRecords.setAllTime(String.valueOf(responses.get("allTime")));
                 imgRecords.setOutImg(String.valueOf(responses.get("outImg")));
                 imgRecordsMapper.insert(imgRecords); // 插入到数据库
+                // 统计每种检测类别的数目
+                Map<String, Integer> labelCounts = countLabels(String.valueOf(responses.get("label")));
+                responses.put("labelCounts", labelCounts);
                 return ApiResult.success(responses);
             }
         } catch (Exception e) {
             return ApiResult.failed("Error: " + e.getMessage());
         }
+    }
+
+    // 统计每种检测类别的数目
+    private Map<String, Integer> countLabels(String labelStr) {
+        // 去掉首尾的括号并分割字符串为标签列表
+        List<String> labels = Arrays.asList(labelStr.substring(1, labelStr.length() - 1).split(", "));
+        Map<String, Integer> labelCounts = new HashMap<>();
+        for (String label : labels) {
+            label = label.trim().replace("\"", ""); // 去掉多余的引号并去除空格
+            labelCounts.put(label, labelCounts.getOrDefault(label, 0) + 1);
+        }
+        return labelCounts;
     }
 }
