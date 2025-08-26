@@ -5,26 +5,29 @@
  * @version: 1.0
  * @Copyright: all
  * @LastEditors: liniancheng
- * @LastEditTime: 2025-07-02 22:38:27
+ * @LastEditTime: 2025-08-26 22:28:27
  */
 import { http } from "@/utils/http";
 import axios from "axios";
 
 export interface DetectImage {
-    originalImage: string,  // 原始图片路径
+    username: string,  // 用户名
+    inputImg: string,  // 原始图片路径
     model: string,  // 模型
-    recognitionWeight: string,  // 识别权重
-    minThreshold: number, // 最小阈值
-    aiAssistant: string, // AI助手使用情况
+    weight: string,  // 识别权重
+    conf: number,  // 最小阈值
+    kind: string,  // 检测种类
+    aiAssistant: string,  // AI助手使用情况
 }
 
 export interface DetectResult {
-    detectionResults: {
-        bowl: number,
-        broccoli: number,
-        hotDog: number,
+    labelCounts: {
+        bowl?: number,
+        broccoli?: number,
+        hotDog?: number,
     },  // 检测结果
-    resultFileName: string,  // 结果图片路径
+    allTime: string,  // 总用时
+    outImg: string,  // 结果图片路径
 }
 
 /* 图片上传 */
@@ -45,7 +48,7 @@ export function upload(file: File) {
 /* 图片检测 */
 export function detect(data: DetectImage) {
     return http.post<AnyObject, DetectImage>(
-        "/detect/image/detect",
+        "/detect/image/flaskDetect",
         data,
     );
 }

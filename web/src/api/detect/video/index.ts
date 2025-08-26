@@ -10,14 +10,6 @@
 import { http } from "@/utils/http";
 import axios from "axios";
 
-export interface DetectImage {
-    originalImage: string; // 原始图片路径
-    model: string; // 模型
-    recognitionWeight: string; // 识别权重
-    minThreshold: number; // 最小阈值
-    aiAssistant: string; // AI助手使用情况
-}
-
 /* 视频上传 */
 export function upload(file: File) {
     const formData = new FormData();
