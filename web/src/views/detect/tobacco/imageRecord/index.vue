@@ -275,7 +275,7 @@ const onRowDel = (row: any) => {
     })
         .then(() => {
             console.log(row);
-            deleteRecord("/api/imgRecords/" + row.id).then(res => {
+            deleteRecord(row.id).then(res => {
                 if (res.code == 0) {
                     console.log(res.data);
                     message("删除成功！", { type: "success" });
