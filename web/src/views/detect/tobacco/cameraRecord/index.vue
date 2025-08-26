@@ -123,6 +123,14 @@
                         >
                             删除
                         </el-button>
+                        <el-button
+                            size="small"
+                            text
+                            type="primary"
+                            @click="show(scope.row)"
+                        >
+                            查看详情
+                        </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -200,6 +208,10 @@ const getTableData = () => {
             message(res.msg, { type: "error" });
         }
     });
+};
+
+const show = (row: any) => {
+    window.open(`http://localhost:8000/#/videoShow?type=camera&id=${row.id}`);
 };
 
 const formatStartTime = (row: any, column: any, cellValue: string) => {

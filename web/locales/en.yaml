@@ -83,6 +83,7 @@ menus:
     pureFourZeroFour: "404"
     pureFourZeroOne: "403"
     pureFive: "500"
+    pureRecordShow: Record Detail
     pureComponents: Components
     pureDialog: Dialog
     pureDrawer: Drawer

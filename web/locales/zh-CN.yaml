@@ -83,6 +83,7 @@ menus:
     pureFourZeroFour: "404"
     pureFourZeroOne: "403"
     pureFive: "500"
+    pureRecordShow: 记录详情
     pureComponents: 组件
     pureDialog: 函数式弹框
     pureDrawer: 函数式抽屉
