@@ -1,31 +1,37 @@
 package com.littlelee.base.detect.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.littlelee.base.common.base.service.impl.BaseServiceImpl;
 import com.littlelee.base.detect.config.DetectConfig;
 import com.littlelee.base.detect.mapper.ImageMapper;
 import com.littlelee.base.detect.mapper.ImageRecordMapper;
+import com.littlelee.base.detect.mapper.ImgRecordsMapper;
 import com.littlelee.base.detect.model.bo.DetectImage;
+import com.littlelee.base.detect.model.bo.PredictRequest;
+import com.littlelee.base.detect.model.bo.PredictResult;
 import com.littlelee.base.detect.model.po.DetectImageRecord;
+import com.littlelee.base.detect.model.po.ImgRecords;
 import com.littlelee.base.detect.model.query.ImageRecordQuery;
 import com.littlelee.base.detect.service.ImageRecordService;
 import com.littlelee.base.detect.service.ImageService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
-import java.util.List;
+import java.util.*;
 import java.io.File;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.client.RestTemplate;
 
 
 /**
@@ -39,44 +45,9 @@ public class ImageServiceImpl extends BaseServiceImpl<ImageMapper, DetectImage> 
     @Autowired
     private ImageRecordService imageRecordService;  // 注入 ImageRecordService
 
-    @Override
-    public ImageRecordQuery pageByQuery(ImageRecordQuery query) {
-        // 设置排序
-        query.addOrder(OrderItem.asc("id"));
-        // 执行分页查询
-        mapper.pageByQuery(query);
-        List<DetectImageRecord> records = query.getRecords();
-        if (CollectionUtils.isNotEmpty(records)) {
-            // 这里可以添加额外的业务逻辑，例如设置额外的字段信息
-        }
-        return query;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Boolean saveImage(DetectImage image) {
-        // 保存图像识别记录
-        return this.save(image);
-    }
-
-    @Override
-    public Boolean deleteImageRecord(String id) {
-        // 根据ID删除图像识别记录
-        return this.removeById(id);
-    }
-
-    @Override
-    public DetectImage getImageById(String id) {
-        // 根据ID获取图像识别记录
-        return this.getById(id);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Boolean updateImageRecord(DetectImage detectImage) {
-        // 更新图像识别记录
-        return this.updateById(detectImage);
-    }
+    private final RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    private ImgRecordsMapper imgRecordsMapper;
 
     @Override
     public Map<String, Object> detectImage(DetectImage detectImage) {
@@ -192,5 +163,63 @@ public class ImageServiceImpl extends BaseServiceImpl<ImageMapper, DetectImage> 
             return null;
         }
     }
+
+    @Override
+    public PredictResult predict(PredictRequest request) {
+        // 创建请求体
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<PredictRequest> requestEntity = new HttpEntity<>(request, headers);
+        String response = restTemplate.postForObject(DetectConfig.getFlaskUrl() + "predictImg", requestEntity, String.class);
+        JSONObject responses = JSONObject.parseObject(response);
+        String message = String.valueOf(responses.get("message"));
+        String status = String.valueOf(responses.get("status"));
+        PredictResult predictResult = new PredictResult();
+        if (status.equals(400)){
+            predictResult.setStatus(status);
+            predictResult.setMessage(message);
+            return predictResult;
+        }else {
+            // 获取Flask端的返回结果
+            String outImg = String.valueOf(responses.get("outImg"));
+            String allTime = String.valueOf(responses.get("allTime"));
+            String label = String.valueOf(responses.get("label"));
+            String confidence = String.valueOf(responses.get("confidence"));
+            ImgRecords imgRecords = new ImgRecords();
+            imgRecords.setWeight(request.getWeight());
+            imgRecords.setConf(request.getConf());
+            imgRecords.setKind(request.getKind());
+            imgRecords.setInputImg(request.getInputImg());
+            imgRecords.setUsername(request.getUsername());
+            imgRecords.setStartTime(request.getStartTime());
+            imgRecords.setLabel(label);
+            imgRecords.setConfidence(confidence);
+            imgRecords.setAllTime(allTime);
+            imgRecords.setOutImg(outImg);
+            imgRecordsMapper.insert(imgRecords); // 插入到数据库
+            // 构造返回结果
+            predictResult.setOutImg(outImg);
+            predictResult.setAllTime(allTime);
+            predictResult.setStatus(status);
+            predictResult.setMessage(message);
+            // 统计每种检测类别的数目
+            Map<String, Integer> labelCounts = countLabels(label);
+            predictResult.setLabelCounts((HashMap<String, Integer>) labelCounts);
+            return predictResult;
+        }
+    }
+
+    // 统计每种检测类别的数目
+    private Map<String, Integer> countLabels(String labelStr) {
+        // 去掉首尾的括号并分割字符串为标签列表
+        List<String> labels = Arrays.asList(labelStr.substring(1, labelStr.length() - 1).split(", "));
+        Map<String, Integer> labelCounts = new HashMap<>();
+        for (String label : labels) {
+            label = label.trim().replace("\"", ""); // 去掉多余的引号并去除空格
+            labelCounts.put(label, labelCounts.getOrDefault(label, 0) + 1);
+        }
+        return labelCounts;
+    }
+
 
 }

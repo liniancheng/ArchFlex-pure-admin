@@ -9,6 +9,7 @@ import com.littlelee.base.detect.config.DetectConfig;
 import com.littlelee.base.detect.mapper.ImgRecordsMapper;
 import com.littlelee.base.detect.model.bo.DetectImage;
 import com.littlelee.base.detect.model.bo.PredictRequest;
+import com.littlelee.base.detect.model.bo.PredictResult;
 import com.littlelee.base.detect.model.po.ImgRecords;
 import com.littlelee.base.detect.service.ImageService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -111,49 +112,14 @@ public class ImageController {
         }
 
         try {
-            // 创建请求体
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<PredictRequest> requestEntity = new HttpEntity<>(request, headers);
-
-            // 调用 Flask API，http://localhost:5000/predictImg
-            String response = restTemplate.postForObject(DetectConfig.getFlaskUrl() + "predictImg", requestEntity, String.class);
-            System.out.println("Received response: " + response);
-            JSONObject responses = JSONObject.parseObject(response);
-            if(responses.get("status").equals(400)){
-                return ApiResult.failed("Error: " + responses.get("message"));
+            PredictResult predictResult = imageService.predict(request);
+            if(predictResult.getStatus().equals(400)){
+                return ApiResult.failed("Error: " + predictResult.getMessage());
             }else {
-                ImgRecords imgRecords = new ImgRecords();
-                imgRecords.setWeight(request.getWeight());
-                imgRecords.setConf(request.getConf());
-                imgRecords.setKind(request.getKind());
-                imgRecords.setInputImg(request.getInputImg());
-                imgRecords.setUsername(request.getUsername());
-                imgRecords.setStartTime(request.getStartTime());
-                imgRecords.setLabel(String.valueOf(responses.get("label")));
-                imgRecords.setConfidence(String.valueOf(responses.get("confidence")));
-                imgRecords.setAllTime(String.valueOf(responses.get("allTime")));
-                imgRecords.setOutImg(String.valueOf(responses.get("outImg")));
-                imgRecordsMapper.insert(imgRecords); // 插入到数据库
-                // 统计每种检测类别的数目
-                Map<String, Integer> labelCounts = countLabels(String.valueOf(responses.get("label")));
-                responses.put("labelCounts", labelCounts);
-                return ApiResult.success(responses);
+                return ApiResult.success(predictResult);
             }
         } catch (Exception e) {
             return ApiResult.failed("Error: " + e.getMessage());
         }
-    }
-
-    // 统计每种检测类别的数目
-    private Map<String, Integer> countLabels(String labelStr) {
-        // 去掉首尾的括号并分割字符串为标签列表
-        List<String> labels = Arrays.asList(labelStr.substring(1, labelStr.length() - 1).split(", "));
-        Map<String, Integer> labelCounts = new HashMap<>();
-        for (String label : labels) {
-            label = label.trim().replace("\"", ""); // 去掉多余的引号并去除空格
-            labelCounts.put(label, labelCounts.getOrDefault(label, 0) + 1);
-        }
-        return labelCounts;
     }
 }
