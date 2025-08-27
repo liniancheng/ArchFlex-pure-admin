@@ -10,17 +10,6 @@
 import { http } from "@/utils/http";
 import axios from "axios";
 
-/* 视频上传 */
-export function upload(file: File) {
-    const formData = new FormData();
-    formData.append("file", file);
-    return http.post<AnyObject, FormData>("/detect/files/upload", formData, {
-        headers: {
-            "Content-Type": "multipart/form-data"
-        }
-    });
-}
-
 /* 获取视频检测记录 */
 export function getRecords(params?: AnyObject) {
     const url = axios.getUri({ url: "/detect/videoRecords", params: params });

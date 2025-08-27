@@ -14,3 +14,13 @@ export function getWeightList() {
     // TODO: get weight list
     // http.get("/detect/image/weight");
 }
+
+export function upload(file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+    return http.post<AnyObject, FormData>("/detect/files/upload", formData, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    });
+}

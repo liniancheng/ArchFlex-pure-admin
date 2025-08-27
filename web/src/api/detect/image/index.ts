@@ -30,21 +30,6 @@ export interface DetectResult {
     outImg: string,  // 结果图片路径
 }
 
-/* 图片上传 */
-export function upload(file: File) {
-    const formData = new FormData();
-    formData.append("file", file);
-    return http.post<AnyObject, FormData>(
-        "/detect/image/upload",
-        formData,
-        {
-            headers: {
-                "Content-Type": "multipart/form-data"
-            }
-        }
-    );
-}
-
 /* 图片检测 */
 export function detect(data: DetectImage) {
     return http.post<AnyObject, DetectImage>(

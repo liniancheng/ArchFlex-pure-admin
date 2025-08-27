@@ -102,9 +102,8 @@
 import { reactive, ref, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { message } from "@/utils/message";
-import { upload } from "@/api/detect/video";
-import { getWeightList } from "@/api/detect";
 import { SocketService } from "@/utils/socket";
+import { getWeightList, upload } from "@/api/detect";
 import { useUserStoreHook } from "@/store/modules/user";
 
 const stores = useUserStoreHook();

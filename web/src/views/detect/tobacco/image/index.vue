@@ -203,9 +203,10 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 import { message } from "@/utils/message";
-import { DetectImage, DetectResult, detect, upload } from "@/api/detect/image";
+import { DetectImage, DetectResult, detect } from "@/api/detect/image";
 import UploadIcon from "~icons/ri/upload-2-line?width=26&height=26";
 import type { FormInstance } from "element-plus";
+import { upload } from "@/api/detect";
 import { useUserStoreHook } from "@/store/modules/user";
 import { storeToRefs } from "pinia";
 
