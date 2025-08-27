@@ -49,9 +49,23 @@ CREATE TABLE `detect_camera_records`  (
       `weight` varchar(255) DEFAULT NULL COMMENT '权重文件',
       `conf` varchar(255) DEFAULT NULL COMMENT '最小置信度阈值',
       `username` varchar(255) DEFAULT NULL COMMENT '用户名',
-      `start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '开始时间',,
+      `start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '开始时间',
       `out_video` varchar(255) DEFAULT NULL COMMENT '输出视频路径',,
       `kind` varchar(255) DEFAULT NULL COMMENT '检测种类',
       `del_flag` int(11) COMMENT '是否删除 1-删除，0-未删除' DEFAULT '0',
       PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COMMENT='摄像检测记录表';
+
+-- ----------------------------
+-- Table structure for detect_models
+-- ----------------------------
+DROP TABLE IF EXISTS `detect_models`;
+CREATE TABLE `detect_models`  (
+      `id` int NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+      `weight` varchar(255) DEFAULT NULL COMMENT '权重文件',
+      `username` varchar(255) DEFAULT NULL COMMENT '用户名',
+      `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+      `kind` varchar(255) DEFAULT NULL COMMENT '检测种类',
+      `del_flag` int(11) COMMENT '是否删除 1-删除，0-未删除' DEFAULT '0',
+      PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COMMENT='模型表';

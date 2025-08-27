@@ -78,4 +78,4 @@ detect:
   weightsPath: D:/work/tobacco/weights
   scriptPath: D:/PycharmProjects/ultralytics-main/ultralytics/predict.py
   outputDir: D:/work/tobacco/result
-  flaskUrl: http://localhost:5000/
+  flaskUrl: http://localhost:5000/   # flask服务地址, 最后一定要加"/"
