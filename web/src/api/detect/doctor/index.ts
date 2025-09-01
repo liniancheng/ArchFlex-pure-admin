@@ -16,10 +16,10 @@ const { username } = storeToRefs(stores);
 
 /* 获取记录 */
 export function getRecords(): Promise<AnyObject> {
-    return http.get(`/ollama/getRecords?who=${username.value}`);
+    return http.get(`/detect/ollama/getRecords?who=${username.value}`);
 }
 
 /* 发送消息 */
 export function sendMessage(bo: {currentUserName: string, message: string}) {
-    return http.post(`/ollama/ai/v3/doctor/stream`, bo);
+    return http.post(`/detect/ollama/ai/v3/doctor/stream`, bo);
 }

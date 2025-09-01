@@ -22,7 +22,7 @@ function createChatHandle() {
                 })
             }
             try {
-                const source = new EventSource(`http://127.0.0.1:8080/sse/connect?userId=${username.value}`);
+                const source = new EventSource(`http://127.0.0.1:8898/sse/connect?userId=${username.value}`);
 
                 source.onopen = (response) => {
                     console.log("sse open", response);

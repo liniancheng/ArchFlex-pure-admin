@@ -1,6 +1,8 @@
 package com.littlelee.base.detect.controller;
 
+import com.littlelee.base.common.util.ApiResult;
 import com.littlelee.base.detect.model.bo.ChatEntity;
+import com.littlelee.base.detect.model.po.ChatRecord;
 import com.littlelee.base.detect.service.ChatRecordService;
 import com.littlelee.base.detect.service.OllamaService;
 import jakarta.annotation.Resource;
@@ -23,7 +25,7 @@ import java.util.stream.Collectors;
  **/
 @Slf4j
 @RestController
-@RequestMapping("ollama")
+@RequestMapping("/ollama")
 public class OllamaController {
 
 //    http://127.0.0.1:8080/ollama/ai/chat
@@ -95,8 +97,9 @@ public class OllamaController {
     }
 
     @GetMapping("/getRecords")
-    public Object aiOllamaV3DoctorStream(@RequestParam String who) {
-        return chatRecordService.getChatRecordList(who);
+    public ApiResult aiOllamaV3DoctorStream(@RequestParam String who) {
+        List<ChatRecord> chatRecordList = chatRecordService.getChatRecordList(who);
+        return ApiResult.success(chatRecordList);
     }
 
 
