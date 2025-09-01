@@ -1,8 +1,69 @@
 <script setup lang="ts">
 import "deep-chat";
 import { ref, onMounted } from "vue";
+import { useUserStoreHook } from "@/store/modules/user";
+import { storeToRefs } from "pinia";
+import { getRecords, sendMessage } from "@/api/detect/doctor";
+
+const stores = useUserStoreHook();
+const { username } = storeToRefs(stores);
 
 const chatRef = ref();
+const history = ref([])
+
+function createChatHandle() {
+    chatRef.value.connect = {
+        handler: (body, signals) => {
+            console.error('有消息来了', body);
+            if (body.messages[0].role === 'user') {
+                sendMessage({
+                    currentUserName: username.value,
+                    message: body.messages[0].text
+                })
+            }
+            try {
+                const source = new EventSource(`http://127.0.0.1:8080/sse/connect?userId=${username.value}`);
+
+                source.onopen = (response) => {
+                    console.log("sse open", response);
+                    signals.onOpen();
+                }
+
+                source.onmessage = (message) => {
+                    signals.onResponse({text: message});
+                }
+
+                source.onerror = (message) => {
+                    signals.onResponse({error: message});
+                }
+
+                source.addEventListener('add', function (e) {
+                    console.log("add事件...", e.data);
+                });
+
+                source.addEventListener('finish', function (e) {
+                    console.log("finish事件...", e.data);
+                });
+
+                source.addEventListener("customEvent", function(e) {
+                    console.log(e.lastEventId, e.data);
+                }, false);
+
+                signals.stopClicked.listener = () => {
+                    // logic to stop your stream, such as creating an abortController
+                };
+            } catch (e) {
+                signals.onResponse({error: 'error'});
+            }
+        },
+    };
+}
+
+function loadHistory() {
+    getRecords().then(res => {
+        history.value = res.data;
+    })
+}
 
 onMounted(() => {
     chatRef.value.demo = {
@@ -13,6 +74,8 @@ onMounted(() => {
             };
         }
     };
+    createChatHandle();
+    loadHistory();
 });
 </script>
 
@@ -57,7 +120,7 @@ onMounted(() => {
             );
             border-color: #e4e4e4;
             border-radius: 10px;
-            box-shadow: 0 0 12px rgba(0,0,0,0.12);
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.12);
         "
         :textInput="{
             styles: {
@@ -140,13 +203,7 @@ onMounted(() => {
                 }
             }
         }"
-        :history="[
-            { text: '赵云是谁？', role: 'user' },
-            {
-                text: '赵云（约168年－229年），字子龙，是三国时期蜀汉的重要将领，以其忠诚和勇敢著称。',
-                role: 'ai'
-            }
-        ]"
+        :history="history"
         :connect="{ stream: true }"
     />
 </template>
