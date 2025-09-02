@@ -61,7 +61,12 @@ function createChatHandle() {
 
 function loadHistory() {
     getRecords().then(res => {
-        history.value = res.data;
+        history.value = res.data.map((item: any) => ({
+            id: item.id,
+            text: item.content,
+            role: item.chatType === 'user' ? 'user' : 'ai',
+            time: item.chatTime,
+        }));
     })
 }
 
