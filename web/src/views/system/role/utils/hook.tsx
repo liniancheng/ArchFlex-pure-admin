@@ -229,7 +229,7 @@ export function useRole(treeRef: Ref) {
     if (id) {
       curRow.value = row;
       isShow.value = true;
-      const { data } = await getRoleMenuIds({ id });
+      const { data } = await getRoleMenuIds(id);
       treeRef.value.setCheckedKeys(data);
     } else {
       curRow.value = null;

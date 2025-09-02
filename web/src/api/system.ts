@@ -1,8 +1,8 @@
 import { http } from "@/utils/http";
 
-type Result = {
+type Result<T = Array<any>> = {
     success: boolean;
-    data?: Array<any>;
+    data?: T;
 };
 
 type ResultTable = {
@@ -79,6 +79,29 @@ interface MenuItem {
     showParent?: boolean;
 }
 
+/** 接口返回的角色信息 */
+export interface ApiRoleItem {
+    roleId: string
+    roleCode: string
+    roleName: string
+    createTime: string
+    modifyTime: string
+    delFlag: string
+    appId: string
+    menuIds: string
+    ableFlag: string
+    remark: string
+}
+/** 角色信息 */
+export interface RoleItem {
+    id: string
+    name: string
+    code: string
+    status: string
+    remark: string
+    createTime: string
+}
+
 export const formatMenu = (data: ApiMenuItem[]): MenuItem[] => {
     if (!data || data?.length <= 0) return [];
     return data.map(item => {
@@ -132,11 +155,33 @@ export const unFormatMenu = (item: MenuItem): ApiMenuItem => {
     };
 };
 
+export const formatRole = (data: ApiRoleItem[]): RoleItem[] => {
+    if (!data || data?.length <= 0) return [];
+    return data.map(item => {
+        return {
+            id:  item.roleId,
+            name: item.roleName,
+            code: item.roleCode,
+            status: item.ableFlag,
+            remark: item.remark,
+            createTime: item.createTime
+        };
+    });
+};
+
 /** 处理后端路由接口返回信息 */
 const formatMenuData = (data: string) => {
     if (!data) return data;
     const parseData: Result = JSON.parse(data);
-    parseData.data = formatMenu(parseData.data);
+    parseData.data = formatMenu(parseData.data as any[]);
+    return parseData;
+};
+const formatRoleData = (data: string) => {
+    if (!data) return data;
+    const parseData: Result<AnyObject> = JSON.parse(data);
+    parseData.data = {
+        list: formatRole(parseData.data.records)
+    }
     return parseData;
 };
 
@@ -157,7 +202,14 @@ export const getRoleIds = (data?: object) => {
 
 /** 获取系统管理-角色管理列表 */
 export const getRoleList = (data?: object) => {
-    return http.request<ResultTable>("post", "/role", { data });
+    return http.request<ResultTable>(
+        "get",
+        "/admin/role/page",
+        { data },
+        {
+            transformResponse: formatRoleData
+        }
+    );
 };
 
 /** 获取系统管理-菜单管理列表 */
@@ -204,10 +256,10 @@ export const getSystemLogsDetail = (data?: object) => {
 
 /** 获取角色管理-权限-菜单权限 */
 export const getRoleMenu = (data?: object) => {
-    return http.request<Result>("post", "/role-menu", { data });
+    return http.request<Result>("post", "/admin/roleMenuRel", { data });
 };
 
 /** 获取角色管理-权限-菜单权限-根据角色 id 查对应菜单 */
-export const getRoleMenuIds = (data?: object) => {
-    return http.request<Result>("post", "/role-menu-ids", { data });
+export const getRoleMenuIds = (id: string) => {
+    return http.request<Result>("get", `/admin/roleMenuRel/treeNode/${id}`);
 };
