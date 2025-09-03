@@ -4,6 +4,7 @@ import com.littlelee.base.common.model.bo.TreeNode;
 import com.littlelee.base.user.model.bo.SysMenuTree;
 import com.littlelee.base.user.model.po.SysMenuInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.littlelee.base.user.model.vo.SysSimpleMenuVO;
 
 import java.util.List;
 import java.util.Set;
@@ -58,6 +59,13 @@ public interface SysMenuInfoService extends IService<SysMenuInfo> {
      * @return
      */
     List<SysMenuInfo> getAllMenuList(String appId);
+
+    /**
+     * 查询所有的菜单简单内容（一维数组）
+     * @param appId
+     * @return
+     */
+    List<SysSimpleMenuVO> getSimpleMenuList(String appId);
 
     /**
      * 查询所有的菜单

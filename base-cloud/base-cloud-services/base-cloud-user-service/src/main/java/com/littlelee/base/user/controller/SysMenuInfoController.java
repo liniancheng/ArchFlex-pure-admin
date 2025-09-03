@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.littlelee.base.user.model.vo.SysSimpleMenuVO;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,12 @@ public class SysMenuInfoController {
     @GetMapping("/menu/list")
     public ApiResult<List<SysMenuInfo>> getAllMenuList() {
         return new ApiResult<>(sysMenuInfoService.getAllMenuList(UserUtil.getAppId(request)));
+    }
+
+    @Operation(summary = "获取所有菜单的简单列表（一维数组，仅包含menuId,menuType,menuName,parentId）", description = "获取所有菜单的简单列表")
+    @GetMapping("/menu/simpleList")
+    public ApiResult<List<SysSimpleMenuVO>> getSimpleMenuList() {
+        return new ApiResult<>(sysMenuInfoService.getSimpleMenuList(UserUtil.getAppId(request)));
     }
 
     @SysLog(serviceId = ServiceNameConstants.BASE_CLOUD_USER_SERVICE,

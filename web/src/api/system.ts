@@ -256,7 +256,7 @@ export const getSystemLogsDetail = (data?: object) => {
 
 /** 获取角色管理-权限-菜单权限 */
 export const getRoleMenu = (data?: object) => {
-    return http.request<Result>("post", "/admin/roleMenuRel", { data });
+    return http.request<Result>("get", "/admin/resource/menu/simpleList");
 };
 
 /** 获取角色管理-权限-菜单权限-根据角色 id 查对应菜单 */

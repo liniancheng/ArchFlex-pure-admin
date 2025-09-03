@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.littlelee.base.user.model.vo.SysSimpleMenuVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -151,6 +152,11 @@ public class SysMenuInfoServiceImpl extends ServiceImpl<SysMenuInfoMapper, SysMe
     	query.lambda().eq(SysMenuInfo::getDelFlag, DataStatusEnum.NORMAL.getCode()).eq(SysMenuInfo::getAppId, appId).orderByAsc(SysMenuInfo::getMenuSort);
 
         return sysMenuInfoMapper.selectList(query);
+    }
+
+    @Override
+    public List<SysSimpleMenuVO> getSimpleMenuList(String appId) {
+        return sysMenuInfoMapper.selectSimpleMenus(DataStatusEnum.NORMAL.getCode(), appId);
     }
 
     @Override
