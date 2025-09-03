@@ -26,4 +26,6 @@ public interface SysRoleMenuRelMapper extends BaseMapper<SysRoleMenuRel> {
 	void removeByIds(@Param("menuIds")List<String> menuIds, @Param("roleId")String roleId);
 
 	List<SysRoleMenuRel> getRoleMenuRels(@Param("roleId")String roleId);
+
+	List<String> getRoleMenuIds(@Param("roleId")String roleId);
 }

@@ -66,4 +66,11 @@ public class SysRoleMenuRelController {
 			@Parameter(description = "角色ID", required = true) @PathVariable("id") String id) {
 		return new ApiResult<>(service.getAllMenuTreeNode(id));
 	}
+
+    @Operation(summary = "获取角色已关联菜单id数组", description = "根据角色ID获取已关联的菜单id数组")
+	@GetMapping("/ids/{id}")
+	public ApiResult<List<String>> getAllMenuIds(
+			@Parameter(description = "角色ID", required = true) @PathVariable("id") String id) {
+		return new ApiResult<>(service.getAllMenuIds(id));
+	}
 }

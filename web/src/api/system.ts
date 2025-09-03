@@ -261,5 +261,5 @@ export const getRoleMenu = (data?: object) => {
 
 /** 获取角色管理-权限-菜单权限-根据角色 id 查对应菜单 */
 export const getRoleMenuIds = (id: string) => {
-    return http.request<Result>("get", `/admin/roleMenuRel/treeNode/${id}`);
+    return http.request<Result>("get", `/admin/roleMenuRel/ids/${id}`);
 };

@@ -12,5 +12,6 @@ public interface SysRoleMenuRelService extends BaseService<SysRoleMenuRel>{
 	public Boolean deleteRoleMenuRel(String roleId, List<String> menuIds);
 
 	public List<SysRoleMenuRel> getAllMenuTreeNode(String appId);
-	
+
+    public List<String> getAllMenuIds(String roleId);
 }

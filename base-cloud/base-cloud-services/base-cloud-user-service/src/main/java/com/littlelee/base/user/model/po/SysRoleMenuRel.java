@@ -2,6 +2,8 @@ package com.littlelee.base.user.model.po;
 
 import java.io.Serializable;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -22,11 +24,13 @@ public class SysRoleMenuRel implements Serializable {
     /**
      * 主键
      */
+    @TableField(value = "role_id", insertStrategy = FieldStrategy.IGNORED, updateStrategy = FieldStrategy.IGNORED)
     private String roleId;
 
     /**
      * 主键
      */
+    @TableField(value = "menu_id", insertStrategy = FieldStrategy.IGNORED, updateStrategy = FieldStrategy.IGNORED)
     private String menuId;
 
 }

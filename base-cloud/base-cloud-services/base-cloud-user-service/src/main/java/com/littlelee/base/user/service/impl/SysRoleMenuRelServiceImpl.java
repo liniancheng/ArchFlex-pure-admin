@@ -50,8 +50,12 @@ public class SysRoleMenuRelServiceImpl extends BaseServiceImpl<SysRoleMenuRelMap
 
 	@Override
 	public List<SysRoleMenuRel> getAllMenuTreeNode(String roleId) {
-        List<SysRoleMenuRel> list = mapper.getRoleMenuRels(roleId);
-        return list;
+        return mapper.getRoleMenuRels(roleId);
+	}
+
+    @Override
+    public List<String> getAllMenuIds(String roleId) {
+        return mapper.getRoleMenuIds(roleId);
 	}
 	
 }
