@@ -79,11 +79,12 @@ public class SysRoleInfoServiceImpl extends ServiceImpl<SysRoleInfoMapper, SysRo
 	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public boolean updateById(SysRoleInfo role) {
-		if(role.getMenuIds() != null && role.getMenuIds().size() >0 ){
+		if(role.getMenuIds() != null){
 			deleteBindRoleWithMenu(role.getRoleId());
 			bindRoleWithMenu(role);
 		}
 		role.setModifyTime(LocalDateTime.now());
+		role.setCreateTime(null); // 手动置空创建时间，避免被修改
 		sysRoleInfoMapper.updateById(role);
 		
 		Object value = redisTemplate.boundHashOps(CommonConstants.SYSTEM_PUBLIC_CODE).get(PubCodeConstants.ASYNC.ASYNC_FLAG.getCode());

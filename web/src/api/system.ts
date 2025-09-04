@@ -84,22 +84,23 @@ export interface ApiRoleItem {
     roleId: string
     roleCode: string
     roleName: string
-    createTime: string
-    modifyTime: string
-    delFlag: string
-    appId: string
-    menuIds: string
-    ableFlag: string
-    remark: string
+    createTime?: string
+    modifyTime?: string
+    delFlag?: string
+    appId?: string
+    menuIds?: string[]
+    ableFlag?: string
+    remark?: string
 }
 /** 角色信息 */
 export interface RoleItem {
-    id: string
+    id?: string
     name: string
     code: string
-    status: string
-    remark: string
-    createTime: string
+    status?: string
+    remark?: string
+    menuIds?: string[]
+    createTime?: string
 }
 
 export const formatMenu = (data: ApiMenuItem[]): MenuItem[] => {
@@ -159,7 +160,7 @@ export const formatRole = (data: ApiRoleItem[]): RoleItem[] => {
     if (!data || data?.length <= 0) return [];
     return data.map(item => {
         return {
-            id:  item.roleId,
+            id: item.roleId,
             name: item.roleName,
             code: item.roleCode,
             status: item.ableFlag,
@@ -167,6 +168,18 @@ export const formatRole = (data: ApiRoleItem[]): RoleItem[] => {
             createTime: item.createTime
         };
     });
+};
+
+export const unFormatRole = (data: RoleItem): ApiRoleItem => {
+    return {
+        roleId: data.code.toLowerCase(),
+        roleName: data.name,
+        roleCode: data.code.toUpperCase(),
+        ableFlag: data.status,
+        remark: data.remark,
+        createTime: data.createTime,
+        menuIds: data.menuIds
+    };
 };
 
 /** 处理后端路由接口返回信息 */
@@ -210,6 +223,26 @@ export const getRoleList = (data?: object) => {
             transformResponse: formatRoleData
         }
     );
+};
+/** 修改系统管理-角色 */
+export const createRole = (data?: RoleItem) => {
+    return http.request<ResultTable>(
+        "post",
+        `/admin/role`,
+        { data: unFormatRole(data) },
+    );
+};
+/** 修改系统管理-角色 */
+export const modifyRole = (data?: RoleItem) => {
+    return http.request<ResultTable>(
+        "put",
+        `/admin/role`,
+        { data: unFormatRole(data) },
+    );
+};
+/** 删除系统管理-角色 */
+export const deleteRole = (id: string) => {
+    return http.request<ResultTable>("delete", `/admin/role/${id}`);
 };
 
 /** 获取系统管理-菜单管理列表 */
