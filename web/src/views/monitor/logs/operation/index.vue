@@ -126,7 +126,7 @@ const {
           ref="tableRef"
           row-key="id"
           align-whole="center"
-          table-layout="auto"
+          table-layout="fixed"
           :loading="loading"
           :size="size"
           adaptive

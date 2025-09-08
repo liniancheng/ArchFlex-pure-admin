@@ -48,7 +48,12 @@ export function useRole(tableRef: Ref) {
     {
       label: "操作概要",
       prop: "summary",
-      minWidth: 140
+      width: 300
+    },
+    {
+      label: "服务模块",
+      prop: "serviceId",
+      minWidth: 100
     },
     {
       label: "操作 IP",
@@ -56,13 +61,13 @@ export function useRole(tableRef: Ref) {
       minWidth: 100
     },
     {
-      label: "操作地点",
-      prop: "address",
+      label: "请求方式",
+      prop: "methodName",
       minWidth: 140
     },
     {
-      label: "操作系统",
-      prop: "system",
+      label: "请求时长",
+      prop: "operTime",
       minWidth: 100
     },
     {

@@ -81,26 +81,60 @@ interface MenuItem {
 
 /** 接口返回的角色信息 */
 export interface ApiRoleItem {
-    roleId: string
-    roleCode: string
-    roleName: string
-    createTime?: string
-    modifyTime?: string
-    delFlag?: string
-    appId?: string
-    menuIds?: string[]
-    ableFlag?: string
-    remark?: string
+    roleId: string;
+    roleCode: string;
+    roleName: string;
+    createTime?: string;
+    modifyTime?: string;
+    delFlag?: string;
+    appId?: string;
+    menuIds?: string[];
+    ableFlag?: string;
+    remark?: string;
 }
 /** 角色信息 */
 export interface RoleItem {
-    id?: string
-    name: string
-    code: string
-    status?: string
-    remark?: string
-    menuIds?: string[]
-    createTime?: string
+    id?: string;
+    name: string;
+    code: string;
+    status?: string;
+    remark?: string;
+    menuIds?: string[];
+    createTime?: string;
+}
+
+/** 接口返回的日志信息 */
+export interface ApiLogItem {
+    logId: string;
+    actionName: string;
+    createBy: string;
+    moduleName: string;
+    params: string;
+    remoteAddr: string;
+    userAgent: string;
+    logStatus: string;
+    createTime: string;
+    methodName: string;
+    serviceId: string;
+    operTime: string;
+}
+/** 日志信息 */
+export interface LogItem {
+    id: number;
+    logId: string;
+    actionName: string;
+    address: string;
+    browser: string;
+    username: string;
+    module: string;
+    summary: string;
+    ip: string;
+    system: string;
+    status: number;
+    operatingTime: string;
+    methodName: string;
+    serviceId: string;
+    operTime: string;
 }
 
 export const formatMenu = (data: ApiMenuItem[]): MenuItem[] => {
@@ -152,7 +186,7 @@ export const unFormatMenu = (item: MenuItem): ApiMenuItem => {
         menuType: item?.menuType.toString(),
         menuUrl: item?.url,
         modifyTime: item?.modifyTime,
-        parentId: item?.parentId
+        parentId: item?.parentId ?? "-1"
     };
 };
 
@@ -182,6 +216,41 @@ export const unFormatRole = (data: RoleItem): ApiRoleItem => {
     };
 };
 
+export const formatLog = (data: ApiLogItem[]): LogItem[] => {
+    if (!data || data?.length <= 0) return [];
+    return data.map((item, index) => {
+        return {
+            id: index + 1,
+            logId: item.logId,
+            actionName: item.actionName,
+            address: item.remoteAddr,
+            browser: item.userAgent,
+            username: item.createBy,
+            module: item.moduleName,
+            summary: item.params,
+            ip: item.remoteAddr,
+            system: item.userAgent,
+            status: Number(item.logStatus),
+            operatingTime: item.createTime,
+            methodName: item.methodName,
+            serviceId: item.serviceId,
+            operTime: item.operTime
+        };
+    });
+};
+
+export const unFormatLog = (data: RoleItem): ApiRoleItem => {
+    return {
+        roleId: data.code.toLowerCase(),
+        roleName: data.name,
+        roleCode: data.code.toUpperCase(),
+        ableFlag: data.status,
+        remark: data.remark,
+        createTime: data.createTime,
+        menuIds: data.menuIds
+    };
+};
+
 /** 处理后端路由接口返回信息 */
 const formatMenuData = (data: string) => {
     if (!data) return data;
@@ -192,9 +261,21 @@ const formatMenuData = (data: string) => {
 const formatRoleData = (data: string) => {
     if (!data) return data;
     const parseData: Result<AnyObject> = JSON.parse(data);
+    const { records, ...t } = parseData.data
     parseData.data = {
-        list: formatRole(parseData.data.records)
-    }
+        ...t,
+        list: formatRole(records)
+    };
+    return parseData;
+};
+const formatLogData = (data: string) => {
+    if (!data) return data;
+    const parseData: Result<AnyObject> = JSON.parse(data);
+    const { records, ...t } = parseData.data
+    parseData.data = {
+        ...t,
+        list: formatLog(records)
+    };
     return parseData;
 };
 
@@ -226,19 +307,15 @@ export const getRoleList = (data?: object) => {
 };
 /** 修改系统管理-角色 */
 export const createRole = (data?: RoleItem) => {
-    return http.request<ResultTable>(
-        "post",
-        `/admin/role`,
-        { data: unFormatRole(data) },
-    );
+    return http.request<ResultTable>("post", `/admin/role`, {
+        data: unFormatRole(data)
+    });
 };
 /** 修改系统管理-角色 */
 export const modifyRole = (data?: RoleItem) => {
-    return http.request<ResultTable>(
-        "put",
-        `/admin/role`,
-        { data: unFormatRole(data) },
-    );
+    return http.request<ResultTable>("put", `/admin/role`, {
+        data: unFormatRole(data)
+    });
 };
 /** 删除系统管理-角色 */
 export const deleteRole = (id: string) => {
@@ -274,7 +351,14 @@ export const getLoginLogsList = (data?: object) => {
 
 /** 获取系统监控-操作日志列表 */
 export const getOperationLogsList = (data?: object) => {
-    return http.request<ResultTable>("post", "/operation-logs", { data });
+    return http.request<ResultTable>(
+        "get",
+        "/admin/log/page",
+        { data },
+        {
+            transformResponse: formatLogData
+        }
+    );
 };
 
 /** 获取系统监控-系统日志列表 */
