@@ -12,6 +12,7 @@ const chatRef = ref();
 const history = ref([])
 
 function createChatHandle() {
+    chatRef.value.stream = true;
     chatRef.value.connect = {
         handler: (body, signals) => {
             console.error('有消息来了', body);
@@ -39,6 +40,7 @@ function createChatHandle() {
 
                 source.addEventListener('add', function (e) {
                     console.log("add事件...", e.data);
+                    signals.onResponse({text: e.data});
                 });
 
                 source.addEventListener('finish', function (e) {
@@ -209,6 +211,5 @@ onMounted(() => {
             }
         }"
         :history="history"
-        :connect="{ stream: true }"
     />
 </template>
