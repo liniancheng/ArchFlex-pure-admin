@@ -4,60 +4,94 @@ import { ref, onMounted } from "vue";
 import { useUserStoreHook } from "@/store/modules/user";
 import { storeToRefs } from "pinia";
 import { getRecords, sendMessage } from "@/api/detect/doctor";
+import { Signals } from "deep-chat/dist/types/handler";
 
 const stores = useUserStoreHook();
 const { username } = storeToRefs(stores);
 
 const chatRef = ref();
-const history = ref([])
+const history = ref([]);
 
 function createChatHandle() {
     chatRef.value.stream = true;
     chatRef.value.connect = {
-        handler: (body, signals) => {
-            console.error('有消息来了', body);
-            if (body.messages[0].role === 'user') {
+        handler: (body: AnyObject, signals: Signals) => {
+            console.error("有消息来了", body);
+            if (body.messages[0].role === "user") {
                 sendMessage({
                     currentUserName: username.value,
                     message: body.messages[0].text
-                })
+                });
             }
             try {
-                const source = new EventSource(`http://127.0.0.1:8898/sse/connect?userId=${username.value}`);
+                const source = new EventSource(
+                    `http://127.0.0.1:8898/sse/connect?userId=${username.value}`
+                );
+                let isThinking = false;
 
-                source.onopen = (response) => {
+                source.onopen = response => {
                     console.log("sse open", response);
                     signals.onOpen();
-                }
+                };
 
-                source.onmessage = (message) => {
-                    signals.onResponse({text: message});
-                }
+                source.onmessage = message => {
+                    signals.onResponse({ text: message.data });
+                };
 
-                source.onerror = (message) => {
-                    signals.onResponse({error: message});
-                }
+                source.onerror = message => {
+                    signals.onResponse({ error: JSON.stringify(message) });
+                };
 
-                source.addEventListener('add', function (e) {
+                source.addEventListener("add", function (e) {
                     console.log("add事件...", e.data);
-                    signals.onResponse({text: e.data});
+                    const data = e.data;
+                    if (data.includes("<think>")) {
+                        isThinking = true;
+                        const thinkingContent = data.replace("<think>", "");
+                        signals.onResponse({
+                            text: thinkingContent,
+                            custom: {
+                                isThinking: true
+                            }
+                        });
+                    } else if (data.includes("</think>")) {
+                        isThinking = false;
+                        const finalContent = data.replace("</think>", "");
+                        signals.onResponse({
+                            text: finalContent,
+                            custom: {
+                                isThinking: false
+                            }
+                        });
+                    } else {
+                        signals.onResponse({
+                            text: data,
+                            custom: {
+                                isThinking: isThinking
+                            }
+                        });
+                    }
                 });
 
-                source.addEventListener('finish', function (e) {
+                source.addEventListener("finish", function (e) {
                     console.log("finish事件...", e.data);
                 });
 
-                source.addEventListener("customEvent", function(e) {
-                    console.log(e.lastEventId, e.data);
-                }, false);
+                source.addEventListener(
+                    "customEvent",
+                    function (e) {
+                        console.log(e.lastEventId, e.data);
+                    },
+                    false
+                );
 
                 signals.stopClicked.listener = () => {
                     // logic to stop your stream, such as creating an abortController
                 };
             } catch (e) {
-                signals.onResponse({error: 'error'});
+                signals.onResponse({ error: "error" });
             }
-        },
+        }
     };
 }
 
@@ -66,10 +100,10 @@ function loadHistory() {
         history.value = res.data.map((item: any) => ({
             id: item.id,
             text: item.content,
-            role: item.chatType === 'user' ? 'user' : 'ai',
-            time: item.chatTime,
+            role: item.chatType === "user" ? "user" : "ai",
+            time: item.chatTime
         }));
-    })
+    });
 }
 
 onMounted(() => {
@@ -164,7 +198,15 @@ onMounted(() => {
                             'linear-gradient(130deg, #2870EA 20%, #1B4AEF 77.5%)'
                     }
                 },
-                ai: { bubble: { background: 'rgba(255,255,255,0.7)' } }
+                ai: {
+                    bubble: message => ({
+                        background: message.isThinking
+                            ? 'rgba(200, 200, 200, 0.5)'
+                            : 'rgba(255, 255, 255, 0.9)',
+                        opacity: message.isThinking ? 0.7 : 1,
+                        transition: 'all 0.3s ease'
+                    })
+                }
             }
         }"
         :submitButtonStyles="{
