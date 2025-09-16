@@ -103,7 +103,7 @@ function loadHistory() {
             role: item.chatType === "user" ? "user" : "ai",
             time: item.chatTime
         }));
-        chatRef.value.scrollToBottom()
+        chatRef.value.scrollToBottom();
     });
 }
 
@@ -156,6 +156,17 @@ onMounted(() => {
             border-radius: 10px;
             box-shadow: 0 0 12px rgba(0, 0, 0, 0.12);
         "
+        :avatars="{
+            user: {
+                styles: {
+                    avatar: {
+                        borderRadius: '5px',
+                        paddingTop: 0,
+                        marginTop: '5px'
+                    }
+                }
+            }
+        }"
         :textInput="{
             styles: {
                 container: {
