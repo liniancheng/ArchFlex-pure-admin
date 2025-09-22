@@ -122,7 +122,7 @@
                                     :prefix-icon="useRenderIcon(Keyhole)"
                                 >
                                     <template v-slot:append>
-                                        <ReImageVerify v-model:code="imgCode" />
+                                        <ReImageVerify ref="reImageVerifyRef" v-model:code="imgCode" />
                                     </template>
                                 </el-input>
                             </el-form-item>
@@ -303,6 +303,7 @@ defineOptions({
     name: "Login"
 });
 
+const reImageVerifyRef = ref();
 const imgCode = ref("");
 const loginDay = ref(7);
 const router = useRouter();
@@ -370,6 +371,7 @@ const loginSuccess = async (res: UserResult) => {
 
 const loginFail = (err: AnyObject) => {
     // 兼容调用成功但登录失败和接口调用失败的情况
+    reImageVerifyRef.value?.getImgCode(); // 刷新验证码
     passwordError.value = err?.message ?? err?.response?.data?.message;
     message(t("login.pureLoginFail"), { type: "error" });
 };
