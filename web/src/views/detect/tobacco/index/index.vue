@@ -8,6 +8,12 @@
 
         <!--TODO: 以下是前端自定义显示内容-->
         <el-row :gutter="12" class="tobacco-index_charts-row">
+            <!--面积图-->
+            <el-col :span="24">
+                <chart-line></chart-line>
+            </el-col>
+        </el-row>
+        <el-row :gutter="12" class="tobacco-index_charts-row">
             <!--柱状图-->
             <el-col :span="16">
                 <chart-bar></chart-bar>
@@ -19,18 +25,13 @@
         </el-row>
         <el-row :gutter="12" type="flex" class="tobacco-index_charts-row">
             <!--雷达图-->
-            <el-col :span="8">
-                <chart-radar></chart-radar>
+            <el-col :span="6" >
+                <!--<chart-radar></chart-radar>-->
+                <custom-time-line></custom-time-line>
             </el-col>
             <!--表格-->
-            <el-col :span="16">
+            <el-col :span="18">
                 <tobacco-table></tobacco-table>
-            </el-col>
-        </el-row>
-        <el-row :gutter="12" class="tobacco-index_charts-row">
-            <!--面积图-->
-            <el-col :span="24">
-                <chart-line></chart-line>
             </el-col>
         </el-row>
     </div>
@@ -39,6 +40,8 @@
 <script lang="ts" setup>
 import { ChartBar, ChartLine, ChartPie, ChartRadar } from "@/views/detect/tobacco/index/components/charts";
 import TobaccoTable from "./components/table/index.vue";
+import TimeLine from "@/views/components/timeline.vue";
+import CustomTimeLine from "@/views/detect/tobacco/index/components/charts/CustomTimeLine.vue";
 
 </script>
 

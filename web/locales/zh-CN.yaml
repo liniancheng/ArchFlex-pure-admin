@@ -254,7 +254,7 @@ login:
 detect:
     tobacco:
         class: 不同种类的检测个数
-        user: 不同用户的预测个数
+        user: 不同车间的虫害数量
         confidence: 不同用户间的平均置信度
         real: 实时预测信息
         ten: 近十日预测数量

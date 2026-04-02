@@ -26,7 +26,17 @@
                         <el-icon>
                             <Search />
                         </el-icon>
-                        查询
+                        <span class="ml-1">查询</span>
+                    </el-button>
+                    <el-button
+                        size="default"
+                        type="primary"
+                        @click="onHandleExport"
+                    >
+                        <el-icon>
+                            <Download />
+                        </el-icon>
+                        <span class="ml-1">数据导出</span>
                     </el-button>
                 </el-col>
                 <el-col
@@ -197,6 +207,7 @@ import { useUserStoreHook } from "@/store/modules/user";
 import { deleteRecord, getRecords } from "@/api/detect/image";
 import Search from "~icons/ep/search";
 import Delete from "~icons/ep/delete";
+import Download from "~icons/ep/Download";
 
 const stores = useUserStoreHook();
 const { username } = storeToRefs(stores);
@@ -303,6 +314,8 @@ const onHandleCurrentChange = (val: number) => {
 const onHandleSelectionChange = (val: AnyArray) => {
     multipleSelection.value = val;
 };
+
+const onHandleExport =()=>{};
 
 const onHandleBulkDelete = () => {
     ElMessageBox.confirm(`此操作将删除所有选中的记录，是否继续?`, "提示", {

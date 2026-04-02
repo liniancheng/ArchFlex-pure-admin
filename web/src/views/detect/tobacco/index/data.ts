@@ -1,7 +1,7 @@
 import { dayjs, getRandomIntBetween } from "./utils";
 
-const pests = ["虫一", "虫二", "虫三", "虫四", "虫五", "虫六", "虫七"];
-const users = ["用户一", "用户二", "用户三", "用户四", "用户五"];
+const pests = ["烟虫甲虫", "烟虫粉螟", "苍蝇"];
+const users = ["车间一", "车间二", "车间三", "车间四", "车间五"];
 
 /** 检测概览 */
 const barChartData = [
@@ -24,11 +24,11 @@ const barChartData = [
 ];
 
 const pieChartData = [
-    { value: 100, name: "用户一" },
-    { value: 200, name: "用户二" },
-    { value: 300, name: "用户三" },
-    { value: 400, name: "用户四" },
-    { value: 500, name: "用户五" }
+    { value: 100, name: "车间一" },
+    { value: 200, name: "车间二" },
+    { value: 300, name: "车间三" },
+    { value: 400, name: "车间四" },
+    { value: 500, name: "车间五" }
 ];
 
 const radarChartData = [
@@ -42,19 +42,41 @@ const radarChartData = [
     }
 ];
 
-const lineChartData = [820, 932, 901, 934, 1290, 1330, 1320];
+const lineChartDataX = [
+    "3月16日",
+    "3月17日",
+    "3月18日",
+    "3月19日",
+    "3月20日",
+    "3月21日",
+    "3月22日",
+    "3月23日",
+    "3月24日",
+    "3月25日",
+];
+
+const lineChartDataY = [820, 932, 901, 934, 1290, 1330, 1320, 1416, 1444, 1560];
 
 /** 数据统计 */
 const tableData = Array.from({ length: 30 }).map((_, index) => {
     return {
         id: index + 1,
-        user: getRandomIntBetween(13500, 19999),
-        recognitionWeight: getRandomIntBetween(12600, 16999),
-        minThreshold: getRandomIntBetween(0, 100) / 100,
-        aiAssistant: getRandomIntBetween(0, 1),
+        user: `操作工${getRandomIntBetween(1, 10)}`,
+        recognitionWeight: ['tobacco_pest.pt', 'invasive_species.pt'][getRandomIntBetween(0, 1)],
+        minThreshold: getRandomIntBetween(2, 10) / 10,
+        aiAssistant: "不使用AI",
         date: dayjs().subtract(index, "day").format("YYYY-MM-DD hh:mm:ss")
     };
 });
 
 
-export { pests, users, barChartData, pieChartData, radarChartData, lineChartData, tableData };
+export {
+    pests,
+    users,
+    barChartData,
+    pieChartData,
+    radarChartData,
+    lineChartDataX,
+    lineChartDataY,
+    tableData
+};

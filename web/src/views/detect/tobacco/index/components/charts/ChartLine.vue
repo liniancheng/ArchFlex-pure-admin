@@ -13,16 +13,19 @@
 import { type PropType, ref, computed } from "vue";
 import { useDark, useECharts } from "@pureadmin/utils";
 import { $t, transformI18n } from "@/plugins/i18n";
-import { lineChartData } from "@/views/detect/tobacco/index/data";
+import {
+    lineChartDataX,
+    lineChartDataY
+} from "@/views/detect/tobacco/index/data";
 
 const props = defineProps({
     data: {
-        type: Array as PropType<Array<number>>,
-        default: lineChartData
+        type: Object as PropType<{x: string[]; y: number[]}>,
+        default: { x:lineChartDataX, y:lineChartDataY }
     },
     title: {
         type: String,
-        default: $t("detect.tobacco.ten"),
+        default: $t("detect.tobacco.ten")
     }
 });
 
@@ -35,28 +38,33 @@ const { setOptions } = useECharts(chartRef, { theme });
 setOptions({
     xAxis: {
         type: "category",
-        data: props.data
+        data: props.data.x
     },
     yAxis: {
         type: "value"
     },
     series: [
         {
-            data: props.data,
+            data: props.data.y,
             type: "line",
             smooth: true,
             areaStyle: {
                 color: {
-                    type: 'linear',
+                    type: "linear",
                     x: 0,
                     y: 0,
                     x2: 0,
                     y2: 1,
-                    colorStops: [{
-                        offset: 0, color: 'rgba(140, 162, 228, 1)' // 0% 处的颜色
-                    }, {
-                        offset: 1, color: 'rgba(140, 162, 228, 0.2)' // 100% 处的颜色
-                    }],
+                    colorStops: [
+                        {
+                            offset: 0,
+                            color: "rgba(140, 162, 228, 1)" // 0% 处的颜色
+                        },
+                        {
+                            offset: 1,
+                            color: "rgba(140, 162, 228, 0.2)" // 100% 处的颜色
+                        }
+                    ],
                     global: false // 缺省为 false
                 }
             }

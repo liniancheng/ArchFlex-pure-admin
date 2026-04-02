@@ -39,10 +39,10 @@ const { setOptions } = useECharts(chartRef, {
 let curDetectType = ref(0); // 0上周、1本周
 const optionsBasis: Array<OptionsType> = [
     {
-        label: "单次"
+        label: "烟叶害虫"
     },
     {
-        label: "批量"
+        label: "入侵物种"
     }
 ];
 
