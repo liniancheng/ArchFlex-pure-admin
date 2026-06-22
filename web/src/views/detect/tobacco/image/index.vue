@@ -124,11 +124,35 @@
                             <div
                                 class="detect-tobacco-image-index_result-image"
                             >
-                                <img
+                                <el-image
                                     class="detect-tobacco-image-index_result-image-detail"
                                     alt="检测结果"
                                     :src="detectionResult?.outImg"
+                                    :preview-src-list="[
+                                        detectionResult?.outImg
+                                    ]"
                                 />
+                                <el-upload
+                                    class="detect-tobacco-image-index_upload-container-mini"
+                                    drag
+                                    name="file"
+                                    :maxCount="1"
+                                    :showUploadList="false"
+                                    :beforeUpload="beforeUpload"
+                                >
+                                    <div
+                                        class="detect-tobacco-image-index_upload-mini-box"
+                                    >
+                                        <el-icon color="#888" :size="24">
+                                            <UploadIcon />
+                                        </el-icon>
+                                        <div
+                                            class="detect-tobacco-image-index_upload-mini-box_text"
+                                        >
+                                            重新上传图片
+                                        </div>
+                                    </div>
+                                </el-upload>
                             </div>
                         </el-col>
                         <el-col :span="8">
@@ -229,7 +253,7 @@ import type { FormInstance } from "element-plus";
 import { upload } from "@/api/detect";
 import { useUserStoreHook } from "@/store/modules/user";
 import { storeToRefs } from "pinia";
-import {buildUUID} from "@pureadmin/utils";
+import { buildUUID } from "@pureadmin/utils";
 
 const stores = useUserStoreHook();
 const { username } = storeToRefs(stores);
@@ -246,7 +270,7 @@ const detectionParam = ref<DetectImage>({
     kind: null,
     conf: 0.5,
     aiAssistant: null,
-    token: buildUUID(),
+    token: buildUUID()
 });
 // 检测结果
 const detectionResult = ref<DetectResult>();
@@ -326,9 +350,9 @@ const detectResultSummary = computed(() => {
     return {
         sum,
         sumType: details.length,
-        startTime: detectionResult.value.startTime,
-        endTime: detectionResult.value.endTime,
-        allTime: detectionResult.value?.allTime,
+        startTime: detectionResult.value?.startTime,
+        endTime: detectionResult.value?.endTime,
+        allTime: detectionResult.value?.allTime
     };
 });
 
@@ -339,6 +363,8 @@ function beforeUpload(file: File) {
 }
 
 function handleFileSelect(file: File) {
+    // 置空检查结果
+    detectionResult.value = null;
     imageFile.value = file;
     detectionFormRef.value.clearValidate(["originalImage"]);
     customUpload();
@@ -363,7 +389,7 @@ function handleDetection() {
         detect(detectionParam.value)
             .then(res => {
                 detectionResult.value = res.data;
-                
+
                 // for test
                 // detectionResult.value = {
                 //     labelCounts: {
@@ -391,6 +417,7 @@ function handleExport() {
 
 function handleReset() {
     // 重置参数
+    detectionFormRef.value.resetFields();
     detectionParam.value = {
         username: username.value,
         inputImg: null,
@@ -399,7 +426,7 @@ function handleReset() {
         conf: 0.5,
         kind: null,
         aiAssistant: null,
-        token: buildUUID(),
+        token: buildUUID()
     };
     imageFile.value = null;
     detectionResult.value = null;
@@ -456,6 +483,26 @@ function handleReset() {
         &-container {
             width: 100%;
             height: 100%;
+
+            &-mini {
+                margin-top: 10px;
+
+                :deep(.el-upload-dragger) {
+                    padding: 10px;
+                }
+                :deep(.el-upload-list) {
+                    margin: 0;
+                }
+
+                .detect-tobacco-image-index_upload-mini-box {
+                    height: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                }
+            }
         }
 
         &-box {
@@ -495,6 +542,7 @@ function handleReset() {
             border: 1px solid #d9d9d9;
             padding: 20px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
 
