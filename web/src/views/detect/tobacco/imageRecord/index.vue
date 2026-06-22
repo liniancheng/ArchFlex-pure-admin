@@ -116,11 +116,11 @@
                     align="center"
                 >
                     <template #default="scope">
-                        <img
-                            width="120"
-                            height="80"
+                        <el-image
+                            style="width: 120px; height: 80px"
                             :src="scope.row.inputImg"
                             :alt="scope.row.inputImg"
+                            :preview-src-list="[scope.row.inputImg]"
                         />
                     </template>
                 </el-table-column>
@@ -131,11 +131,11 @@
                     align="center"
                 >
                     <template #default="scope">
-                        <img
-                            width="120"
-                            height="80"
+                        <el-image
+                            style="width: 120px; height: 80px"
                             :src="scope.row.outImg"
                             :alt="scope.row.outImg"
+                            :preview-src-list="[scope.row.inputImg]"
                         />
                     </template>
                 </el-table-column>
@@ -315,7 +315,7 @@ const onHandleSelectionChange = (val: AnyArray) => {
     multipleSelection.value = val;
 };
 
-const onHandleExport =()=>{};
+const onHandleExport = () => {};
 
 const onHandleBulkDelete = () => {
     ElMessageBox.confirm(`此操作将删除所有选中的记录，是否继续?`, "提示", {
