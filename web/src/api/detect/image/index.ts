@@ -18,16 +18,20 @@ export interface DetectImage {
     conf: number,  // 最小阈值
     kind: string,  // 检测种类
     aiAssistant: string,  // AI助手使用情况
+    token: string,
 }
 
 export interface DetectResult {
+    label: string,
     labelCounts: {
-        bowl?: number,
-        broccoli?: number,
-        hotDog?: number,
+        [key: string]: {
+            num: number,
+        },
     },  // 检测结果
     allTime: string,  // 总用时
     outImg: string,  // 结果图片路径
+    startTime: string,
+    endTime: string,
 }
 
 /* 图片检测 */

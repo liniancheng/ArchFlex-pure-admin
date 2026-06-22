@@ -164,6 +164,26 @@
                                     <span
                                         class="detect-tobacco-image-index_result-info-overview_count"
                                     >
+                                        开始检测时间：
+                                        <span
+                                            class="detect-tobacco-image-index_result-info-overview_count-number"
+                                        >
+                                            {{ detectResultSummary?.startTime }}
+                                        </span>
+                                    </span>
+                                    <span
+                                        class="detect-tobacco-image-index_result-info-overview_count"
+                                    >
+                                        检测结束时间：
+                                        <span
+                                            class="detect-tobacco-image-index_result-info-overview_count-number"
+                                        >
+                                            {{ detectResultSummary?.endTime }}
+                                        </span>
+                                    </span>
+                                    <span
+                                        class="detect-tobacco-image-index_result-info-overview_count"
+                                    >
                                         总用时：
                                         <span
                                             class="detect-tobacco-image-index_result-info-overview_count-number"
@@ -209,6 +229,7 @@ import type { FormInstance } from "element-plus";
 import { upload } from "@/api/detect";
 import { useUserStoreHook } from "@/store/modules/user";
 import { storeToRefs } from "pinia";
+import {buildUUID} from "@pureadmin/utils";
 
 const stores = useUserStoreHook();
 const { username } = storeToRefs(stores);
@@ -224,7 +245,8 @@ const detectionParam = ref<DetectImage>({
     weight: null,
     kind: null,
     conf: 0.5,
-    aiAssistant: null
+    aiAssistant: null,
+    token: buildUUID(),
 });
 // 检测结果
 const detectionResult = ref<DetectResult>();
@@ -294,7 +316,7 @@ const detectResultDetail = computed(() => {
     if (!detectionResult.value?.labelCounts) return [];
 
     return Object.entries(detectionResult.value.labelCounts).map(
-        ([type, count]) => ({ type, count })
+        ([type, count]) => ({ type, count: count.num })
     );
 });
 
@@ -304,7 +326,9 @@ const detectResultSummary = computed(() => {
     return {
         sum,
         sumType: details.length,
-        allTime: detectionResult.value?.allTime
+        startTime: detectionResult.value.startTime,
+        endTime: detectionResult.value.endTime,
+        allTime: detectionResult.value?.allTime,
     };
 });
 
@@ -339,6 +363,7 @@ function handleDetection() {
         detect(detectionParam.value)
             .then(res => {
                 detectionResult.value = res.data;
+                
                 // for test
                 // detectionResult.value = {
                 //     labelCounts: {
@@ -373,7 +398,8 @@ function handleReset() {
         weight: null,
         conf: 0.5,
         kind: null,
-        aiAssistant: null
+        aiAssistant: null,
+        token: buildUUID(),
     };
     imageFile.value = null;
     detectionResult.value = null;
