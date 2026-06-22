@@ -12,13 +12,25 @@ public class PredictResult {
      */
     String outImg;
     /**
+     * 开始检测时间
+     */
+    String startTime;
+    /**
+     * 检测结束时间
+     */
+    String endTime;
+    /**
      * 总耗时
      */
     String allTime;
     /**
+     * 类别
+     */
+    String label;
+    /**
      * 每种类别的数量
      */
-    HashMap<String, Integer> labelCounts;
+    HashMap<String, FlaskResponse.CountItem> labelCounts;
     /**
      * Flask返回的状态码，200为成功，400为失败
      */

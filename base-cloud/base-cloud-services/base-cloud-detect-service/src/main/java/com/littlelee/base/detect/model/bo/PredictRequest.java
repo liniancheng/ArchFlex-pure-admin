@@ -21,4 +21,8 @@ public class PredictRequest {
 
     private String conf;
 
+    private String token;
+
+    private String outputPath;
+
 }

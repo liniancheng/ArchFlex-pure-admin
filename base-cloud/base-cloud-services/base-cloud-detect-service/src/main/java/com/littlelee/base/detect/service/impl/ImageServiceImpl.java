@@ -8,6 +8,7 @@ import com.littlelee.base.detect.mapper.ImageMapper;
 import com.littlelee.base.detect.mapper.ImageRecordMapper;
 import com.littlelee.base.detect.mapper.ImgRecordsMapper;
 import com.littlelee.base.detect.model.bo.DetectImage;
+import com.littlelee.base.detect.model.bo.FlaskResponse;
 import com.littlelee.base.detect.model.bo.PredictRequest;
 import com.littlelee.base.detect.model.bo.PredictResult;
 import com.littlelee.base.detect.model.po.DetectImageRecord;
@@ -15,6 +16,7 @@ import com.littlelee.base.detect.model.po.ImgRecords;
 import com.littlelee.base.detect.model.query.ImageRecordQuery;
 import com.littlelee.base.detect.service.ImageRecordService;
 import com.littlelee.base.detect.service.ImageService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -38,6 +40,7 @@ import org.springframework.web.client.RestTemplate;
  * 图像识别记录服务实现类
  */
 @Service
+@Slf4j
 public class ImageServiceImpl extends BaseServiceImpl<ImageMapper, DetectImage> implements ImageService {
 
     @Autowired
@@ -48,6 +51,8 @@ public class ImageServiceImpl extends BaseServiceImpl<ImageMapper, DetectImage> 
     private final RestTemplate restTemplate = new RestTemplate();
     @Autowired
     private ImgRecordsMapper imgRecordsMapper;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Override
     public Map<String, Object> detectImage(DetectImage detectImage) {
@@ -170,10 +175,27 @@ public class ImageServiceImpl extends BaseServiceImpl<ImageMapper, DetectImage> 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<PredictRequest> requestEntity = new HttpEntity<>(request, headers);
-        String response = restTemplate.postForObject(DetectConfig.getFlaskUrl() + "predictImg", requestEntity, String.class);
-        JSONObject responses = JSONObject.parseObject(response);
-        String message = String.valueOf(responses.get("message"));
-        String status = String.valueOf(responses.get("status"));
+        String response;
+        try {
+            response = restTemplate.postForObject(DetectConfig.getFlaskUrl() + "predictImg", requestEntity, String.class);
+        } catch (Exception e) {
+            throw new RuntimeException("调用Flask算法服务失败", e);
+        }
+
+        if (response == null || response.isEmpty()) {
+            throw new RuntimeException("Flask算法端返回为空");
+        }
+        System.out.println(response);
+        log.info("Flask response: {}", response);
+        FlaskResponse flaskResponse;
+        try {
+            flaskResponse = objectMapper.readValue(response, FlaskResponse.class);
+        } catch (Exception e) {
+            throw new RuntimeException("解析Flask返回失败", e);
+        }
+        String message = flaskResponse.getMessage();
+        String status = flaskResponse.getStatus();
+        FlaskResponse.DataDTO data = flaskResponse.getData();
         PredictResult predictResult = new PredictResult();
         if (status.equals(400)){
             predictResult.setStatus(status);
@@ -181,10 +203,13 @@ public class ImageServiceImpl extends BaseServiceImpl<ImageMapper, DetectImage> 
             return predictResult;
         }else {
             // 获取Flask端的返回结果
-            String outImg = String.valueOf(responses.get("outImg"));
-            String allTime = String.valueOf(responses.get("allTime"));
-            String label = String.valueOf(responses.get("label"));
-            String confidence = String.valueOf(responses.get("confidence"));
+            String outImg = data.getOutImg();
+            String allTime = data.getAllTime();
+            String label = data.getLabel();
+            String confidence = data.getConfidence();
+            String startTime = data.getStartTime();
+            String endTime = data.getEndTime();
+            // 存储检测记录
             ImgRecords imgRecords = new ImgRecords();
             imgRecords.setWeight(request.getWeight());
             imgRecords.setConf(request.getConf());
@@ -202,23 +227,13 @@ public class ImageServiceImpl extends BaseServiceImpl<ImageMapper, DetectImage> 
             predictResult.setAllTime(allTime);
             predictResult.setStatus(status);
             predictResult.setMessage(message);
-            // 统计每种检测类别的数目
-            Map<String, Integer> labelCounts = countLabels(label);
-            predictResult.setLabelCounts((HashMap<String, Integer>) labelCounts);
+            predictResult.setLabel(label);
+            predictResult.setStartTime(startTime);
+            predictResult.setEndTime(endTime);
+            HashMap<String, FlaskResponse.CountItem> labelCounts = data.getCount();
+            predictResult.setLabelCounts(labelCounts);
             return predictResult;
         }
-    }
-
-    // 统计每种检测类别的数目
-    private Map<String, Integer> countLabels(String labelStr) {
-        // 去掉首尾的括号并分割字符串为标签列表
-        List<String> labels = Arrays.asList(labelStr.substring(1, labelStr.length() - 1).split(", "));
-        Map<String, Integer> labelCounts = new HashMap<>();
-        for (String label : labels) {
-            label = label.trim().replace("\"", ""); // 去掉多余的引号并去除空格
-            labelCounts.put(label, labelCounts.getOrDefault(label, 0) + 1);
-        }
-        return labelCounts;
     }
 
 

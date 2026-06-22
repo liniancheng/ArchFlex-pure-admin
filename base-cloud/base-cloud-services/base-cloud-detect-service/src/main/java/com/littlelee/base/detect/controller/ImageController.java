@@ -109,6 +109,8 @@ public class ImageController {
             return ApiResult.failed("未提供图片链接");
         } else if (request.getWeight() == null || request.getWeight().isEmpty()) {
             return ApiResult.failed("未提供权重");
+        } else if (request.getKind() == null || request.getKind().isEmpty()) {
+            return ApiResult.failed("未选择检测种类");
         }
 
         try {
